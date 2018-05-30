@@ -12,6 +12,12 @@ import com.anbang.qipai.game.remote.service.QipaiMembersRomoteService;
 import com.anbang.qipai.game.remote.vo.CommonRemoteVO;
 import com.anbang.qipai.game.web.vo.CommonVO;
 
+/**
+ * 游戏大厅相关
+ * 
+ * @author neo
+ *
+ */
 @RestController
 @RequestMapping("/hall")
 public class HallController {
@@ -22,6 +28,12 @@ public class HallController {
 	@Autowired
 	private QipaiMembersRomoteService qipaiMembersRomoteService;
 
+	/**
+	 * 大厅首页
+	 * 
+	 * @param token
+	 * @return
+	 */
 	@RequestMapping(value = "/index")
 	@ResponseBody
 	public CommonVO index(String token) {
