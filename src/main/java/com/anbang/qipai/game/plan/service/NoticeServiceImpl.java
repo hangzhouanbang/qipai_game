@@ -6,10 +6,9 @@ import org.springframework.stereotype.Component;
 import com.anbang.qipai.game.plan.bean.Notices;
 import com.anbang.qipai.game.plan.dao.NoticeDao;
 
-
 @Component
-public class NoticeServiceImpl{
-	
+public class NoticeServiceImpl {
+
 	@Autowired
 	private NoticeDao noticeDao;
 
@@ -19,6 +18,10 @@ public class NoticeServiceImpl{
 		notices.setState(1);
 		notices.setNotice(notice);
 		noticeDao.addNotice(notices);
+	}
+
+	public Notices findPublicNotice() {
+		return noticeDao.queryByState(1);
 	}
 
 }

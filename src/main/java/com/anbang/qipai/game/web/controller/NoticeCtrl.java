@@ -1,4 +1,4 @@
-package com.anbang.qipai.game.plan.controller;
+package com.anbang.qipai.game.web.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
