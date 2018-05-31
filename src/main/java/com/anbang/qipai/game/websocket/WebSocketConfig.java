@@ -12,7 +12,7 @@ public class WebSocketConfig implements WebSocketConfigurer {
 
 	@Override
 	public void registerWebSocketHandlers(WebSocketHandlerRegistry registry) {
-		registry.addHandler(hallWsController(), "/hall");
+		registry.addHandler(hallWsController(), "/hall").setAllowedOrigins("*");
 	}
 
 	@Bean

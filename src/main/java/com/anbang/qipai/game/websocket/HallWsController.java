@@ -50,8 +50,7 @@ public class HallWsController extends TextWebSocketHandler {
 
 	@Override
 	public void afterConnectionEstablished(WebSocketSession session) throws Exception {
-		// 只是连上，什么也不做。要等第一条心跳过来。
-		System.out.println(session);
+		wsNotifier.addSession(session);
 	}
 
 	@Override
@@ -98,8 +97,8 @@ public class HallWsController extends TextWebSocketHandler {
 			}
 			return;
 		}
-		if (!wsNotifier.hasSession(session.getId())) {// 第一条心跳
-			wsNotifier.addSession(session, memberId);
+		if (wsNotifier.isRawSession(session.getId())) {// 第一条心跳
+			wsNotifier.updateSession(session.getId(), memberId);
 			// 发送系统公告
 			Notices notice = noticeService.findPublicNotice();
 			if (notice != null) {
@@ -110,6 +109,8 @@ public class HallWsController extends TextWebSocketHandler {
 				mo.setData(moData);
 				sendMessage(session, gson.toJson(mo));
 			}
+		} else {
+			wsNotifier.updateSession(session.getId());
 		}
 	}
 
