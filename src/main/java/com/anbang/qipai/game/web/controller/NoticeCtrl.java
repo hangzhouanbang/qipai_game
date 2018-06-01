@@ -13,7 +13,7 @@ import com.anbang.qipai.game.websocket.HallWsNotifier;
  * 系统通告controller
  **/
 @Controller
-@RequestMapping("/NoticeCtrl")
+@RequestMapping("/notice")
 public class NoticeCtrl {
 
 	@Autowired
@@ -26,7 +26,7 @@ public class NoticeCtrl {
 	 * 添加系统公告
 	 * 
 	 **/
-	@RequestMapping("/addNotice")
+	@RequestMapping("/addnotice")
 	@ResponseBody
 	public CommonVO addNotice(String notice) {
 		noticeService.addNotice(notice);
