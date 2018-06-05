@@ -95,11 +95,14 @@ public class HallWsNotifier {
 			data.put("content", notice);
 			mo.setData(data);
 			String payLoad = gson.toJson(mo);
-			idSessionMap.values().forEach((session) -> {
-				try {
-					session.sendMessage(new TextMessage(payLoad));
-				} catch (IOException e) {
-					e.printStackTrace();
+			memberIdSessionIdMap.values().forEach((sessionId) -> {
+				WebSocketSession session = idSessionMap.get(sessionId);
+				if (session != null) {
+					try {
+						session.sendMessage(new TextMessage(payLoad));
+					} catch (IOException e) {
+						e.printStackTrace();
+					}
 				}
 			});
 		});

@@ -8,7 +8,7 @@ package com.anbang.qipai.game.remote.vo;
  */
 public class CommonRemoteVO {
 
-	private boolean success = true;
+	private boolean success;
 
 	private String msg;
 
