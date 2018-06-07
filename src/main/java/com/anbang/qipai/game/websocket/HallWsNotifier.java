@@ -56,7 +56,10 @@ public class HallWsNotifier {
 		sessionIdActivetimeMap.put(session.getId(), System.currentTimeMillis());
 	}
 
-	public void updateSession(String sessionId, String memberId) {
+	public void updateSession(String sessionId, String memberId) throws SessionAlreadyExistsException {
+		if (memberIdSessionIdMap.containsKey(memberId)) {
+			throw new SessionAlreadyExistsException();
+		}
 		sessionIdActivetimeMap.put(sessionId, System.currentTimeMillis());
 		sessionIdMemberIdMap.put(sessionId, memberId);
 		memberIdSessionIdMap.put(memberId, sessionId);

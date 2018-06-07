@@ -38,6 +38,7 @@ public class HallWsController extends TextWebSocketHandler {
 	protected void handleTextMessage(WebSocketSession session, TextMessage message) throws Exception {
 
 		executorService.submit(() -> {
+			System.out.println("ws received: " + message.getPayload());// TODO 要去掉
 			CommonMO mo = gson.fromJson(message.getPayload(), CommonMO.class);
 			String msg = mo.getMsg();
 			if ("heartbeat".equals(msg)) {// 心跳
@@ -98,7 +99,15 @@ public class HallWsController extends TextWebSocketHandler {
 			return;
 		}
 		if (wsNotifier.isRawSession(session.getId())) {// 第一条心跳
-			wsNotifier.updateSession(session.getId(), memberId);
+			try {
+				wsNotifier.updateSession(session.getId(), memberId);
+			} catch (SessionAlreadyExistsException e1) {
+				try {
+					session.close();
+				} catch (IOException e2) {
+					e2.printStackTrace();
+				}
+			}
 			// 发送系统公告
 			Notices notice = noticeService.findPublicNotice();
 			if (notice != null) {
