@@ -1,0 +1,39 @@
+package com.anbang.qipai.game.plan.bean.members;
+
+/**
+ * 会员
+ * 
+ * @author Neo
+ *
+ */
+public class Member {
+
+	private String id;
+	private boolean vip;
+	private MemberRights rights;
+
+	public String getId() {
+		return id;
+	}
+
+	public void setId(String id) {
+		this.id = id;
+	}
+
+	public boolean isVip() {
+		return vip;
+	}
+
+	public void setVip(boolean vip) {
+		this.vip = vip;
+	}
+
+	public MemberRights getRights() {
+		return rights;
+	}
+
+	public void setRights(MemberRights rights) {
+		this.rights = rights;
+	}
+
+}

@@ -6,7 +6,7 @@ import org.springframework.messaging.support.MessageBuilder;
 
 import com.anbang.qipai.game.msg.channel.NoticeSource;
 import com.anbang.qipai.game.msg.msjobj.CommonMO;
-import com.anbang.qipai.game.plan.bean.Notices;
+import com.anbang.qipai.game.plan.bean.notice.Notices;
 
 @EnableBinding(NoticeSource.class)
 public class NoticeMsgService {

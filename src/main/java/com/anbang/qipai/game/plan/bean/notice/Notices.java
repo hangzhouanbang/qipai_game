@@ -1,4 +1,4 @@
-package com.anbang.qipai.game.plan.bean;
+package com.anbang.qipai.game.plan.bean.notice;
 
 public class Notices {
 	

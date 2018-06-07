@@ -1,6 +1,6 @@
 package com.anbang.qipai.game.plan.dao;
 
-import com.anbang.qipai.game.plan.bean.Notices;
+import com.anbang.qipai.game.plan.bean.notice.Notices;
 
 public interface NoticeDao {
 

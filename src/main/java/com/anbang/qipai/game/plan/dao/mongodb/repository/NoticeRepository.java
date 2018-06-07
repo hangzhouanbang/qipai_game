@@ -2,7 +2,7 @@ package com.anbang.qipai.game.plan.dao.mongodb.repository;
 
 import org.springframework.data.mongodb.repository.MongoRepository;
 
-import com.anbang.qipai.game.plan.bean.Notices;
+import com.anbang.qipai.game.plan.bean.notice.Notices;
 
 public interface NoticeRepository extends MongoRepository<Notices, String> {
 	/**

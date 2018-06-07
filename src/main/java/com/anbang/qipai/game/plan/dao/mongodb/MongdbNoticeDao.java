@@ -3,7 +3,7 @@ package com.anbang.qipai.game.plan.dao.mongodb;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import com.anbang.qipai.game.plan.bean.Notices;
+import com.anbang.qipai.game.plan.bean.notice.Notices;
 import com.anbang.qipai.game.plan.dao.NoticeDao;
 import com.anbang.qipai.game.plan.dao.mongodb.repository.NoticeRepository;
 

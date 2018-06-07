@@ -13,7 +13,7 @@ import org.springframework.web.socket.TextMessage;
 import org.springframework.web.socket.WebSocketSession;
 import org.springframework.web.socket.handler.TextWebSocketHandler;
 
-import com.anbang.qipai.game.plan.bean.Notices;
+import com.anbang.qipai.game.plan.bean.notice.Notices;
 import com.anbang.qipai.game.plan.service.MemberAuthService;
 import com.anbang.qipai.game.plan.service.NoticeServiceImpl;
 import com.google.gson.Gson;

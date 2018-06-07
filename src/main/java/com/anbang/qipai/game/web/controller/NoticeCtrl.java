@@ -6,7 +6,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.anbang.qipai.game.msg.service.NoticeMsgService;
-import com.anbang.qipai.game.plan.bean.Notices;
+import com.anbang.qipai.game.plan.bean.notice.Notices;
 import com.anbang.qipai.game.plan.service.NoticeServiceImpl;
 import com.anbang.qipai.game.web.vo.CommonVO;
 import com.anbang.qipai.game.websocket.HallWsNotifier;
