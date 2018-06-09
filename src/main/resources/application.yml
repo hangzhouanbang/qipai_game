@@ -13,7 +13,18 @@ spring:
           autoCreateTopics: true
           autoAddPartitions: false
         bindings:
-          game:
+          notice:
+            producer:
+              configuration:
+                request:
+                  timeout:
+                    ms: 30000
+                linger:
+                  ms: 5
+                batch:
+                  size: 16384
+                  
+          gameServer:
             producer:
               configuration:
                 request:
@@ -25,8 +36,14 @@ spring:
                   size: 16384
 
       bindings:
-        game:
-          destination: game
+        notice:
+          destination: notice
+          contentType: application/json
+          producer:
+            partitionCount: 1
+            
+        gameServer:
+          destination: gameServer
           contentType: application/json
           producer:
             partitionCount: 1
