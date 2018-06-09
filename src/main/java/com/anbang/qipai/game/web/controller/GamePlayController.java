@@ -102,7 +102,7 @@ public class GamePlayController {
 	 */
 	@RequestMapping(value = "/game_server_online")
 	@ResponseBody
-	public CommonVO gameserveronline(GameServer gameServer) {
+	public CommonVO gameserveronline(@RequestBody GameServer gameServer) {
 		CommonVO vo = new CommonVO();
 		gameService.onlineServer(gameServer);
 		gameServerMsgService.gameServerOnline(gameServer);
