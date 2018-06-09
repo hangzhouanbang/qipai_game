@@ -12,7 +12,9 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.anbang.qipai.game.cqrs.c.domain.games.CanNotJoinMoreRoomsException;
 import com.anbang.qipai.game.cqrs.c.service.GameRoomCmdService;
+import com.anbang.qipai.game.msg.service.GameServerMsgService;
 import com.anbang.qipai.game.plan.bean.games.GameRoom;
+import com.anbang.qipai.game.plan.bean.games.GameServer;
 import com.anbang.qipai.game.plan.bean.games.IllegalGameLawsException;
 import com.anbang.qipai.game.plan.bean.members.Member;
 import com.anbang.qipai.game.plan.bean.members.MemberRights;
@@ -43,6 +45,9 @@ public class GamePlayController {
 
 	@Autowired
 	private GameRoomCmdService gameRoomCmdService;
+
+	@Autowired
+	private GameServerMsgService gameServerMsgService;
 
 	/**
 	 * 创建瑞安麻将房间
@@ -86,6 +91,36 @@ public class GamePlayController {
 		// TODO: 游戏服务器rpc开房
 
 		// gameService.saveGameRoom(gameRoom);
+		return vo;
+	}
+
+	/**
+	 * 游戏服务器上线
+	 * 
+	 * @param gameServer
+	 * @return
+	 */
+	@RequestMapping(value = "/game_server_online")
+	@ResponseBody
+	public CommonVO gameserveronline(GameServer gameServer) {
+		CommonVO vo = new CommonVO();
+		gameService.onlineServer(gameServer);
+		gameServerMsgService.gameServerOnline(gameServer);
+		return vo;
+	}
+
+	/**
+	 * 游戏服务器下线
+	 * 
+	 * @param gameServer
+	 * @return
+	 */
+	@RequestMapping(value = "/game_server_offline")
+	@ResponseBody
+	public CommonVO gameserveroffline(String gameServerId) {
+		CommonVO vo = new CommonVO();
+		gameService.offlineServer(gameServerId);
+		gameServerMsgService.gameServerOffline(gameServerId);
 		return vo;
 	}
 
