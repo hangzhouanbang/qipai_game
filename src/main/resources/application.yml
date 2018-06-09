@@ -53,6 +53,15 @@ spring:
 server:
   port: 83
   
+logging:
+  path: D:/data/log
+  level:
+    xatu.zsl: debug
+    org.springfromework.web: info
+    org.hibernate: error
+  file: log\myspringboot.log
+  
+  
 eureka:
   client:
     serviceUrl:
