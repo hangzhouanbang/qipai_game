@@ -9,11 +9,13 @@ import org.springframework.stereotype.Component;
 import com.anbang.qipai.game.plan.bean.games.Game;
 import com.anbang.qipai.game.plan.bean.games.GameLaw;
 import com.anbang.qipai.game.plan.bean.games.GameRoom;
+import com.anbang.qipai.game.plan.bean.games.GameServer;
 import com.anbang.qipai.game.plan.bean.games.IllegalGameLawsException;
 import com.anbang.qipai.game.plan.bean.members.Member;
 import com.anbang.qipai.game.plan.bean.members.MemberRights;
 import com.anbang.qipai.game.plan.bean.members.NotVIPMemberException;
 import com.anbang.qipai.game.plan.dao.GameLawDao;
+import com.anbang.qipai.game.plan.dao.GameServerDao;
 import com.anbang.qipai.game.plan.dao.MemberDao;
 
 @Component
@@ -24,6 +26,9 @@ public class GameService {
 
 	@Autowired
 	private MemberDao memberDao;
+
+	@Autowired
+	private GameServerDao gameServerDao;
 
 	public GameLaw findGameLaw(Game game, String lawName) {
 		return gameLawDao.findByGameAndName(game, lawName);
@@ -72,6 +77,14 @@ public class GameService {
 
 		return gameRoom;
 
+	}
+
+	public void onlineServer(GameServer gameServer) {
+		gameServerDao.save(gameServer);
+	}
+
+	public void offlineServer(String gameServerId) {
+		gameServerDao.remove(gameServerId);
 	}
 
 }
