@@ -21,4 +21,7 @@ public interface QipaiMembersRomoteService {
 
 	@RequestMapping(value = "/member/info")
 	public MemberRemoteVO member_info(@RequestParam("memberId") String memberId);
+
+	@RequestMapping(value = "/clubcard/showclubcard")
+	public CommonRemoteVO clubcard_showclubcard();
 }
