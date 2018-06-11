@@ -11,9 +11,9 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.anbang.qipai.game.msg.service.MailMsgService;
-import com.anbang.qipai.game.plan.bean.mail.MailState;
 import com.anbang.qipai.game.plan.bean.mail.SystemMail;
 import com.anbang.qipai.game.plan.service.MailService;
+import com.anbang.qipai.game.plan.service.MemberAuthService;
 import com.anbang.qipai.game.web.vo.CommonVO;
 
 import net.sf.json.JSONObject;
@@ -28,6 +28,9 @@ public class MailController {
 	
 	@Autowired
 	private MailService mailService;
+	
+	@Autowired
+	private MemberAuthService memberAuthService;
 	
 	@Autowired
 	private MailMsgService mailMsgService;
@@ -50,7 +53,6 @@ public class MailController {
 		mails.setIntegral(mail1.getIntegral());
 		mails.setNumber(mail1.getNumber());
 		mails.setVipcard(mail1.getVipcard());
-		logger.info("66666666666"+mails.getIntegral()+mails.getNumber()+mails.getVipcard());
 		mails.setCreatetime(System.currentTimeMillis());
 		
 		SystemMail mail2 = mailService.addmail(mails);
@@ -66,8 +68,41 @@ public class MailController {
 	 * **/
 	@RequestMapping("/querymail")
 	@ResponseBody
-	public Map<String,Object> querymail(String memberid) throws ParseException{
-		return mailService.findall(memberid); 
+	public CommonVO querymail(String token) throws ParseException{
+		CommonVO vo = new CommonVO();
+		String memberId = memberAuthService.getMemberIdBySessionId(token);
+		if (memberId == null) {
+			vo.setSuccess(false);
+			vo.setMsg("invalid token");
+			return vo;
+		}
+		Map<String,Object> map =  mailService.findall(memberId); 
+		vo.setData(map);
+		return vo;
+	}
+	
+	/**用户点击单个邮件，查看邮件详情
+	 * @param memberid 会员id
+	 * @param mailid 邮件id
+	 * **/
+	@RequestMapping("/findonemail")
+	@ResponseBody
+	public CommonVO findonemail(String token,String mailid){
+		CommonVO vo = new CommonVO();
+		String memberId = memberAuthService.getMemberIdBySessionId(token);
+		if (memberId == null) {
+			vo.setSuccess(false);
+			vo.setMsg("invalid token");
+			return vo;
+		}
+		if(mailid == null) {
+			vo.setSuccess(false);
+			vo.setMsg("invalid mailid");
+			return vo;
+		}
+		Map<String,Object> map = mailService.findonemail(memberId, mailid);
+		vo.setData(map);
+		return vo;
 	}
 	
 	/**用户进入游戏大厅，是否有未读邮件，有未读显示小红点
@@ -75,28 +110,41 @@ public class MailController {
 	 * **/
 	@RequestMapping("/redmail")
 	@ResponseBody
-	public Map<String,Object> redmail(String memberid){
-		return mailService.redmail(memberid);
+	public CommonVO redmail(String token){
+		CommonVO vo = new CommonVO();
+		String memberId = memberAuthService.getMemberIdBySessionId(token);
+		if (memberId == null) {
+			vo.setSuccess(false);
+			vo.setMsg("invalid token");
+			return vo;
+		}
+		Map<String,Object> map = mailService.redmail(memberId);
+		vo.setData(map);
+		return vo;
 	}
 	
-	/**用户点开邮件，改变邮件状态
+	/**是否领取福利
 	 * @param memberid 会员id
 	 * @param mailid 邮件id
 	 * @param receive 是否领取
 	 * **/
 	@RequestMapping("/updatemailstate")
 	@ResponseBody
-	public String changestate(String memberid,String mailid,String receive) {
-		if(memberid != null && mailid !=null) 
-		{
-			MailState mailstate = mailService.changestate(memberid, mailid, receive);
-			if(mailstate!=null) {
-				return "success";
-			}
-			return "file";
+	public CommonVO changestate(String token,String mailid,String receive) {
+		CommonVO vo = new CommonVO();
+		String memberId = memberAuthService.getMemberIdBySessionId(token);
+		if (memberId == null) {
+			vo.setSuccess(false);
+			vo.setMsg("invalid token");
+			return vo;
 		}
-	return "file";
-		
+		if(mailid == null) {
+			vo.setSuccess(false);
+			vo.setMsg("invalid mailid");
+			return vo;
+		}
+		vo = mailService.changestate(memberId, mailid, receive);
+			return vo;
 	}
 	
 	/**所有邮件设为已读
@@ -104,12 +152,16 @@ public class MailController {
 	 * **/
 	@RequestMapping("/updateallmail")
 	@ResponseBody
-	public String updateallmail(String memberid) {
-		long count = mailService.findallmembermail(memberid);
-		if(count != 0) {
-			return "success";
+	public CommonVO updateallmail(String token) {
+		CommonVO vo = new CommonVO();
+		String memberId = memberAuthService.getMemberIdBySessionId(token);
+		if (memberId == null) {
+			vo.setSuccess(false);
+			vo.setMsg("invalid token");
+			return vo;
 		}
-		return "file";
+		 mailService.findallmembermail(memberId);
+		 return new CommonVO();
 	}
 	
 	/**删除所有已读
@@ -117,12 +169,16 @@ public class MailController {
 	 * **/
 	@RequestMapping("/deleteallmail")
 	@ResponseBody
-	public String deleteallmail(String memberid) {
-		long count = mailService.deleteallmail(memberid);
-		if(count != 0) {
-			return "success";
+	public CommonVO deleteallmail(String token) {
+		CommonVO vo = new CommonVO();
+		String memberId = memberAuthService.getMemberIdBySessionId(token);
+		if (memberId == null) {
+			vo.setSuccess(false);
+			vo.setMsg("invalid token");
+			return vo;
 		}
-		return "file";
+		mailService.deleteallmail(memberId);
+		return new CommonVO();
 	}
 	
 	

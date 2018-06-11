@@ -19,16 +19,13 @@ public interface MailDao {
 	 * **/
 	
 	List<MailState> findall(String memberid);
-	/**删除邮件
-	 * @param id 邮件编号
-	 * **/
+
 	/**根据邮件id查询邮件时间查询多少天前的邮件
 	 * @param mailid 邮件编号
+	 * @return 返回的对象
 	 * **/
 	SystemMail findByIdtime(String mailid,long newtime);
 	
-	
-	void deletemail(Integer id);
 	/**添加系统邮件
 	 * @param mail 邮件内容
 	 * @return 查询结果
@@ -74,7 +71,7 @@ public interface MailDao {
 	/**修改单个会员单个邮件的状态
 	 * @param mailstate 邮件状态对象
 	 * **/
-	MailState updatemembermail(MailState mailstate);
+	void updatemembermail(MailState mailstate);
 	
 	/**查询一个会员的所有邮件
 	 * @param memberid 会员编号
