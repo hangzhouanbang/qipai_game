@@ -11,6 +11,7 @@ public class LawsMutexGroup {
 	private String id;
 	private Game game;
 	private String name;// 拼音缩写，用于游戏内唯一标示
+	private String desc;
 
 	public String getId() {
 		return id;
@@ -34,6 +35,14 @@ public class LawsMutexGroup {
 
 	public void setName(String name) {
 		this.name = name;
+	}
+
+	public String getDesc() {
+		return desc;
+	}
+
+	public void setDesc(String desc) {
+		this.desc = desc;
 	}
 
 }

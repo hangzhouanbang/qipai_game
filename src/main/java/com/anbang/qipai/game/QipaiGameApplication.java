@@ -36,12 +36,24 @@ public class QipaiGameApplication {
 
 	@Bean
 	public HttpClient httpClient() {
-		return new HttpClient();
+		HttpClient client = new HttpClient();
+		try {
+			client.start();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return client;
 	}
 
 	@Bean
 	public HttpClient sslHttpClient() {
-		return new HttpClient(new SslContextFactory());
+		HttpClient client = new HttpClient(new SslContextFactory());
+		try {
+			client.start();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return client;
 	}
 
 	@Bean
