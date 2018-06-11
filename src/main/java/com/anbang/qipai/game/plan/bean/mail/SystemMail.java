@@ -1,13 +1,11 @@
 package com.anbang.qipai.game.plan.bean.mail;
 
-import java.io.File;
-
 public class SystemMail {
 	private String id;//邮件id
 	
 	private String title;//邮件标题
 	
-	private File file;//邮件图片
+	private String file;//邮件图片文档
 	
 	private Long createtime;//生成时间
 	
@@ -34,11 +32,11 @@ public class SystemMail {
 		this.title = title;
 	}
 
-	public File getFile() {
+	public String getFile() {
 		return file;
 	}
 
-	public void setFile(File file) {
+	public void setFile(String file) {
 		this.file = file;
 	}
 

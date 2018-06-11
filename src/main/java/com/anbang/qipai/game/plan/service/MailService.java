@@ -91,15 +91,11 @@ public class MailService {
 		Map<String,Object> map = new HashMap<String,Object>();
 		 Member member = maildao.findMemberById(memberid);
 		 long newtime = conversionDate.cdate(member.getCreateTime(), 20);
-		 //未读未领
+		 List<SystemMail> lists = new ArrayList<>();
 		 List<SystemMail> wdwl = new ArrayList<>();
-		 //未读（不带附件）
 		 List<SystemMail> wd = new ArrayList<>();
-		 //已读未领
 		 List<SystemMail> ydwl = new ArrayList<>();
-		 //已读已领
 		 List<SystemMail> ydyl = new ArrayList<>();
-		 //已领（不带附件）
 		 List<SystemMail> yl = new ArrayList<>();
 		 List<MailState> list = maildao.findall(memberid);
 		 for (MailState mailState1 : list) {
@@ -118,11 +114,12 @@ public class MailService {
 				 }
 			 }
 		 	}
-		 map.put("wdwl",wdwl);
-		 map.put("wd",wd);
-		 map.put("ydwl",ydwl);
-		 map.put("ydyl",ydyl);
-		 map.put("yl",yl);
+		 lists.addAll(wdwl);
+		 lists.addAll(wd);
+		 lists.addAll(ydwl);
+		 lists.addAll(ydyl);
+		 lists.addAll(yl);
+		 map.put("lists",lists);
 	    return map;
 	}
 	

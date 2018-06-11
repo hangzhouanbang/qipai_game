@@ -71,6 +71,7 @@ public class MailController {
 	public CommonVO querymail(String token) throws ParseException{
 		CommonVO vo = new CommonVO();
 		String memberId = memberAuthService.getMemberIdBySessionId(token);
+		System.out.println(token);
 		if (memberId == null) {
 			vo.setSuccess(false);
 			vo.setMsg("invalid token");

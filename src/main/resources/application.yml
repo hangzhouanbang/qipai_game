@@ -34,6 +34,17 @@ spring:
                   ms: 5
                 batch:
                   size: 16384
+                  
+          mail:
+            producer:
+              configuration:
+                request:
+                  timeout:
+                    ms: 30000
+                linger:
+                  ms: 5
+                batch:
+                  size: 16384
 
       bindings:
         notice:
@@ -55,6 +66,14 @@ spring:
             concurrency: 1
             partitioned: false
           contentType: application/json
+          
+        mail:
+          destination: mail
+          group: qipai-game
+          consumer:
+            concurrency: 1
+            partitioned: false
+          contentType: application/jso
   
   application:
     name: qipai-game

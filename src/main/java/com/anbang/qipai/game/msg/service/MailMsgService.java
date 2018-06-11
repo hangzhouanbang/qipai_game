@@ -13,6 +13,7 @@ public class MailMsgService {
 	
 	@Autowired
 	private MailSource mailSource;
+	
 	public void createmail(SystemMail mail) {
 		CommonMO mo = new CommonMO();
 		mo.setMsg("newMail");
