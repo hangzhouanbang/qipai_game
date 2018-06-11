@@ -26,12 +26,11 @@ public class MongdbMailDao implements MailDao{
 	public List<MailState> findall(String memberid) {
 		Criteria criteria = new Criteria();
 		criteria.andOperator(Criteria.where("memberid").is(memberid));//多条件查询
-		Query query = new Query();
 		List<MailState> list = mongoTemplate.find(new Query(criteria),MailState.class);
 		return list;
 	}
-	/**根据邮件id查询邮件时间查询多少天前的邮件**/
 
+	/**根据邮件id查询邮件时间查询多少天前的邮件**/
 	@Override
 	public SystemMail findByIdtime(String mailid, long newtime) {
 		Criteria criteria = new Criteria();
@@ -48,10 +47,6 @@ public class MongdbMailDao implements MailDao{
 		return mail;
 	}
 
-	@Override
-	public void deletemail(Integer id) {
-		
-	}
 	/**返回第几个一万条数据
 	 * **/
 	@Override
@@ -99,9 +94,8 @@ public class MongdbMailDao implements MailDao{
 
 	/**修改哪个会员哪个邮件的状态**/
 	@Override
-	public MailState updatemembermail(MailState mailstate) {
+	public void updatemembermail(MailState mailstate) {
 		mongoTemplate.save(mailstate);
-		return mailstate;
 	}
 
 	/**查询一个会员的所有邮件
@@ -118,6 +112,7 @@ public class MongdbMailDao implements MailDao{
 	public SystemMail findmailById(String mailid) {
 		return mongoTemplate.findById(mailid,SystemMail.class);
 	}
+
 
 
 }

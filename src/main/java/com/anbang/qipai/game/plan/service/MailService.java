@@ -20,6 +20,7 @@ import com.anbang.qipai.game.plan.bean.mail.TrackPoint;
 import com.anbang.qipai.game.plan.bean.members.Member;
 import com.anbang.qipai.game.plan.dao.MailDao;
 import com.anbang.qipai.game.plan.date.ConversionDate;
+import com.anbang.qipai.game.web.vo.CommonVO;
 
 @Component
 public class MailService {
@@ -67,8 +68,21 @@ public class MailService {
 			}
 			page++;
 		}
-	
 	}
+	
+	/**用户点击单个邮件，查看详情
+	 * @param memberid 会员id
+	 * @param mailid 邮件id
+	 * **/
+	public Map<String,Object> findonemail(String memberid,String mailid){
+		Map<String,Object> map = new HashMap<String,Object>();
+		MailState mailstate = maildao.findmembermail(memberid, mailid);
+		SystemMail systemmail = maildao.findmailById(mailid);
+		map.put("mailstate", mailstate);
+		map.put("systemmail", systemmail);
+		return map;
+	}
+	
 	/**用户查看本身邮件
 	 * @param memberid 会员id
 	 * @throws ParseException 
@@ -76,20 +90,39 @@ public class MailService {
 	public Map<String,Object> findall(String memberid) throws ParseException{
 		Map<String,Object> map = new HashMap<String,Object>();
 		 Member member = maildao.findMemberById(memberid);
-		 logger.info("对象："+member.getId()+member.getRights());
-		 logger.info("时间1："+member.getCreateTime());
 		 long newtime = conversionDate.cdate(member.getCreateTime(), 20);
-		 logger.info("时间："+newtime);
-		 List<SystemMail> lists = new ArrayList<>();
+		 //未读未领
+		 List<SystemMail> wdwl = new ArrayList<>();
+		 //未读（不带附件）
+		 List<SystemMail> wd = new ArrayList<>();
+		 //已读未领
+		 List<SystemMail> ydwl = new ArrayList<>();
+		 //已读已领
+		 List<SystemMail> ydyl = new ArrayList<>();
+		 //已领（不带附件）
+		 List<SystemMail> yl = new ArrayList<>();
 		 List<MailState> list = maildao.findall(memberid);
 		 for (MailState mailState1 : list) {
-		 logger.info("会员的所有邮件id："+mailState1.getMailid());
-		 SystemMail sys = maildao.findByIdtime(mailState1.getMailid(), newtime);
-		 if(sys != null) {
-			 lists.add(sys);
-		 }
-		 }
-		 map.put("lists",lists);
+			 SystemMail sys = maildao.findByIdtime(mailState1.getMailid(), newtime);
+			 if(sys != null) {
+				 if(mailState1.getStatemail().equals("1") && mailState1.getReceive().equals("1")) {
+					 wdwl.add(sys);
+				 }else if(mailState1.getStatemail().equals("1") && mailState1.getReceive().equals("2")) {
+					 wd.add(sys);
+				 }else if(mailState1.getStatemail().equals("0") && mailState1.getReceive().equals("1")) {
+					 ydwl.add(sys);
+				 }else if(mailState1.getStatemail().equals("0") && mailState1.getReceive().equals("0")) {
+					 ydyl.add(sys);
+				 }else if(mailState1.getStatemail().equals("0") && mailState1.getReceive().equals("2")) {
+					 yl.add(sys);
+				 }
+			 }
+		 	}
+		 map.put("wdwl",wdwl);
+		 map.put("wd",wd);
+		 map.put("ydwl",ydwl);
+		 map.put("ydyl",ydyl);
+		 map.put("yl",yl);
 	    return map;
 	}
 	
@@ -120,42 +153,38 @@ public class MailService {
 	 *@param mailid 邮件id
 	 *@param receive 是否领取
 	 * **/
-	public MailState changestate(String memberid,String mailid,String receive) {
+	public CommonVO changestate(String memberid,String mailid,String receive) {
+		CommonVO vo = new CommonVO();
 		MailState mailstate = maildao.findmembermail(memberid, mailid);
 		mailstate.setStatemail("0");
 		if(receive!=null && !receive.equals("")) {
-			mailstate.setReceive(receive);
+			mailstate.setReceive("0");
 		}
-		return maildao.updatemembermail(mailstate);
+		maildao.updatemembermail(mailstate);
+		return vo;
 	}
 	
 	/**把一个用户的所有邮件设为已读
 	 * **/
-	public long findallmembermail(String memberid) {
+	public void findallmembermail(String memberid) {
 		List<MailState> list = maildao.findallmembermail(memberid);
-		long count = 0;
 		for (MailState mailState : list) {//循环把这个会员的所有邮件设为已读
 			mailState.setStatemail("0");
 			maildao.addmailstate(mailState);
-			count++;
 		}
-		return count;
 	}
 	
 	/**删除所有已读
 	 * @param memberid 会员id
 	 * **/
-	public long deleteallmail(String memberid) {
+	public void deleteallmail(String memberid) {
 		List<MailState> list = maildao.findallmembermail(memberid);
-		long count = 0;
 		for (MailState mailState : list) {
 			if(mailState.getStatemail().equals("0") && mailState.getReceive().equals("0") || mailState.getReceive().equals("2")) {
 				mailState.setDeletestate("0");
 			}
 			maildao.addmailstate(mailState);
-			count++;
 		}
-		return count;
 	}
 	
 }
