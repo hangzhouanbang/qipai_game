@@ -47,6 +47,14 @@ spring:
           contentType: application/json
           producer:
             partitionCount: 1
+            
+        members:
+          destination: members
+          group: qipai-game
+          consumer:
+            concurrency: 1
+            partitioned: false
+          contentType: application/json
   
   application:
     name: qipai-game

@@ -7,4 +7,8 @@ public interface GameLawDao {
 
 	GameLaw findByGameAndName(Game game, String name);
 
+	void save(GameLaw law);
+
+	void remove(String id);
+
 }

@@ -1,5 +1,7 @@
 package com.anbang.qipai.game.plan.dao.mongodb;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -21,6 +23,11 @@ public class MongodbGameServerDao implements GameServerDao {
 	@Override
 	public void remove(String id) {
 		repository.delete(id);
+	}
+
+	@Override
+	public List<GameServer> findAll() {
+		return repository.findAll();
 	}
 
 }

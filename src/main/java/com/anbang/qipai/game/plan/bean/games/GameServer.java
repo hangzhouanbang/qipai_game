@@ -12,6 +12,7 @@ public class GameServer {
 	private Game game;
 	private String name;
 	private String domainForHttp;
+	private int portForHttp;
 	private String wsUrl;
 
 	public String getId() {
@@ -44,6 +45,14 @@ public class GameServer {
 
 	public void setDomainForHttp(String domainForHttp) {
 		this.domainForHttp = domainForHttp;
+	}
+
+	public int getPortForHttp() {
+		return portForHttp;
+	}
+
+	public void setPortForHttp(int portForHttp) {
+		this.portForHttp = portForHttp;
 	}
 
 	public String getWsUrl() {

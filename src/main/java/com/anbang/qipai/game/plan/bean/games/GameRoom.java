@@ -18,7 +18,7 @@ public class GameRoom {
 	private boolean vip;
 	private int playersCount;
 	private int panCountPerJu;
-	private GameServerRoom serverRoom;
+	private ServerGame serverGame;
 	private int currentPanNum;
 	private long deadlineTime;
 
@@ -105,12 +105,12 @@ public class GameRoom {
 		this.panCountPerJu = panCountPerJu;
 	}
 
-	public GameServerRoom getServerRoom() {
-		return serverRoom;
+	public ServerGame getServerGame() {
+		return serverGame;
 	}
 
-	public void setServerRoom(GameServerRoom serverRoom) {
-		this.serverRoom = serverRoom;
+	public void setServerGame(ServerGame serverGame) {
+		this.serverGame = serverGame;
 	}
 
 	public int getCurrentPanNum() {

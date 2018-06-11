@@ -19,4 +19,14 @@ public class MongodbGameLawDao implements GameLawDao {
 		return repository.findOneByGameAndName(game, name);
 	}
 
+	@Override
+	public void save(GameLaw law) {
+		repository.save(law);
+	}
+
+	@Override
+	public void remove(String id) {
+		repository.delete(id);
+	}
+
 }
