@@ -1,6 +1,8 @@
 package com.anbang.qipai.game.web.controller;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.eclipse.jetty.client.HttpClient;
 import org.eclipse.jetty.client.api.ContentResponse;
@@ -11,9 +13,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.anbang.qipai.game.cqrs.c.domain.games.CanNotJoinMoreRoomsException;
 import com.anbang.qipai.game.cqrs.c.service.GameRoomCmdService;
 import com.anbang.qipai.game.msg.service.GameServerMsgService;
+import com.anbang.qipai.game.plan.bean.games.CanNotJoinMoreRoomsException;
 import com.anbang.qipai.game.plan.bean.games.Game;
 import com.anbang.qipai.game.plan.bean.games.GameRoom;
 import com.anbang.qipai.game.plan.bean.games.GameServer;
@@ -25,6 +27,8 @@ import com.anbang.qipai.game.plan.bean.members.NotVIPMemberException;
 import com.anbang.qipai.game.plan.service.GameService;
 import com.anbang.qipai.game.plan.service.MemberAuthService;
 import com.anbang.qipai.game.plan.service.MemberService;
+import com.anbang.qipai.game.remote.service.QipaiMembersRomoteService;
+import com.anbang.qipai.game.remote.vo.CommonRemoteVO;
 import com.anbang.qipai.game.web.fb.RamjLawsFB;
 import com.anbang.qipai.game.web.vo.CommonVO;
 import com.google.gson.Gson;
@@ -55,6 +59,9 @@ public class GamePlayController {
 	private GameServerMsgService gameServerMsgService;
 
 	@Autowired
+	private QipaiMembersRomoteService qipaiMembersRomoteService;
+
+	@Autowired
 	private HttpClient httpClient;
 
 	private Gson gson = new Gson();
@@ -75,9 +82,22 @@ public class GamePlayController {
 			vo.setMsg("invalid token");
 			return vo;
 		}
+		Member member = memberService.findMember(memberId);
+		MemberRights rights = member.getRights();
 
 		try {
 			GameRoom gameRoom = gameService.buildRamjGameRoom(memberId, lawNames);
+
+			// 普通会员开vip房扣金币
+			if (!member.isVip() && gameRoom.isVip()) {
+				int gold = rights.getPlanMemberCreateRoomDailyGoldPrice();
+				CommonRemoteVO rvo = qipaiMembersRomoteService.gold_withdraw(memberId, gold, "pay for create room");
+				if (!rvo.isSuccess()) {
+					vo.setSuccess(false);
+					vo.setMsg(rvo.getMsg());
+					return vo;
+				}
+			}
 
 			GameServer gameServer = gameRoom.getServerGame().getServer();
 			// 游戏服务器rpc，需要手动httpclientrpc
@@ -100,12 +120,14 @@ public class GamePlayController {
 				return vo;
 			}
 
-			Member member = memberService.findMember(memberId);
-			MemberRights rights = member.getRights();
-			String roomNo = gameRoomCmdService.createRoom(memberId, rights.getRoomsCount(), System.currentTimeMillis());
+			String roomNo = gameRoomCmdService.createRoom(memberId, System.currentTimeMillis());
 			gameRoom.setNo(roomNo);
 
-			gameService.saveGameRoom(gameRoom);
+			gameService.createGameRoom(gameRoom);
+
+			Map data = new HashMap();
+			data.put("serverGame", gameRoom.getServerGame());
+			vo.setData(data);
 			return vo;
 
 		} catch (IllegalGameLawsException e) {

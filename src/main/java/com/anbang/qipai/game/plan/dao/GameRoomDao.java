@@ -6,4 +6,6 @@ public interface GameRoomDao {
 
 	void save(GameRoom gameRoom);
 
+	int count(long startTimeForCreate, long endTimeForCreate, String createMemberId, boolean vip);
+
 }

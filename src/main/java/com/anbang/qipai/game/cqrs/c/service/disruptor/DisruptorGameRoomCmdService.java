@@ -3,7 +3,6 @@ package com.anbang.qipai.game.cqrs.c.service.disruptor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import com.anbang.qipai.game.cqrs.c.domain.games.CanNotJoinMoreRoomsException;
 import com.anbang.qipai.game.cqrs.c.service.GameRoomCmdService;
 import com.anbang.qipai.game.cqrs.c.service.impl.GameRoomCmdServiceImpl;
 import com.highto.framework.concurrent.DeferredResult;
@@ -16,22 +15,17 @@ public class DisruptorGameRoomCmdService extends DisruptorCmdServiceBase impleme
 	private GameRoomCmdServiceImpl gameRoomCmdServiceImpl;
 
 	@Override
-	public String createRoom(String memberId, Integer maxRooms, Long createTime) throws CanNotJoinMoreRoomsException {
-		CommonCommand cmd = new CommonCommand(GameRoomCmdServiceImpl.class.getName(), "createRoom", memberId, maxRooms,
+	public String createRoom(String memberId, Long createTime) {
+		CommonCommand cmd = new CommonCommand(GameRoomCmdServiceImpl.class.getName(), "createRoom", memberId,
 				createTime);
 		DeferredResult<String> result = publishEvent(disruptorFactory.getCoreCmdDisruptor(), cmd, () -> {
-			String roomNo = gameRoomCmdServiceImpl.createRoom(cmd.getParameter(), cmd.getParameter(),
-					cmd.getParameter());
+			String roomNo = gameRoomCmdServiceImpl.createRoom(cmd.getParameter(), cmd.getParameter());
 			return roomNo;
 		});
 		try {
 			return result.getResult();
 		} catch (Exception e) {
-			if (e instanceof CanNotJoinMoreRoomsException) {
-				throw (CanNotJoinMoreRoomsException) e;
-			} else {
-				throw new RuntimeException(e);
-			}
+			throw new RuntimeException(e);
 		}
 	}
 

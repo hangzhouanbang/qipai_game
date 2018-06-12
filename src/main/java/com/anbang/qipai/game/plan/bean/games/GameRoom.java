@@ -20,6 +20,7 @@ public class GameRoom {
 	private int panCountPerJu;
 	private ServerGame serverGame;
 	private int currentPanNum;
+	private String createMemberId;
 	private long createTime;
 	private long deadlineTime;
 
@@ -120,6 +121,14 @@ public class GameRoom {
 
 	public void setCurrentPanNum(int currentPanNum) {
 		this.currentPanNum = currentPanNum;
+	}
+
+	public String getCreateMemberId() {
+		return createMemberId;
+	}
+
+	public void setCreateMemberId(String createMemberId) {
+		this.createMemberId = createMemberId;
 	}
 
 	public long getCreateTime() {

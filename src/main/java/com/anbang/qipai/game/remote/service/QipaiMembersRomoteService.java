@@ -24,4 +24,9 @@ public interface QipaiMembersRomoteService {
 
 	@RequestMapping(value = "/clubcard/showclubcard")
 	public CommonRemoteVO clubcard_showclubcard();
+
+	@RequestMapping(value = "/gold/withdraw")
+	public CommonRemoteVO gold_withdraw(@RequestParam("memberId") String memberId, @RequestParam("amount") int amount,
+			@RequestParam("textSummary") String textSummary);
+
 }

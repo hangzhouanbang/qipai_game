@@ -1,18 +1,21 @@
 package com.anbang.qipai.game.plan.service;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Random;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import com.anbang.qipai.game.plan.bean.games.CanNotJoinMoreRoomsException;
 import com.anbang.qipai.game.plan.bean.games.Game;
 import com.anbang.qipai.game.plan.bean.games.GameLaw;
 import com.anbang.qipai.game.plan.bean.games.GameRoom;
 import com.anbang.qipai.game.plan.bean.games.GameServer;
 import com.anbang.qipai.game.plan.bean.games.IllegalGameLawsException;
 import com.anbang.qipai.game.plan.bean.games.LawsMutexGroup;
+import com.anbang.qipai.game.plan.bean.games.MemberGameRoom;
 import com.anbang.qipai.game.plan.bean.games.NoServerAvailableForGameException;
 import com.anbang.qipai.game.plan.bean.games.ServerGame;
 import com.anbang.qipai.game.plan.bean.members.Member;
@@ -23,6 +26,8 @@ import com.anbang.qipai.game.plan.dao.GameRoomDao;
 import com.anbang.qipai.game.plan.dao.GameServerDao;
 import com.anbang.qipai.game.plan.dao.LawsMutexGroupDao;
 import com.anbang.qipai.game.plan.dao.MemberDao;
+import com.anbang.qipai.game.plan.dao.MemberGameRoomDao;
+import com.anbang.qipai.game.util.TimeUtil;
 
 @Component
 public class GameService {
@@ -40,6 +45,9 @@ public class GameService {
 	private GameRoomDao gameRoomDao;
 
 	@Autowired
+	private MemberGameRoomDao memberGameRoomDao;
+
+	@Autowired
 	private LawsMutexGroupDao lawsMutexGroupDao;
 
 	public GameLaw findGameLaw(Game game, String lawName) {
@@ -49,8 +57,15 @@ public class GameService {
 	/**
 	 * 创建瑞安麻将房间
 	 */
-	public GameRoom buildRamjGameRoom(String memberId, List<String> lawNames)
-			throws IllegalGameLawsException, NotVIPMemberException, NoServerAvailableForGameException {
+	public GameRoom buildRamjGameRoom(String memberId, List<String> lawNames) throws IllegalGameLawsException,
+			NotVIPMemberException, NoServerAvailableForGameException, CanNotJoinMoreRoomsException {
+		Member member = memberDao.findById(memberId);
+		MemberRights rights = member.getRights();
+
+		int memberRoomsCount = memberGameRoomDao.count(memberId);
+		if (rights.getRoomsCount() <= memberRoomsCount) {
+			throw new CanNotJoinMoreRoomsException();
+		}
 
 		List<GameServer> allServers = gameServerDao.findAll();
 		if (allServers == null || allServers.isEmpty()) {
@@ -70,11 +85,15 @@ public class GameService {
 			throw new IllegalGameLawsException();
 		}
 		gameRoom.calculateVip();
-		Member member = memberDao.findById(memberId);
 		if (gameRoom.isVip() && !member.isVip()) {
-			throw new NotVIPMemberException();
+			Date d = new Date();
+			long startTime = TimeUtil.getDayStartTime(d);
+			long endTime = TimeUtil.getDayEndTime(d);
+			int todayCreateVipRoomsCount = gameRoomDao.count(startTime, endTime, memberId, true);
+			if (rights.getPlanMemberMaxCreateRoomDaily() <= todayCreateVipRoomsCount) {
+				throw new NotVIPMemberException();
+			}
 		}
-		MemberRights rights = member.getRights();
 		gameRoom.setCurrentPanNum(0);
 		gameRoom.setDeadlineTime(System.currentTimeMillis() + (rights.getRoomsAliveHours() * 60 * 60 * 1000));
 		gameRoom.setGame(Game.ruianMajiang);
@@ -98,6 +117,7 @@ public class GameService {
 			gameRoom.setPlayersCount(4);
 		}
 		gameRoom.setCreateTime(System.currentTimeMillis());
+		gameRoom.setCreateMemberId(memberId);
 		return gameRoom;
 
 	}
@@ -111,8 +131,13 @@ public class GameService {
 		gameServerDao.remove(gameServerId);
 	}
 
-	public void saveGameRoom(GameRoom gameRoom) {
+	public void createGameRoom(GameRoom gameRoom) {
 		gameRoomDao.save(gameRoom);
+		String createMemberId = gameRoom.getCreateMemberId();
+		MemberGameRoom mgr = new MemberGameRoom();
+		mgr.setGameRoom(gameRoom);
+		mgr.setMemberId(createMemberId);
+		memberGameRoomDao.save(mgr);
 	}
 
 	public void createGameLaw(Game game, String name, String desc, String mutexGroupId, boolean vip) {
