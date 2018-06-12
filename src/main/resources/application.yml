@@ -73,7 +73,7 @@ spring:
           consumer:
             concurrency: 1
             partitioned: false
-          contentType: application/jso
+          contentType: application/json
   
   application:
     name: qipai-game
