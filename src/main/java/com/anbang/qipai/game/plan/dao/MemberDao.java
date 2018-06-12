@@ -11,7 +11,8 @@ public interface MemberDao {
 
 	void updateRights(String memberId, MemberRights rights);
 
-	void updatePlanMembersRights(int memberRoomsCount, int memberRoomsAliveHours);
+	void updatePlanMembersRights(int memberRoomsCount, int memberRoomsAliveHours, int planMemberMaxCreateRoomDaily,
+			int planMemberCreateRoomDailyGoldPrice);
 
 	void updateVipMembersRights(int memberRoomsCount, int memberRoomsAliveHours);
 

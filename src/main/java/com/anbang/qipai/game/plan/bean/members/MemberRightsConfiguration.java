@@ -18,6 +18,12 @@ public class MemberRightsConfiguration {
 	private int planMemberRoomsAliveHours;
 	private int vipMemberRoomsAliveHours;
 
+	// 普通会员每日开房(vip房)上限
+	private int planMemberMaxCreateRoomDaily;
+
+	// 普通会员每日开房(vip房)金币价格
+	private int planMemberCreateRoomDailyGoldPrice;
+
 	public String getId() {
 		return id;
 	}
@@ -56,6 +62,22 @@ public class MemberRightsConfiguration {
 
 	public void setVipMemberRoomsAliveHours(int vipMemberRoomsAliveHours) {
 		this.vipMemberRoomsAliveHours = vipMemberRoomsAliveHours;
+	}
+
+	public int getPlanMemberMaxCreateRoomDaily() {
+		return planMemberMaxCreateRoomDaily;
+	}
+
+	public void setPlanMemberMaxCreateRoomDaily(int planMemberMaxCreateRoomDaily) {
+		this.planMemberMaxCreateRoomDaily = planMemberMaxCreateRoomDaily;
+	}
+
+	public int getPlanMemberCreateRoomDailyGoldPrice() {
+		return planMemberCreateRoomDailyGoldPrice;
+	}
+
+	public void setPlanMemberCreateRoomDailyGoldPrice(int planMemberCreateRoomDailyGoldPrice) {
+		this.planMemberCreateRoomDailyGoldPrice = planMemberCreateRoomDailyGoldPrice;
 	}
 
 }

@@ -14,6 +14,7 @@ public class GameServer {
 	private String domainForHttp;
 	private int portForHttp;
 	private String wsUrl;
+	private long onlineTime;
 
 	public String getId() {
 		return id;
@@ -61,6 +62,14 @@ public class GameServer {
 
 	public void setWsUrl(String wsUrl) {
 		this.wsUrl = wsUrl;
+	}
+
+	public long getOnlineTime() {
+		return onlineTime;
+	}
+
+	public void setOnlineTime(long onlineTime) {
+		this.onlineTime = onlineTime;
 	}
 
 }

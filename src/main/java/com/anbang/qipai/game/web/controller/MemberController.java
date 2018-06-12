@@ -17,9 +17,11 @@ public class MemberController {
 
 	@RequestMapping("/plan_rights_conf")
 	@ResponseBody
-	public CommonVO planrightsconf(int memberRoomsCount, int memberRoomsAliveHours) {
+	public CommonVO planrightsconf(int memberRoomsCount, int memberRoomsAliveHours, int planMemberMaxCreateRoomDaily,
+			int planMemberCreateRoomDailyGoldPrice) {
 		CommonVO vo = new CommonVO();
-		memberService.setPlanMembersRights(memberRoomsCount, memberRoomsAliveHours);
+		memberService.setPlanMembersRights(memberRoomsCount, memberRoomsAliveHours, planMemberMaxCreateRoomDaily,
+				planMemberCreateRoomDailyGoldPrice);
 		return vo;
 	}
 

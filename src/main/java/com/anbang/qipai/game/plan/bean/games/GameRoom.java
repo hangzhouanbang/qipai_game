@@ -20,6 +20,7 @@ public class GameRoom {
 	private int panCountPerJu;
 	private ServerGame serverGame;
 	private int currentPanNum;
+	private long createTime;
 	private long deadlineTime;
 
 	public void calculateVip() {
@@ -119,6 +120,14 @@ public class GameRoom {
 
 	public void setCurrentPanNum(int currentPanNum) {
 		this.currentPanNum = currentPanNum;
+	}
+
+	public long getCreateTime() {
+		return createTime;
+	}
+
+	public void setCreateTime(long createTime) {
+		this.createTime = createTime;
 	}
 
 	public long getDeadlineTime() {

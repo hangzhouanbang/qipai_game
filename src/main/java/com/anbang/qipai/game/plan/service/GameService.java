@@ -97,12 +97,13 @@ public class GameService {
 		} else {
 			gameRoom.setPlayersCount(4);
 		}
-
+		gameRoom.setCreateTime(System.currentTimeMillis());
 		return gameRoom;
 
 	}
 
 	public void onlineServer(GameServer gameServer) {
+		gameServer.setOnlineTime(System.currentTimeMillis());
 		gameServerDao.save(gameServer);
 	}
 
