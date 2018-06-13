@@ -27,7 +27,7 @@ public class QipaiGameApplication {
 
 	@Autowired
 	private SnapshotJsonUtil snapshotJsonUtil;
-
+	
 	@Autowired
 	private ApplicationContext applicationContext;
 

@@ -5,6 +5,8 @@ public class SystemMail {
 	
 	private String title;//邮件标题
 	
+	private String adminname;//管理员名称
+	
 	private String file;//邮件图片文档
 	
 	private Long createtime;//生成时间
@@ -72,7 +74,15 @@ public class SystemMail {
 		this.vipcard = vipcard;
 	}
 
+	public String getAdminname() {
+		return adminname;
+	}
 
+	public void setAdminname(String adminname) {
+		this.adminname = adminname;
+	}
+
+	
 
 
 	

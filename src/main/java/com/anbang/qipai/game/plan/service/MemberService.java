@@ -27,7 +27,7 @@ public class MemberService {
 	}
 
 	public void setPlanMembersRights(int memberRoomsCount, int memberRoomsAliveHours, int planMemberMaxCreateRoomDaily,
-			int planMemberCreateRoomDailyGoldPrice) {
+			int planMemberCreateRoomDailyGoldPrice,int planMemberaddRoomDailyGoldPrice) {
 		MemberRightsConfiguration mrc = memberRightsConfigurationDao.find();
 		if (mrc == null) {
 			mrc = new MemberRightsConfiguration();
@@ -36,12 +36,13 @@ public class MemberService {
 			mrc.setPlanMemberRoomsCount(memberRoomsCount);
 			mrc.setPlanMemberMaxCreateRoomDaily(planMemberMaxCreateRoomDaily);
 			mrc.setPlanMemberCreateRoomDailyGoldPrice(planMemberCreateRoomDailyGoldPrice);
+			mrc.setPlanMemberaddRoomDailyGoldPrice(planMemberaddRoomDailyGoldPrice);
 			memberRightsConfigurationDao.save(mrc);
 		} else {
 			memberRightsConfigurationDao.setPlanMembersRights(memberRoomsCount, memberRoomsAliveHours);
 		}
 		memberDao.updatePlanMembersRights(memberRoomsCount, memberRoomsAliveHours, planMemberMaxCreateRoomDaily,
-				planMemberCreateRoomDailyGoldPrice);
+				planMemberCreateRoomDailyGoldPrice,planMemberaddRoomDailyGoldPrice);
 	}
 
 	public void setVipMembersRights(int memberRoomsCount, int memberRoomsAliveHours) {

@@ -12,7 +12,7 @@ public interface MemberDao {
 	void updateRights(String memberId, MemberRights rights);
 
 	void updatePlanMembersRights(int memberRoomsCount, int memberRoomsAliveHours, int planMemberMaxCreateRoomDaily,
-			int planMemberCreateRoomDailyGoldPrice);
+			int planMemberCreateRoomDailyGoldPrice,int planMemberaddRoomDailyGoldPrice);
 
 	void updateVipMembersRights(int memberRoomsCount, int memberRoomsAliveHours);
 

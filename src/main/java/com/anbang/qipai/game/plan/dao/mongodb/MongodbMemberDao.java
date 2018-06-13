@@ -39,12 +39,13 @@ public class MongodbMemberDao implements MemberDao {
 
 	@Override
 	public void updatePlanMembersRights(int memberRoomsCount, int memberRoomsAliveHours,
-			int planMemberMaxCreateRoomDaily, int planMemberCreateRoomDailyGoldPrice) {
+			int planMemberMaxCreateRoomDaily, int planMemberCreateRoomDailyGoldPrice,int planMemberaddRoomDailyGoldPrice) {
 		mongoTemplate.updateMulti(new Query(Criteria.where("vip").is(false)),
 				new Update().set("rights.memberRoomsCount", memberRoomsCount)
 						.set("rights.memberRoomsAliveHours", memberRoomsAliveHours)
 						.set("rights.planMemberMaxCreateRoomDaily", planMemberMaxCreateRoomDaily)
-						.set("rights.planMemberCreateRoomDailyGoldPrice", planMemberCreateRoomDailyGoldPrice),
+						.set("rights.planMemberCreateRoomDailyGoldPrice", planMemberCreateRoomDailyGoldPrice)
+						.set("rights.planMemberaddRoomDailyGoldPrice", planMemberaddRoomDailyGoldPrice),
 				Member.class);
 	}
 

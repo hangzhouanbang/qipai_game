@@ -46,8 +46,9 @@ public class MailController {
 	public CommonVO addmail(String mail) {
 		JSONObject json = JSONObject.fromObject(mail);
 		SystemMail mail1 = (SystemMail) JSONObject.toBean(json, SystemMail.class);
-		
+		logger.info("管理员名称"+mail1.getAdminname());
 		SystemMail mails = new SystemMail();
+		mails.setAdminname(mail1.getAdminname());
 		mails.setTitle(mail1.getTitle());
 		mails.setFile(mail1.getFile());
 		mails.setIntegral(mail1.getIntegral());
@@ -56,6 +57,7 @@ public class MailController {
 		mails.setCreatetime(System.currentTimeMillis());
 		
 		SystemMail mail2 = mailService.addmail(mails);
+		logger.info("管理员id"+mail2.getId());
 		mailMsgService.createmail(mail2);
 		//给会员发送邮件
 		mailService.pagingfind(mail2.getId());
