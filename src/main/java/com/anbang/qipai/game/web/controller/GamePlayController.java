@@ -104,16 +104,19 @@ public class GamePlayController {
 			RamjLawsFB fb = new RamjLawsFB(lawNames);
 			Request req = httpClient.newRequest(
 					"http://" + gameServer.getDomainForHttp() + ":" + gameServer.getPortForHttp() + "/game/newgame");
+			req.param("playerId", memberId);
 			req.param("difen", fb.getDifen());
 			req.param("taishu", fb.getTaishu());
 			req.param("panshu", fb.getPanshu());
 			req.param("renshu", fb.getRenshu());
 			req.param("dapao", fb.getDapao());
+			Map resData;
 			try {
 				ContentResponse res = req.send();
 				String resJson = new String(res.getContent());
 				CommonVO resVo = gson.fromJson(resJson, CommonVO.class);
-				gameRoom.getServerGame().setGameId((String) resVo.getData());
+				resData = (Map) resVo.getData();
+				gameRoom.getServerGame().setGameId((String) resData.get("gameId"));
 			} catch (Exception e) {
 				vo.setSuccess(false);
 				vo.setMsg("SysException");
@@ -126,7 +129,11 @@ public class GamePlayController {
 			gameService.createGameRoom(gameRoom);
 
 			Map data = new HashMap();
-			data.put("serverGame", gameRoom.getServerGame());
+			data.put("httpDomain", gameRoom.getServerGame().getServer().getDomainForHttp());
+			data.put("httpPort", gameRoom.getServerGame().getServer().getPortForHttp());
+			data.put("wsUrl", gameRoom.getServerGame().getServer().getWsUrl());
+			data.put("gameId", gameRoom.getServerGame().getGameId());
+			data.put("token", resData.get("token"));
 			vo.setData(data);
 			return vo;
 
