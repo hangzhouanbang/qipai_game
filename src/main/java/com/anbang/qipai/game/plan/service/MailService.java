@@ -49,16 +49,14 @@ public class MailService {
 			Pageable pageable= new PageRequest(page-1, size);
 			List<Member> list = maildao.pagingfind(query,pageable);
 			for (Member member : list) {//分页查询后的会员添加邮件记录
-				logger.info("id:"+member.getId()+i+page);
 				MailState mailstate = new MailState();
-				mailstate.setMailid(mailid);
+				mailstate.setMailid(systemmail.getId());
 				mailstate.setMemberid(member.getId());
 				if(systemmail.getNumber() == 0 && systemmail.getIntegral() == 0 && systemmail.getVipcard() == 0) {
 					mailstate.setReceive("2");
 				}else {
 					mailstate.setReceive("1");
 				}
-				logger.info("奖励是否为空："+systemmail.getNumber()+systemmail.getVipcard()+systemmail.getIntegral());
 				mailstate.setStatemail("1");
 				mailstate.setDeletestate("1");
 				maildao.addmailstate(mailstate);

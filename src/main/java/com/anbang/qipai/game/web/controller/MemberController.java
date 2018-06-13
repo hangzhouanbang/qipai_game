@@ -5,6 +5,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.anbang.qipai.game.msg.service.MemberRightsConfigurationMsgService;
+import com.anbang.qipai.game.plan.bean.members.MemberRightsConfiguration;
 import com.anbang.qipai.game.plan.service.MemberService;
 import com.anbang.qipai.game.web.vo.CommonVO;
 
@@ -14,23 +16,27 @@ public class MemberController {
 
 	@Autowired
 	private MemberService memberService;
+	
+	@Autowired
+	private MemberRightsConfigurationMsgService memberRightsConfigurationMsgService;
 
 	@RequestMapping("/plan_rights_conf")
 	@ResponseBody
-	public CommonVO planrightsconf(int memberRoomsCount, int memberRoomsAliveHours, int planMemberMaxCreateRoomDaily,
+	public CommonVO planrightsconf(int planMemberRoomsCount, int planMemberRoomsAliveHours, int planMemberMaxCreateRoomDaily,
 			int planMemberCreateRoomDailyGoldPrice,int planMemberaddRoomDailyGoldPrice) {
 		CommonVO vo = new CommonVO();
-		System.out.println("----------:"+memberRoomsCount+memberRoomsAliveHours+planMemberMaxCreateRoomDaily+planMemberCreateRoomDailyGoldPrice+planMemberaddRoomDailyGoldPrice);
-		memberService.setPlanMembersRights(memberRoomsCount, memberRoomsAliveHours, planMemberMaxCreateRoomDaily,
+		memberService.setPlanMembersRights(planMemberRoomsCount, planMemberRoomsAliveHours, planMemberMaxCreateRoomDaily,
 				planMemberCreateRoomDailyGoldPrice,planMemberaddRoomDailyGoldPrice);
+		MemberRightsConfiguration memberRightsConfiguration = memberService.findMemberRightsById();
+		memberRightsConfigurationMsgService.createMemberRights(memberRightsConfiguration);
 		return vo;
 	}
 
 	@RequestMapping("/vip_rights_conf")
 	@ResponseBody
-	public CommonVO viprightsconf(int memberRoomsCount, int memberRoomsAliveHours) {
+	public CommonVO viprightsconf(int vipMemberRoomsCount, int vipMemberRoomsAliveHours) {
 		CommonVO vo = new CommonVO();
-		memberService.setVipMembersRights(memberRoomsCount, memberRoomsAliveHours);
+		memberService.setVipMembersRights(vipMemberRoomsCount, vipMemberRoomsAliveHours);
 		return vo;
 	}
 

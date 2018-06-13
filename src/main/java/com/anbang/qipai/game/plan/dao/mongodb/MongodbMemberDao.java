@@ -9,6 +9,7 @@ import org.springframework.stereotype.Component;
 
 import com.anbang.qipai.game.plan.bean.members.Member;
 import com.anbang.qipai.game.plan.bean.members.MemberRights;
+import com.anbang.qipai.game.plan.bean.members.MemberRightsConfiguration;
 import com.anbang.qipai.game.plan.dao.MemberDao;
 import com.anbang.qipai.game.plan.dao.mongodb.repository.MemberRepository;
 
@@ -55,5 +56,10 @@ public class MongodbMemberDao implements MemberDao {
 				new Update().set("rights.memberRoomsCount", memberRoomsCount).set("rights.memberRoomsAliveHours",
 						memberRoomsAliveHours),
 				Member.class);
+	}
+
+	@Override
+	public MemberRightsConfiguration findMemberRightsById() {
+		return mongoTemplate.findById("1", MemberRightsConfiguration.class);
 	}
 }

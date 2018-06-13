@@ -9,7 +9,7 @@ import com.anbang.qipai.game.msg.msjobj.CommonMO;
 import com.anbang.qipai.game.plan.bean.members.MemberRightsConfiguration;
 
 @EnableBinding(MemberRightsConfigurationSource.class)
-public class MemberRightsConfigurationService {
+public class MemberRightsConfigurationMsgService {
 
 	@Autowired
 	private MemberRightsConfigurationSource memberRightsConfigurationSource;

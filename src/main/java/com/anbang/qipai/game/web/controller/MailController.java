@@ -55,12 +55,11 @@ public class MailController {
 		mails.setNumber(mail1.getNumber());
 		mails.setVipcard(mail1.getVipcard());
 		mails.setCreatetime(System.currentTimeMillis());
-		
+		mails.setStatus(mail1.getStatus());
 		SystemMail mail2 = mailService.addmail(mails);
-		logger.info("管理员id"+mail2.getId());
-		mailMsgService.createmail(mail2);
 		//给会员发送邮件
 		mailService.pagingfind(mail2.getId());
+		mailMsgService.createmail(mail2);
 		return new CommonVO();
 	}
 	

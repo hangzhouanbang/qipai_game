@@ -25,38 +25,42 @@ public class MemberService {
 	public void addMember(Member member) {
 		memberDao.save(member);
 	}
+	
+	public MemberRightsConfiguration findMemberRightsById() {
+		return memberDao.findMemberRightsById();
+	}
 
-	public void setPlanMembersRights(int memberRoomsCount, int memberRoomsAliveHours, int planMemberMaxCreateRoomDaily,
+	public void setPlanMembersRights(int planmemberRoomsCount, int planMemberRoomsAliveHours, int planMemberMaxCreateRoomDaily,
 			int planMemberCreateRoomDailyGoldPrice,int planMemberaddRoomDailyGoldPrice) {
 		MemberRightsConfiguration mrc = memberRightsConfigurationDao.find();
 		if (mrc == null) {
 			mrc = new MemberRightsConfiguration();
 			mrc.setId("1");
-			mrc.setPlanMemberRoomsAliveHours(memberRoomsAliveHours);
-			mrc.setPlanMemberRoomsCount(memberRoomsCount);
+			mrc.setPlanMemberRoomsAliveHours(planMemberRoomsAliveHours);
+			mrc.setPlanMemberRoomsCount(planmemberRoomsCount);
 			mrc.setPlanMemberMaxCreateRoomDaily(planMemberMaxCreateRoomDaily);
 			mrc.setPlanMemberCreateRoomDailyGoldPrice(planMemberCreateRoomDailyGoldPrice);
 			mrc.setPlanMemberaddRoomDailyGoldPrice(planMemberaddRoomDailyGoldPrice);
 			memberRightsConfigurationDao.save(mrc);
 		} else {
-			memberRightsConfigurationDao.setPlanMembersRights(memberRoomsCount, memberRoomsAliveHours);
+			memberRightsConfigurationDao.setPlanMembersRights(planmemberRoomsCount, planMemberRoomsAliveHours);
 		}
-		memberDao.updatePlanMembersRights(memberRoomsCount, memberRoomsAliveHours, planMemberMaxCreateRoomDaily,
+		memberDao.updatePlanMembersRights(planmemberRoomsCount, planMemberRoomsAliveHours, planMemberMaxCreateRoomDaily,
 				planMemberCreateRoomDailyGoldPrice,planMemberaddRoomDailyGoldPrice);
 	}
 
-	public void setVipMembersRights(int memberRoomsCount, int memberRoomsAliveHours) {
+	public void setVipMembersRights(int vipMemberRoomsCount, int vipMemberRoomsAliveHours) {
 		MemberRightsConfiguration mrc = memberRightsConfigurationDao.find();
 		if (mrc == null) {
 			mrc = new MemberRightsConfiguration();
 			mrc.setId("1");
-			mrc.setVipMemberRoomsAliveHours(memberRoomsAliveHours);
-			mrc.setVipMemberRoomsCount(memberRoomsCount);
+			mrc.setVipMemberRoomsAliveHours(vipMemberRoomsAliveHours);
+			mrc.setVipMemberRoomsCount(vipMemberRoomsCount);
 			memberRightsConfigurationDao.save(mrc);
 		} else {
-			memberRightsConfigurationDao.setVipMembersRights(memberRoomsCount, memberRoomsAliveHours);
+			memberRightsConfigurationDao.setVipMembersRights(vipMemberRoomsCount, vipMemberRoomsAliveHours);
 		}
-		memberDao.updateVipMembersRights(memberRoomsCount, memberRoomsAliveHours);
+		memberDao.updateVipMembersRights(vipMemberRoomsCount, vipMemberRoomsAliveHours);
 	}
 
 	public void updateMemberRights(String memberId) {

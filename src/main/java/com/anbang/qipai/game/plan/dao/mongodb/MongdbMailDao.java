@@ -67,7 +67,7 @@ public class MongdbMailDao implements MailDao{
 	 * **/
 	@Override
 	public void addmailstate(MailState mailstate) {
-		mongoTemplate.save(mailstate);
+		mongoTemplate.insert(mailstate);
 	}
 
 	/**根据会员id查询会员注册时间
