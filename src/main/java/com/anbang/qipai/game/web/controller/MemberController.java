@@ -37,6 +37,8 @@ public class MemberController {
 	public CommonVO viprightsconf(int vipMemberRoomsCount, int vipMemberRoomsAliveHours) {
 		CommonVO vo = new CommonVO();
 		memberService.setVipMembersRights(vipMemberRoomsCount, vipMemberRoomsAliveHours);
+		MemberRightsConfiguration memberRightsConfiguration = memberService.findMemberRightsById();
+		memberRightsConfigurationMsgService.createMemberRights(memberRightsConfiguration);
 		return vo;
 	}
 

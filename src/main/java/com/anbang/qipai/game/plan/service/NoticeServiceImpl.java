@@ -12,11 +12,13 @@ public class NoticeServiceImpl {
 	@Autowired
 	private NoticeDao noticeDao;
 
-	public void addNotice(String notice) {
+	public void addNotice(String notice,String place,String adminname) {
 		Notices notices = new Notices();
 		notices.setId("1");
 		notices.setState(1);
+		notices.setPlace(place);
 		notices.setNotice(notice);
+		notices.setAdminname(adminname);
 		noticeDao.addNotice(notices);
 	}
 

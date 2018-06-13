@@ -34,16 +34,28 @@ public class NoticeCtrl {
 	 **/
 	@RequestMapping("/addnotice")
 	@ResponseBody
-	public CommonVO addNotice(String notice) {
-		noticeService.addNotice(notice);
+	public CommonVO addNotice(String notice,String place,String adminname) {
+		noticeService.addNotice(notice,place,adminname);
 		//发送消息
 		Notices notices = noticeService.findPublicNotice();
 		Notices notices1 = new Notices();
+		notices1.setPlace(notices.getPlace());
 		notices1.setNotice(notices.getNotice());
 		notices1.setState(notices.getState());
+		notices1.setAdminname(notices.getAdminname());
 		noticeMsgService.createNotice(notices1);
 		wsNotifier.publishSysNotice(notice);
 		return new CommonVO();
-
 	}
+	
+	/**
+	 * 修改系统公告状态
+	 * 
+	 **/
+	@RequestMapping("/updateNotice")
+	@ResponseBody
+	public CommonVO updateNotice() {
+		return new CommonVO();
+	}
+	
 }

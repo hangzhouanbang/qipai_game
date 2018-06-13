@@ -76,6 +76,8 @@ public class MemberService {
 				rights.setRoomsAliveHours(mrc.getPlanMemberRoomsAliveHours());
 				rights.setPlanMemberCreateRoomDailyGoldPrice(mrc.getPlanMemberCreateRoomDailyGoldPrice());
 				rights.setPlanMemberMaxCreateRoomDaily(mrc.getPlanMemberMaxCreateRoomDaily());
+				rights.setPlanMemberCreateRoomDailyGoldPrice(mrc.getPlanMemberCreateRoomDailyGoldPrice());
+				rights.setPlanMemberaddRoomDailyGoldPrice(mrc.getPlanMemberaddRoomDailyGoldPrice());
 			}
 			memberDao.updateRights(memberId, rights);
 		}
