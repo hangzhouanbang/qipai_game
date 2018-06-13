@@ -19,16 +19,13 @@ import com.anbang.qipai.game.plan.bean.mail.SystemMail;
 import com.anbang.qipai.game.plan.bean.mail.TrackPoint;
 import com.anbang.qipai.game.plan.bean.members.Member;
 import com.anbang.qipai.game.plan.dao.MailDao;
-import com.anbang.qipai.game.plan.date.ConversionDate;
+import com.anbang.qipai.game.util.TimeUtil;
 import com.anbang.qipai.game.web.vo.CommonVO;
 
 @Component
 public class MailService {
 	
 	private static Logger logger = LoggerFactory.getLogger(MailService.class);
-	
-	@Autowired
-	private ConversionDate conversionDate;
 	
 	@Autowired
 	private MailDao maildao;
@@ -90,7 +87,7 @@ public class MailService {
 	public Map<String,Object> findall(String memberid) throws ParseException{
 		Map<String,Object> map = new HashMap<String,Object>();
 		 Member member = maildao.findMemberById(memberid);
-		 long newtime = conversionDate.cdate(member.getCreateTime(), 20);
+		 long newtime = TimeUtil.creducedate(member.getCreateTime(), 20);
 		 List<SystemMail> lists = new ArrayList<>();
 		 List<SystemMail> wdwl = new ArrayList<>();
 		 List<SystemMail> wd = new ArrayList<>();

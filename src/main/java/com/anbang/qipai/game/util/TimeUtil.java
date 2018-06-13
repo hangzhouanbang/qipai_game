@@ -8,6 +8,14 @@ import java.util.GregorianCalendar;
  * Created by tan on 2017/9/12.
  */
 public class TimeUtil {
+	
+	//获得多少天前的毫秒数
+	public static long creducedate(long date,long day){
+		day = day*24*60*60*1000; // 要加上的天数转换成毫秒数
+		date-=day; // 相减得到新的毫秒数
+		return date; 
+	}
+	
 	//获取本月的开始时间
 	public static long getBeginDayTimeOfCurrentMonth(long currentTime) {
 		Calendar calendar = Calendar.getInstance();
