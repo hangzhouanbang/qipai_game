@@ -23,6 +23,7 @@ public class GameRoom {
 	private String createMemberId;
 	private long createTime;
 	private long deadlineTime;
+	private boolean finished;
 
 	public void calculateVip() {
 		if (laws != null) {
@@ -145,6 +146,14 @@ public class GameRoom {
 
 	public void setDeadlineTime(long deadlineTime) {
 		this.deadlineTime = deadlineTime;
+	}
+
+	public boolean isFinished() {
+		return finished;
+	}
+
+	public void setFinished(boolean finished) {
+		this.finished = finished;
 	}
 
 }
