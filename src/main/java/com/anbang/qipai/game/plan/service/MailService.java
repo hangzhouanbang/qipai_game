@@ -16,6 +16,7 @@ import org.springframework.stereotype.Component;
 
 import com.anbang.qipai.game.plan.bean.mail.MailState;
 import com.anbang.qipai.game.plan.bean.mail.SystemMail;
+import com.anbang.qipai.game.plan.bean.mail.SystemMailState;
 import com.anbang.qipai.game.plan.bean.mail.TrackPoint;
 import com.anbang.qipai.game.plan.bean.members.Member;
 import com.anbang.qipai.game.plan.dao.MailDao;
@@ -86,26 +87,33 @@ public class MailService {
 		Map<String,Object> map = new HashMap<String,Object>();
 		 Member member = maildao.findMemberById(memberid);
 		 long newtime = TimeUtil.creducedate(member.getCreateTime(), 20);
-		 List<SystemMail> lists = new ArrayList<>();
-		 List<SystemMail> wdwl = new ArrayList<>();
-		 List<SystemMail> wd = new ArrayList<>();
-		 List<SystemMail> ydwl = new ArrayList<>();
-		 List<SystemMail> ydyl = new ArrayList<>();
-		 List<SystemMail> yl = new ArrayList<>();
+		 List<SystemMailState> lists = new ArrayList<>();
+		 List<SystemMailState> wdwl = new ArrayList<>();
+		 List<SystemMailState> wd = new ArrayList<>();
+		 List<SystemMailState> ydwl = new ArrayList<>();
+		 List<SystemMailState> ydyl = new ArrayList<>();
+		 List<SystemMailState> yl = new ArrayList<>();
 		 List<MailState> list = maildao.findall(memberid);
 		 for (MailState mailState1 : list) {
 			 SystemMail sys = maildao.findByIdtime(mailState1.getMailid(), newtime);
+			 SystemMailState systemMailState = new SystemMailState();
 			 if(sys != null) {
+				 systemMailState.setStatemail(mailState1.getStatemail());
 				 if(mailState1.getStatemail().equals("1") && mailState1.getReceive().equals("1")) {
-					 wdwl.add(sys);
+					 systemMailState.setSystemMail(sys);
+					 wdwl.add(systemMailState);
 				 }else if(mailState1.getStatemail().equals("1") && mailState1.getReceive().equals("2")) {
-					 wd.add(sys);
+					 systemMailState.setSystemMail(sys);
+					 wd.add(systemMailState);
 				 }else if(mailState1.getStatemail().equals("0") && mailState1.getReceive().equals("1")) {
-					 ydwl.add(sys);
+					 systemMailState.setSystemMail(sys);
+					 ydwl.add(systemMailState);
 				 }else if(mailState1.getStatemail().equals("0") && mailState1.getReceive().equals("0")) {
-					 ydyl.add(sys);
+					 systemMailState.setSystemMail(sys);
+					 ydyl.add(systemMailState);
 				 }else if(mailState1.getStatemail().equals("0") && mailState1.getReceive().equals("2")) {
-					 yl.add(sys);
+					 systemMailState.setSystemMail(sys);
+					 yl.add(systemMailState);
 				 }
 			 }
 		 	}

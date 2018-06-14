@@ -13,7 +13,7 @@ public class MailState {
 	private String receive;//奖励状态0-已领，1-未领,2-没有附件奖励
 	
 	private String deletestate;//删除状态0-已删除，1-代表未删除
-
+	
 	public String getId() {
 		return id;
 	}
@@ -61,7 +61,7 @@ public class MailState {
 	public void setDeletestate(String deletestate) {
 		this.deletestate = deletestate;
 	}
-	
+
 	
 	
 	

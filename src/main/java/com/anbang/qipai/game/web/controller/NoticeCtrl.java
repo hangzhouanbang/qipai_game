@@ -52,10 +52,12 @@ public class NoticeCtrl {
 	 * 修改系统公告状态
 	 * 
 	 **/
-	@RequestMapping("/updateNotice")
+	@RequestMapping("/updatenotice")
 	@ResponseBody
 	public CommonVO updateNotice() {
 		noticeService.updateNotice();
+		Notices notices = noticeService.queryById();
+		noticeMsgService.createNotice(notices);
 		return new CommonVO();
 	}
 	

@@ -27,9 +27,10 @@ public class MongodbMemberRightsConfigurationDao implements MemberRightsConfigur
 	}
 
 	@Override
-	public void setPlanMembersRights(int memberRoomsCount, int memberRoomsAliveHours) {
+	public void setPlanMembersRights(int memberRoomsCount, int memberRoomsAliveHours,int planMemberCreateRoomDailyGoldPrice,int planMemberaddRoomDailyGoldPrice) {
 		mongoTemplate.updateFirst(new Query(Criteria.where("id").is("1")), new Update()
-				.set("planMemberRoomsCount", memberRoomsCount).set("planMemberRoomsAliveHours", memberRoomsAliveHours),
+				.set("planMemberRoomsCount", memberRoomsCount).set("planMemberRoomsAliveHours", memberRoomsAliveHours)
+				.set("planMemberCreateRoomDailyGoldPrice", planMemberCreateRoomDailyGoldPrice).set("planMemberaddRoomDailyGoldPrice", planMemberaddRoomDailyGoldPrice),
 				MemberRightsConfiguration.class);
 	}
 

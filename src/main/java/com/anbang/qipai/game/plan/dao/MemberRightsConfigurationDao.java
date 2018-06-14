@@ -8,7 +8,7 @@ public interface MemberRightsConfigurationDao {
 
 	void save(MemberRightsConfiguration mrc);
 
-	void setPlanMembersRights(int memberRoomsCount, int memberRoomsAliveHours);
+	void setPlanMembersRights(int memberRoomsCount, int memberRoomsAliveHours,int planMemberCreateRoomDailyGoldPrice,int planMemberaddRoomDailyGoldPrice);
 
 	void setVipMembersRights(int memberRoomsCount, int memberRoomsAliveHours);
 

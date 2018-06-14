@@ -43,7 +43,7 @@ public class MemberService {
 			mrc.setPlanMemberaddRoomDailyGoldPrice(planMemberaddRoomDailyGoldPrice);
 			memberRightsConfigurationDao.save(mrc);
 		} else {
-			memberRightsConfigurationDao.setPlanMembersRights(planmemberRoomsCount, planMemberRoomsAliveHours);
+			memberRightsConfigurationDao.setPlanMembersRights(planmemberRoomsCount, planMemberRoomsAliveHours,planMemberCreateRoomDailyGoldPrice,planMemberaddRoomDailyGoldPrice);
 		}
 		memberDao.updatePlanMembersRights(planmemberRoomsCount, planMemberRoomsAliveHours, planMemberMaxCreateRoomDaily,
 				planMemberCreateRoomDailyGoldPrice,planMemberaddRoomDailyGoldPrice);

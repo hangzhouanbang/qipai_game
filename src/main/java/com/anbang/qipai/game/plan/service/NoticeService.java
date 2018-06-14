@@ -31,5 +31,9 @@ public class NoticeService {
 	public Notices findPublicNotice() {
 		return noticeDao.queryByState(1);
 	}
+	
+	public Notices queryById() {
+		return noticeDao.queryById("1");
+	}
 
 }

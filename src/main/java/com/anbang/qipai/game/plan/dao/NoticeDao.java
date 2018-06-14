@@ -13,5 +13,6 @@ public interface NoticeDao {
 	Notices queryByState(Integer state);
 
 	Notices queryById(String id);
+	
 
 }
