@@ -15,7 +15,7 @@ import org.springframework.web.socket.handler.TextWebSocketHandler;
 
 import com.anbang.qipai.game.plan.bean.notice.Notices;
 import com.anbang.qipai.game.plan.service.MemberAuthService;
-import com.anbang.qipai.game.plan.service.NoticeServiceImpl;
+import com.anbang.qipai.game.plan.service.NoticeService;
 import com.google.gson.Gson;
 
 @Component
@@ -28,7 +28,7 @@ public class HallWsController extends TextWebSocketHandler {
 	private MemberAuthService memberAuthService;
 
 	@Autowired
-	private NoticeServiceImpl noticeService;
+	private NoticeService noticeService;
 
 	private ExecutorService executorService = Executors.newCachedThreadPool();
 

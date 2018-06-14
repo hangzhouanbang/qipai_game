@@ -69,16 +69,18 @@ public class MailController {
 	 * **/
 	@RequestMapping("/querymail")
 	@ResponseBody
-	public CommonVO querymail(String token) throws ParseException{
+	public CommonVO querymail() throws ParseException{
 		CommonVO vo = new CommonVO();
-		String memberId = memberAuthService.getMemberIdBySessionId(token);
-		System.out.println(token);
-		if (memberId == null) {
-			vo.setSuccess(false);
-			vo.setMsg("invalid token");
-			return vo;
-		}
-		Map<String,Object> map =  mailService.findall(memberId); 
+		//System.out.println("ssssssssssss"+token);
+		//String memberId = "5b1b6439c5925221746e8eb4"; 
+		//  memberAuthService.getMemberIdBySessionId(token);
+		//System.out.println(token);
+//		if (memberId == null) {
+//			vo.setSuccess(false);
+//			vo.setMsg("invalid token");
+//			return vo;
+//		}
+		Map<String,Object> map =  mailService.findall("5b1b6439c5925221746e8eb4"); 
 		vo.setData(map);
 		return vo;
 	}

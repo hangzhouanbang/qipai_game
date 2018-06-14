@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.anbang.qipai.game.msg.service.NoticeMsgService;
 import com.anbang.qipai.game.plan.bean.notice.Notices;
-import com.anbang.qipai.game.plan.service.NoticeServiceImpl;
+import com.anbang.qipai.game.plan.service.NoticeService;
 import com.anbang.qipai.game.web.vo.CommonVO;
 import com.anbang.qipai.game.websocket.HallWsNotifier;
 
@@ -20,7 +20,7 @@ import com.anbang.qipai.game.websocket.HallWsNotifier;
 public class NoticeCtrl {
 
 	@Autowired
-	private NoticeServiceImpl noticeService;
+	private NoticeService noticeService;
 
 	@Autowired
 	private HallWsNotifier wsNotifier;
@@ -55,6 +55,7 @@ public class NoticeCtrl {
 	@RequestMapping("/updateNotice")
 	@ResponseBody
 	public CommonVO updateNotice() {
+		noticeService.updateNotice();
 		return new CommonVO();
 	}
 	

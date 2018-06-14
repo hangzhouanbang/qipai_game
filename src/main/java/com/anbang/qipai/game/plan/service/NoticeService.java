@@ -7,7 +7,7 @@ import com.anbang.qipai.game.plan.bean.notice.Notices;
 import com.anbang.qipai.game.plan.dao.NoticeDao;
 
 @Component
-public class NoticeServiceImpl {
+public class NoticeService {
 
 	@Autowired
 	private NoticeDao noticeDao;
@@ -19,6 +19,12 @@ public class NoticeServiceImpl {
 		notices.setPlace(place);
 		notices.setNotice(notice);
 		notices.setAdminname(adminname);
+		noticeDao.addNotice(notices);
+	}
+	
+	public void updateNotice() {
+		Notices notices = noticeDao.queryByState(1);
+		notices.setState(0);
 		noticeDao.addNotice(notices);
 	}
 
