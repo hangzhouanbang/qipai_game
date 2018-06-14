@@ -77,7 +77,6 @@ public class MailController {
 			vo.setMsg("invalid token");
 			return vo;
 		}
-		System.out.println("111111:"+memberId);
 		Map<String,Object> map =  mailService.findall(memberId); 
 		vo.setData(map);
 		return vo;
@@ -102,7 +101,6 @@ public class MailController {
 			vo.setMsg("invalid mailid");
 			return vo;
 		}
-		System.out.println("222222:"+memberId);
 		Map<String,Object> map = mailService.findonemail(memberId, mailid);
 		vo.setData(map);
 		return vo;
@@ -121,7 +119,6 @@ public class MailController {
 			vo.setMsg("invalid token");
 			return vo;
 		}
-		System.out.println("3333333:"+memberId);
 		Map<String,Object> map = mailService.redmail(memberId);
 		vo.setData(map);
 		return vo;
@@ -147,7 +144,6 @@ public class MailController {
 			vo.setMsg("invalid mailid");
 			return vo;
 		}
-		System.out.println("444444:"+memberId);
 		vo = mailService.changestate(memberId, mailid);
 			return vo;
 	}
@@ -165,7 +161,6 @@ public class MailController {
 			vo.setMsg("invalid token");
 			return vo;
 		}
-		System.out.println("555555:"+memberId);
 		 mailService.findallmembermail(memberId);
 		 return new CommonVO();
 	}
@@ -183,7 +178,6 @@ public class MailController {
 			vo.setMsg("invalid token");
 			return vo;
 		}
-		System.out.println("6666666:"+memberId);
 		mailService.deleteallmail(memberId);
 		return new CommonVO();
 	}

@@ -140,7 +140,7 @@ public class MailService {
 		Map<String,Object> map = new HashMap<>();
 		 List<MailState> list = maildao.findall(memberid);
 		 for (MailState mailState : list) {
-			 if(mailState.getStatemail().equals("1")) {
+			 if(mailState.getStatemail().equals("1") || mailState.getReceive().equals("1")) {
 				 tr.setMemberid(memberid);
 				 tr.setState(true);
 				 break;
