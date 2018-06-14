@@ -69,18 +69,16 @@ public class MailController {
 	 * **/
 	@RequestMapping("/querymail")
 	@ResponseBody
-	public CommonVO querymail() throws ParseException{
+	public CommonVO querymail(String token) throws ParseException{
 		CommonVO vo = new CommonVO();
-		//System.out.println("ssssssssssss"+token);
-		//String memberId = "5b1b6439c5925221746e8eb4"; 
-		//  memberAuthService.getMemberIdBySessionId(token);
-		//System.out.println(token);
-//		if (memberId == null) {
-//			vo.setSuccess(false);
-//			vo.setMsg("invalid token");
-//			return vo;
-//		}
-		Map<String,Object> map =  mailService.findall("5b1b6439c5925221746e8eb4"); 
+		String memberId = memberAuthService.getMemberIdBySessionId(token);
+		if (memberId == null) {
+			vo.setSuccess(false);
+			vo.setMsg("invalid token");
+			return vo;
+		}
+		System.out.println("111111:"+memberId);
+		Map<String,Object> map =  mailService.findall(memberId); 
 		vo.setData(map);
 		return vo;
 	}
@@ -104,6 +102,7 @@ public class MailController {
 			vo.setMsg("invalid mailid");
 			return vo;
 		}
+		System.out.println("222222:"+memberId);
 		Map<String,Object> map = mailService.findonemail(memberId, mailid);
 		vo.setData(map);
 		return vo;
@@ -122,6 +121,7 @@ public class MailController {
 			vo.setMsg("invalid token");
 			return vo;
 		}
+		System.out.println("3333333:"+memberId);
 		Map<String,Object> map = mailService.redmail(memberId);
 		vo.setData(map);
 		return vo;
@@ -134,7 +134,7 @@ public class MailController {
 	 * **/
 	@RequestMapping("/updatemailstate")
 	@ResponseBody
-	public CommonVO changestate(String token,String mailid,String receive) {
+	public CommonVO changestate(String token,String mailid) {
 		CommonVO vo = new CommonVO();
 		String memberId = memberAuthService.getMemberIdBySessionId(token);
 		if (memberId == null) {
@@ -147,7 +147,8 @@ public class MailController {
 			vo.setMsg("invalid mailid");
 			return vo;
 		}
-		vo = mailService.changestate(memberId, mailid, receive);
+		System.out.println("444444:"+memberId);
+		vo = mailService.changestate(memberId, mailid);
 			return vo;
 	}
 	
@@ -164,6 +165,7 @@ public class MailController {
 			vo.setMsg("invalid token");
 			return vo;
 		}
+		System.out.println("555555:"+memberId);
 		 mailService.findallmembermail(memberId);
 		 return new CommonVO();
 	}
@@ -181,6 +183,7 @@ public class MailController {
 			vo.setMsg("invalid token");
 			return vo;
 		}
+		System.out.println("6666666:"+memberId);
 		mailService.deleteallmail(memberId);
 		return new CommonVO();
 	}

@@ -74,6 +74,9 @@ public class MailService {
 		Map<String,Object> map = new HashMap<String,Object>();
 		MailState mailstate = maildao.findmembermail(memberid, mailid);
 		SystemMail systemmail = maildao.findmailById(mailid);
+		mailstate.setStatemail("0");
+		MailState mailstates = maildao.findmembermail(memberid, mailid);
+		maildao.updatemembermail(mailstates);
 		map.put("mailstate", mailstate);
 		map.put("systemmail", systemmail);
 		return map;
@@ -95,33 +98,36 @@ public class MailService {
 		 List<SystemMailState> yl = new ArrayList<>();
 		 List<MailState> list = maildao.findall(memberid);
 		 for (MailState mailState1 : list) {
-			 SystemMail sys = maildao.findByIdtime(mailState1.getMailid(), newtime);
-			 SystemMailState systemMailState = new SystemMailState();
-			 if(sys != null) {
-				 systemMailState.setStatemail(mailState1.getStatemail());
-				 if(mailState1.getStatemail().equals("1") && mailState1.getReceive().equals("1")) {
-					 systemMailState.setSystemMail(sys);
-					 wdwl.add(systemMailState);
-				 }else if(mailState1.getStatemail().equals("1") && mailState1.getReceive().equals("2")) {
-					 systemMailState.setSystemMail(sys);
-					 wd.add(systemMailState);
-				 }else if(mailState1.getStatemail().equals("0") && mailState1.getReceive().equals("1")) {
-					 systemMailState.setSystemMail(sys);
-					 ydwl.add(systemMailState);
-				 }else if(mailState1.getStatemail().equals("0") && mailState1.getReceive().equals("0")) {
-					 systemMailState.setSystemMail(sys);
-					 ydyl.add(systemMailState);
-				 }else if(mailState1.getStatemail().equals("0") && mailState1.getReceive().equals("2")) {
-					 systemMailState.setSystemMail(sys);
-					 yl.add(systemMailState);
+			 if(mailState1.getDeletestate().equals("1")) {
+				 SystemMail sys = maildao.findByIdtime(mailState1.getMailid(), newtime);
+				 SystemMailState systemMailState = new SystemMailState();
+				 if(sys != null) {
+					 systemMailState.setStatemail(mailState1.getStatemail());
+					 if(mailState1.getStatemail().equals("1") && mailState1.getReceive().equals("1")) {
+						 systemMailState.setSystemMail(sys);
+						 wdwl.add(systemMailState);
+					 }else if(mailState1.getStatemail().equals("1") && mailState1.getReceive().equals("2")) {
+						 systemMailState.setSystemMail(sys);
+						 wd.add(systemMailState);
+					 }else if(mailState1.getStatemail().equals("0") && mailState1.getReceive().equals("1")) {
+						 systemMailState.setSystemMail(sys);
+						 ydwl.add(systemMailState);
+					 }else if(mailState1.getStatemail().equals("0") && mailState1.getReceive().equals("0")) {
+						 systemMailState.setSystemMail(sys);
+						 ydyl.add(systemMailState);
+					 }else if(mailState1.getStatemail().equals("0") && mailState1.getReceive().equals("2")) {
+						 systemMailState.setSystemMail(sys);
+						 yl.add(systemMailState);
+					 }
 				 }
-			 }
-		 	}
+				 }
+			 	}
 		 lists.addAll(wdwl);
 		 lists.addAll(wd);
 		 lists.addAll(ydwl);
 		 lists.addAll(ydyl);
 		 lists.addAll(yl);
+		 
 		 map.put("lists",lists);
 	    return map;
 	}
@@ -153,13 +159,11 @@ public class MailService {
 	 *@param mailid 邮件id
 	 *@param receive 是否领取
 	 * **/
-	public CommonVO changestate(String memberid,String mailid,String receive) {
+	public CommonVO changestate(String memberid,String mailid) {
 		CommonVO vo = new CommonVO();
 		MailState mailstate = maildao.findmembermail(memberid, mailid);
 		mailstate.setStatemail("0");
-		if(receive!=null && !receive.equals("")) {
-			mailstate.setReceive("0");
-		}
+		mailstate.setReceive("0");
 		maildao.updatemembermail(mailstate);
 		return vo;
 	}
