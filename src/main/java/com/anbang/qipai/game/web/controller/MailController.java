@@ -69,7 +69,7 @@ public class MailController {
 	 * **/
 	@RequestMapping("/querymail")
 	@ResponseBody
-	public CommonVO querymail(String token) throws ParseException{
+	public CommonVO querymail(String token,String you) throws ParseException{
 		CommonVO vo = new CommonVO();
 		String memberId = memberAuthService.getMemberIdBySessionId(token);
 		if (memberId == null) {
@@ -77,6 +77,9 @@ public class MailController {
 			vo.setMsg("invalid token");
 			return vo;
 		}
+		logger.info("id"+memberId+you);
+		Integer redcount = mailService.redmailcount(memberId);
+		vo.setMsg(redcount.toString());
 		Map<String,Object> map =  mailService.findall(memberId); 
 		vo.setData(map);
 		return vo;
@@ -102,24 +105,9 @@ public class MailController {
 			return vo;
 		}
 		Map<String,Object> map = mailService.findonemail(memberId, mailid);
-		vo.setData(map);
-		return vo;
-	}
-	
-	/**用户进入游戏大厅，是否有未读邮件，有未读显示小红点
-	 * @param memberid 会员id
-	 * **/
-	@RequestMapping("/redmail")
-	@ResponseBody
-	public CommonVO redmail(String token){
-		CommonVO vo = new CommonVO();
-		String memberId = memberAuthService.getMemberIdBySessionId(token);
-		if (memberId == null) {
-			vo.setSuccess(false);
-			vo.setMsg("invalid token");
-			return vo;
-		}
-		Map<String,Object> map = mailService.redmail(memberId);
+		Integer redcount = mailService.redmailcount(memberId);
+		logger.info("红点数"+redcount);
+		vo.setMsg(redcount.toString());
 		vo.setData(map);
 		return vo;
 	}
@@ -144,8 +132,11 @@ public class MailController {
 			vo.setMsg("invalid mailid");
 			return vo;
 		}
+		
 		vo = mailService.changestate(memberId, mailid);
-			return vo;
+		Integer redcount = mailService.redmailcount(memberId);
+		vo.setMsg(redcount.toString());
+		return vo;
 	}
 	
 	/**所有邮件设为已读
@@ -162,6 +153,8 @@ public class MailController {
 			return vo;
 		}
 		 mailService.findallmembermail(memberId);
+		Integer redcount = mailService.redmailcount(memberId);
+		vo.setMsg(redcount.toString());
 		 return new CommonVO();
 	}
 	
@@ -179,6 +172,8 @@ public class MailController {
 			return vo;
 		}
 		mailService.deleteallmail(memberId);
+		Integer redcount = mailService.redmailcount(memberId);
+		vo.setMsg(redcount.toString());
 		return new CommonVO();
 	}
 	

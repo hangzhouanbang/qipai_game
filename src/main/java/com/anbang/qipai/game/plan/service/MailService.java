@@ -17,7 +17,6 @@ import org.springframework.stereotype.Component;
 import com.anbang.qipai.game.plan.bean.mail.MailState;
 import com.anbang.qipai.game.plan.bean.mail.SystemMail;
 import com.anbang.qipai.game.plan.bean.mail.SystemMailState;
-import com.anbang.qipai.game.plan.bean.mail.TrackPoint;
 import com.anbang.qipai.game.plan.bean.members.Member;
 import com.anbang.qipai.game.plan.dao.MailDao;
 import com.anbang.qipai.game.util.TimeUtil;
@@ -72,11 +71,11 @@ public class MailService {
 	 * **/
 	public Map<String,Object> findonemail(String memberid,String mailid){
 		Map<String,Object> map = new HashMap<String,Object>();
+		MailState mailstates = maildao.findmembermail(memberid, mailid);
+		mailstates.setStatemail("0");
+		maildao.updatemembermail(mailstates);
 		MailState mailstate = maildao.findmembermail(memberid, mailid);
 		SystemMail systemmail = maildao.findmailById(mailid);
-		mailstate.setStatemail("0");
-		MailState mailstates = maildao.findmembermail(memberid, mailid);
-		maildao.updatemembermail(mailstates);
 		map.put("mailstate", mailstate);
 		map.put("systemmail", systemmail);
 		return map;
@@ -103,10 +102,11 @@ public class MailService {
 				 SystemMailState systemMailState = new SystemMailState();
 				 if(sys != null) {
 					 systemMailState.setStatemail(mailState1.getStatemail());
+					 systemMailState.setReceive(mailState1.getReceive());
 					 if(mailState1.getStatemail().equals("1") && mailState1.getReceive().equals("1")) {
 						 systemMailState.setSystemMail(sys);
 						 wdwl.add(systemMailState);
-					 }else if(mailState1.getStatemail().equals("1") && mailState1.getReceive().equals("2")) {
+					 }else if(mailState1.getStatemail().equals("1") && mailState1.getReceive().equals("2") || mailState1.getReceive().equals("0")) {
 						 systemMailState.setSystemMail(sys);
 						 wd.add(systemMailState);
 					 }else if(mailState1.getStatemail().equals("0") && mailState1.getReceive().equals("1")) {
@@ -132,28 +132,20 @@ public class MailService {
 	    return map;
 	}
 	
-	/**邮件小红点
-	 * @param memberid 会员id
-	 * **/
-	public Map<String,Object> redmail(String memberid){
-		TrackPoint tr = new TrackPoint();
-		Map<String,Object> map = new HashMap<>();
-		 List<MailState> list = maildao.findall(memberid);
-		 for (MailState mailState : list) {
-			 if(mailState.getStatemail().equals("1") || mailState.getReceive().equals("1")) {
-				 tr.setMemberid(memberid);
-				 tr.setState(true);
-				 break;
-			 }else {
-				 tr.setMemberid(memberid);
-				 tr.setState(false);
-			 }
-		}
-		 map.put("track",tr);
-		 return map;
-		
-	}
 	
+	/**查询有多少未读未领的，小红点个数
+	 * **/
+	public Integer redmailcount(String memberid) {
+		Integer count = 0;
+		List<MailState> list = maildao.findall(memberid);
+		for (MailState mailState : list) {
+			if(mailState.getStatemail().equals("1") || mailState.getReceive().equals("1") ) {
+				count++;
+			}
+		}
+		return count;
+	}
+
 	/**用户点开邮件，改变邮件状态
 	 *@param memberid 会员id
 	 *@param mailid 邮件id
