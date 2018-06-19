@@ -78,8 +78,6 @@ public class MailController {
 			return vo;
 		}
 		logger.info("id"+memberId+you);
-		Integer redcount = mailService.redmailcount(memberId);
-		vo.setMsg(redcount.toString());
 		Map<String,Object> map =  mailService.findall(memberId); 
 		vo.setData(map);
 		return vo;
@@ -105,9 +103,6 @@ public class MailController {
 			return vo;
 		}
 		Map<String,Object> map = mailService.findonemail(memberId, mailid);
-		Integer redcount = mailService.redmailcount(memberId);
-		logger.info("红点数"+redcount);
-		vo.setMsg(redcount.toString());
 		vo.setData(map);
 		return vo;
 	}
@@ -134,8 +129,6 @@ public class MailController {
 		}
 		
 		vo = mailService.changestate(memberId, mailid);
-		Integer redcount = mailService.redmailcount(memberId);
-		vo.setMsg(redcount.toString());
 		return vo;
 	}
 	
@@ -153,8 +146,6 @@ public class MailController {
 			return vo;
 		}
 		 mailService.findallmembermail(memberId);
-		Integer redcount = mailService.redmailcount(memberId);
-		vo.setMsg(redcount.toString());
 		 return new CommonVO();
 	}
 	
@@ -172,8 +163,6 @@ public class MailController {
 			return vo;
 		}
 		mailService.deleteallmail(memberId);
-		Integer redcount = mailService.redmailcount(memberId);
-		vo.setMsg(redcount.toString());
 		return new CommonVO();
 	}
 	

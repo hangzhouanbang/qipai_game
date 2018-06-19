@@ -134,7 +134,7 @@ public class MailService {
 	
 	
 	/**查询有多少未读未领的，小红点个数
-	 * **/
+	 * 
 	public Integer redmailcount(String memberid) {
 		Integer count = 0;
 		List<MailState> list = maildao.findall(memberid);
@@ -145,7 +145,7 @@ public class MailService {
 		}
 		return count;
 	}
-
+	 **/
 	/**用户点开邮件，改变邮件状态
 	 *@param memberid 会员id
 	 *@param mailid 邮件id
