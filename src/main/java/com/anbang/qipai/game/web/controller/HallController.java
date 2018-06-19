@@ -66,7 +66,6 @@ public class HallController {
 	}
 
 	@RequestMapping("/showclubcard")
-	@ResponseBody
 	public CommonVO showClubCard(String token) {
 		CommonVO vo = new CommonVO();
 		String memberId = memberAuthService.getMemberIdBySessionId(token);
@@ -77,7 +76,6 @@ public class HallController {
 		}
 		CommonRemoteVO commonRemoteVO = qipaiMembersRomoteService.clubcard_showclubcard();
 		if (commonRemoteVO.isSuccess()) {
-			vo.setSuccess(commonRemoteVO.isSuccess());
 			vo.setMsg(commonRemoteVO.getMsg());
 			vo.setData(commonRemoteVO.getData());
 		}
