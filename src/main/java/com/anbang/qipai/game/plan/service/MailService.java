@@ -19,6 +19,8 @@ import com.anbang.qipai.game.plan.bean.mail.SystemMail;
 import com.anbang.qipai.game.plan.bean.mail.SystemMailState;
 import com.anbang.qipai.game.plan.bean.members.Member;
 import com.anbang.qipai.game.plan.dao.MailDao;
+import com.anbang.qipai.game.remote.service.QipaiMembersRomoteService;
+import com.anbang.qipai.game.remote.vo.CommonRemoteVO;
 import com.anbang.qipai.game.util.TimeUtil;
 import com.anbang.qipai.game.web.vo.CommonVO;
 
@@ -28,14 +30,23 @@ public class MailService {
 	private static Logger logger = LoggerFactory.getLogger(MailService.class);
 	
 	@Autowired
+	private QipaiMembersRomoteService qipaiMembersRomoteService;
+	
+	@Autowired
 	private MailDao maildao;
 	/**添加系统邮件
 	 * @param mail 邮件信息
 	 * **/
 	public SystemMail addmail(SystemMail mail) {
 		return maildao.addmail(mail);
-		
 	}
+	
+	/**根据邮件id查询邮件信息
+	 * **/
+	public SystemMail findmailById(String mailid){
+		return  maildao.findmailById(mailid);
+	}
+	
 	/**分页查询并给所有会员添加记录
 	 * @param mailid 哪封邮件的id
 	 * **/
@@ -151,12 +162,24 @@ public class MailService {
 	 *@param mailid 邮件id
 	 *@param receive 是否领取
 	 * **/
-	public CommonVO changestate(String memberid,String mailid) {
+	public CommonVO changestate(String memberId,String mailid) {
 		CommonVO vo = new CommonVO();
-		MailState mailstate = maildao.findmembermail(memberid, mailid);
-		mailstate.setStatemail("0");
-		mailstate.setReceive("0");
-		maildao.updatemembermail(mailstate);
+		CommonRemoteVO cvo = new CommonRemoteVO();
+		MailState mailstate = maildao.findmembermail(memberId, mailid);
+		if(mailstate.getReceive().equals("1")) {//只有未领取过才能领取
+			//往会员中心发送消息  进行奖励添加
+			SystemMail systemmail = maildao.findmailById(mailid);
+			cvo = qipaiMembersRomoteService.game_mail_reward(memberId,systemmail.getNumber(),systemmail.getIntegral(),systemmail.getVipcard());
+			if(cvo.isSuccess()) {
+				mailstate.setStatemail("0");
+				mailstate.setReceive("0");
+				maildao.updatemembermail(mailstate);
+			}else {
+				vo.setSuccess(false);
+				vo.setMsg("调用服务出错");
+				return vo;
+			}
+		}
 		return vo;
 	}
 	

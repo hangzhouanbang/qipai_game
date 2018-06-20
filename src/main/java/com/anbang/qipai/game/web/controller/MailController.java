@@ -35,6 +35,7 @@ public class MailController {
 	@Autowired
 	private MailMsgService mailMsgService;
 	
+	
 	private static Logger logger = LoggerFactory.getLogger(MailController.class);
 	
 	/**新发布的系统公告,并给所有用户发送邮件
@@ -107,10 +108,9 @@ public class MailController {
 		return vo;
 	}
 	
-	/**是否领取福利
+	/**领取奖利
 	 * @param memberid 会员id
 	 * @param mailid 邮件id
-	 * @param receive 是否领取
 	 * **/
 	@RequestMapping("/updatemailstate")
 	@ResponseBody
@@ -127,7 +127,6 @@ public class MailController {
 			vo.setMsg("invalid mailid");
 			return vo;
 		}
-		
 		vo = mailService.changestate(memberId, mailid);
 		return vo;
 	}
