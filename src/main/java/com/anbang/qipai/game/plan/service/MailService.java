@@ -166,18 +166,20 @@ public class MailService {
 		CommonVO vo = new CommonVO();
 		CommonRemoteVO cvo = new CommonRemoteVO();
 		MailState mailstate = maildao.findmembermail(memberId, mailid);
-		if(mailstate.getReceive().equals("1")) {//只有未领取过才能领取
-			//往会员中心发送消息  进行奖励添加
-			SystemMail systemmail = maildao.findmailById(mailid);
-			cvo = qipaiMembersRomoteService.game_mail_reward(memberId,systemmail.getNumber(),systemmail.getIntegral(),systemmail.getVipcard());
-			if(cvo.isSuccess()) {
-				mailstate.setStatemail("0");
-				mailstate.setReceive("0");
-				maildao.updatemembermail(mailstate);
-			}else {
-				vo.setSuccess(false);
-				vo.setMsg("调用服务出错");
-				return vo;
+		if(mailstate != null) {
+			if(mailstate.getReceive().equals("1")) {//只有未领取过才能领取
+				//往会员中心发送消息  进行奖励添加
+				SystemMail systemmail = maildao.findmailById(mailid);
+				cvo = qipaiMembersRomoteService.game_mail_reward(memberId,systemmail.getNumber(),systemmail.getIntegral(),systemmail.getVipcard());
+				if(cvo.isSuccess()) {
+					mailstate.setStatemail("0");
+					mailstate.setReceive("0");
+					maildao.updatemembermail(mailstate);
+				}else {
+					vo.setSuccess(false);
+					vo.setMsg("调用服务出错");
+					return vo;
+				}
 			}
 		}
 		return vo;
