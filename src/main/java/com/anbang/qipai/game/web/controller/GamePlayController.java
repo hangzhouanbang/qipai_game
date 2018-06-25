@@ -132,6 +132,7 @@ public class GamePlayController {
 			data.put("httpDomain", gameRoom.getServerGame().getServer().getDomainForHttp());
 			data.put("httpPort", gameRoom.getServerGame().getServer().getPortForHttp());
 			data.put("wsUrl", gameRoom.getServerGame().getServer().getWsUrl());
+			data.put("roomNo", gameRoom.getNo());
 			data.put("gameId", gameRoom.getServerGame().getGameId());
 			data.put("token", resData.get("token"));
 			vo.setData(data);
