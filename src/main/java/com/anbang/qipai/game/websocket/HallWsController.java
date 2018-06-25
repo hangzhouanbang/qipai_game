@@ -103,8 +103,8 @@ public class HallWsController extends TextWebSocketHandler {
 			} catch (SessionAlreadyExistsException e1) {
 				try {
 					session.close();
-				} catch (IOException e2) {
-					e2.printStackTrace();
+				} catch (IOException e) {
+					e.printStackTrace();
 				}
 			}
 			// 发送系统公告
