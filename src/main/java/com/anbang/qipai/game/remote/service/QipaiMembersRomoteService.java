@@ -22,14 +22,13 @@ public interface QipaiMembersRomoteService {
 	@RequestMapping(value = "/member/info")
 	public MemberRemoteVO member_info(@RequestParam("memberId") String memberId);
 
-	@RequestMapping(value = "/clubcard/showclubcard")
-	public CommonRemoteVO clubcard_showclubcard();
-
 	@RequestMapping(value = "/gold/withdraw")
 	public CommonRemoteVO gold_withdraw(@RequestParam("memberId") String memberId, @RequestParam("amount") int amount,
 			@RequestParam("textSummary") String textSummary);
-	
+
 	@RequestMapping(value = "/game/mail_reward")
-	public CommonRemoteVO game_mail_reward(@RequestParam("memberId") String memberId,@RequestParam("number") Integer number,@RequestParam("integral") Integer integral,@RequestParam("vipcard") Integer vipcard);
+	public CommonRemoteVO game_mail_reward(@RequestParam("memberId") String memberId,
+			@RequestParam("number") Integer number, @RequestParam("integral") Integer integral,
+			@RequestParam("vipcard") Integer vipcard);
 
 }
