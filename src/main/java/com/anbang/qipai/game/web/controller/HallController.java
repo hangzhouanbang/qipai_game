@@ -11,7 +11,6 @@ import org.springframework.web.bind.annotation.RestController;
 import com.anbang.qipai.game.conf.WebsocketConfig;
 import com.anbang.qipai.game.plan.service.MemberAuthService;
 import com.anbang.qipai.game.remote.service.QipaiMembersRomoteService;
-import com.anbang.qipai.game.remote.vo.CommonRemoteVO;
 import com.anbang.qipai.game.remote.vo.MemberRemoteVO;
 import com.anbang.qipai.game.web.vo.CommonVO;
 
@@ -61,23 +60,6 @@ public class HallController {
 			mm.put("nickname", memberRemoteVO.getNickname());
 			mm.put("headimgurl", memberRemoteVO.getHeadimgurl());
 			mm.put("gold", memberRemoteVO.getGold());
-		}
-		return vo;
-	}
-
-	@RequestMapping("/showclubcard")
-	public CommonVO showClubCard(String token) {
-		CommonVO vo = new CommonVO();
-		String memberId = memberAuthService.getMemberIdBySessionId(token);
-		if (memberId == null) {
-			vo.setSuccess(false);
-			vo.setMsg("invalid token");
-			return vo;
-		}
-		CommonRemoteVO commonRemoteVO = qipaiMembersRomoteService.clubcard_showclubcard();
-		if (commonRemoteVO.isSuccess()) {
-			vo.setMsg(commonRemoteVO.getMsg());
-			vo.setData(commonRemoteVO.getData());
 		}
 		return vo;
 	}
