@@ -54,9 +54,10 @@ public class NoticeCtrl {
 	 **/
 	@RequestMapping("/updatenotice")
 	@ResponseBody
-	public CommonVO updateNotice() {
+	public CommonVO updateNotice(String id) {
 		noticeService.updateNotice();
 		Notices notices = noticeService.queryById();
+		notices.setId(id);
 		noticeMsgService.createNotice(notices);
 		return new CommonVO();
 	}

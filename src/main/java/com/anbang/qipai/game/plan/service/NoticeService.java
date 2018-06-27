@@ -23,7 +23,7 @@ public class NoticeService {
 	}
 	
 	public void updateNotice() {
-		Notices notices = noticeDao.queryByState(1);
+		Notices notices = noticeDao.queryById("1");
 		notices.setState(0);
 		noticeDao.addNotice(notices);
 	}
