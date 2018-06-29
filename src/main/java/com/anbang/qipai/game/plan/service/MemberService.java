@@ -25,13 +25,14 @@ public class MemberService {
 	public void addMember(Member member) {
 		memberDao.save(member);
 	}
-	
+
 	public MemberRightsConfiguration findMemberRightsById() {
 		return memberDao.findMemberRightsById();
 	}
 
-	public void setPlanMembersRights(int planmemberRoomsCount, int planMemberRoomsAliveHours, int planMemberMaxCreateRoomDaily,
-			int planMemberCreateRoomDailyGoldPrice,int planMemberaddRoomDailyGoldPrice) {
+	public void setPlanMembersRights(int planmemberRoomsCount, int planMemberRoomsAliveHours,
+			int planMemberMaxCreateRoomDaily, int planMemberCreateRoomDailyGoldPrice,
+			int planMemberJoinRoomGoldPrice) {
 		MemberRightsConfiguration mrc = memberRightsConfigurationDao.find();
 		if (mrc == null) {
 			mrc = new MemberRightsConfiguration();
@@ -40,13 +41,14 @@ public class MemberService {
 			mrc.setPlanMemberRoomsCount(planmemberRoomsCount);
 			mrc.setPlanMemberMaxCreateRoomDaily(planMemberMaxCreateRoomDaily);
 			mrc.setPlanMemberCreateRoomDailyGoldPrice(planMemberCreateRoomDailyGoldPrice);
-			mrc.setPlanMemberaddRoomDailyGoldPrice(planMemberaddRoomDailyGoldPrice);
+			mrc.setPlanMemberJoinRoomGoldPrice(planMemberJoinRoomGoldPrice);
 			memberRightsConfigurationDao.save(mrc);
 		} else {
-			memberRightsConfigurationDao.setPlanMembersRights(planmemberRoomsCount, planMemberRoomsAliveHours,planMemberCreateRoomDailyGoldPrice,planMemberaddRoomDailyGoldPrice);
+			memberRightsConfigurationDao.setPlanMembersRights(planmemberRoomsCount, planMemberRoomsAliveHours,
+					planMemberCreateRoomDailyGoldPrice, planMemberJoinRoomGoldPrice);
 		}
 		memberDao.updatePlanMembersRights(planmemberRoomsCount, planMemberRoomsAliveHours, planMemberMaxCreateRoomDaily,
-				planMemberCreateRoomDailyGoldPrice,planMemberaddRoomDailyGoldPrice);
+				planMemberCreateRoomDailyGoldPrice, planMemberJoinRoomGoldPrice);
 	}
 
 	public void setVipMembersRights(int vipMemberRoomsCount, int vipMemberRoomsAliveHours) {
@@ -77,7 +79,7 @@ public class MemberService {
 				rights.setPlanMemberCreateRoomDailyGoldPrice(mrc.getPlanMemberCreateRoomDailyGoldPrice());
 				rights.setPlanMemberMaxCreateRoomDaily(mrc.getPlanMemberMaxCreateRoomDaily());
 				rights.setPlanMemberCreateRoomDailyGoldPrice(mrc.getPlanMemberCreateRoomDailyGoldPrice());
-				rights.setPlanMemberaddRoomDailyGoldPrice(mrc.getPlanMemberaddRoomDailyGoldPrice());
+				rights.setPlanMemberJoinRoomGoldPrice(mrc.getPlanMemberJoinRoomGoldPrice());
 			}
 			memberDao.updateRights(memberId, rights);
 		}

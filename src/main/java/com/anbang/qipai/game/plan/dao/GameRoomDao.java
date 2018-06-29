@@ -8,4 +8,6 @@ public interface GameRoomDao {
 
 	int count(long startTimeForCreate, long endTimeForCreate, String createMemberId, boolean vip);
 
+	GameRoom findRoomOpen(String roomNo);
+
 }

@@ -166,4 +166,17 @@ public class GameService {
 		lawsMutexGroupDao.remove(groupId);
 	}
 
+	public GameRoom findRoomOpen(String roomNo) {
+		return gameRoomDao.findRoomOpen(roomNo);
+	}
+
+	public void tryHasMoreRoom(String memberId) throws CanNotJoinMoreRoomsException {
+		Member member = memberDao.findById(memberId);
+		MemberRights rights = member.getRights();
+		int memberRoomsCount = memberGameRoomDao.count(memberId);
+		if (rights.getRoomsCount() <= memberRoomsCount) {
+			throw new CanNotJoinMoreRoomsException();
+		}
+	}
+
 }

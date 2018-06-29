@@ -23,10 +23,10 @@ public class MemberRightsConfiguration {
 
 	// 普通会员每日开房(vip房)金币价格
 	private int planMemberCreateRoomDailyGoldPrice;
-	
-	//普通会员加入房间(vip房)金币价格
-	private int planMemberaddRoomDailyGoldPrice;
-	
+
+	// 普通会员加入房间(vip房)金币价格
+	private int planMemberJoinRoomGoldPrice;
+
 	public String getId() {
 		return id;
 	}
@@ -83,13 +83,12 @@ public class MemberRightsConfiguration {
 		this.planMemberCreateRoomDailyGoldPrice = planMemberCreateRoomDailyGoldPrice;
 	}
 
-	public int getPlanMemberaddRoomDailyGoldPrice() {
-		return planMemberaddRoomDailyGoldPrice;
+	public int getPlanMemberJoinRoomGoldPrice() {
+		return planMemberJoinRoomGoldPrice;
 	}
 
-	public void setPlanMemberaddRoomDailyGoldPrice(int planMemberaddRoomDailyGoldPrice) {
-		this.planMemberaddRoomDailyGoldPrice = planMemberaddRoomDailyGoldPrice;
+	public void setPlanMemberJoinRoomGoldPrice(int planMemberJoinRoomGoldPrice) {
+		this.planMemberJoinRoomGoldPrice = planMemberJoinRoomGoldPrice;
 	}
-	
-	
+
 }

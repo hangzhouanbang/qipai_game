@@ -6,4 +6,6 @@ import com.anbang.qipai.game.plan.bean.games.GameRoom;
 
 public interface GameRoomRepository extends MongoRepository<GameRoom, String> {
 
+	GameRoom findByNoAndFinished(String no, boolean finished);
+
 }

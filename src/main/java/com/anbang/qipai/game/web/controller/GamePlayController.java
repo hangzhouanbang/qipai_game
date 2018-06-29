@@ -85,59 +85,9 @@ public class GamePlayController {
 		Member member = memberService.findMember(memberId);
 		MemberRights rights = member.getRights();
 
+		GameRoom gameRoom;
 		try {
-			GameRoom gameRoom = gameService.buildRamjGameRoom(memberId, lawNames);
-
-			// 普通会员开vip房扣金币
-			if (!member.isVip() && gameRoom.isVip()) {
-				int gold = rights.getPlanMemberCreateRoomDailyGoldPrice();
-				CommonRemoteVO rvo = qipaiMembersRomoteService.gold_withdraw(memberId, gold, "pay for create room");
-				if (!rvo.isSuccess()) {
-					vo.setSuccess(false);
-					vo.setMsg(rvo.getMsg());
-					return vo;
-				}
-			}
-
-			GameServer gameServer = gameRoom.getServerGame().getServer();
-			// 游戏服务器rpc，需要手动httpclientrpc
-			RamjLawsFB fb = new RamjLawsFB(lawNames);
-			Request req = httpClient.newRequest(
-					"http://" + gameServer.getDomainForHttp() + ":" + gameServer.getPortForHttp() + "/game/newgame");
-			req.param("playerId", memberId);
-			req.param("difen", fb.getDifen());
-			req.param("taishu", fb.getTaishu());
-			req.param("panshu", fb.getPanshu());
-			req.param("renshu", fb.getRenshu());
-			req.param("dapao", fb.getDapao());
-			Map resData;
-			try {
-				ContentResponse res = req.send();
-				String resJson = new String(res.getContent());
-				CommonVO resVo = gson.fromJson(resJson, CommonVO.class);
-				resData = (Map) resVo.getData();
-				gameRoom.getServerGame().setGameId((String) resData.get("gameId"));
-			} catch (Exception e) {
-				vo.setSuccess(false);
-				vo.setMsg("SysException");
-				return vo;
-			}
-
-			String roomNo = gameRoomCmdService.createRoom(memberId, System.currentTimeMillis());
-			gameRoom.setNo(roomNo);
-
-			gameService.createGameRoom(gameRoom);
-
-			Map data = new HashMap();
-			data.put("httpDomain", gameRoom.getServerGame().getServer().getDomainForHttp());
-			data.put("httpPort", gameRoom.getServerGame().getServer().getPortForHttp());
-			data.put("wsUrl", gameRoom.getServerGame().getServer().getWsUrl());
-			data.put("roomNo", gameRoom.getNo());
-			data.put("gameId", gameRoom.getServerGame().getGameId());
-			data.put("token", resData.get("token"));
-			vo.setData(data);
-			return vo;
-
+			gameRoom = gameService.buildRamjGameRoom(memberId, lawNames);
 		} catch (IllegalGameLawsException e) {
 			vo.setSuccess(false);
 			vo.setMsg("IllegalGameLawsException");
@@ -155,6 +105,130 @@ public class GamePlayController {
 			vo.setMsg("NoServerAvailableForGameException");
 			return vo;
 		}
+
+		// 普通会员开vip房扣金币
+		if (!member.isVip() && gameRoom.isVip()) {
+			int gold = rights.getPlanMemberCreateRoomDailyGoldPrice();
+			CommonRemoteVO rvo = qipaiMembersRomoteService.gold_withdraw(memberId, gold, "pay for create room");
+			if (!rvo.isSuccess()) {
+				vo.setSuccess(false);
+				vo.setMsg(rvo.getMsg());
+				return vo;
+			}
+		}
+
+		GameServer gameServer = gameRoom.getServerGame().getServer();
+		// 游戏服务器rpc，需要手动httpclientrpc
+		RamjLawsFB fb = new RamjLawsFB(lawNames);
+		Request req = httpClient.newRequest(
+				"http://" + gameServer.getDomainForHttp() + ":" + gameServer.getPortForHttp() + "/game/newgame");
+		req.param("playerId", memberId);
+		req.param("difen", fb.getDifen());
+		req.param("taishu", fb.getTaishu());
+		req.param("panshu", fb.getPanshu());
+		req.param("renshu", fb.getRenshu());
+		req.param("dapao", fb.getDapao());
+		Map resData;
+		try {
+			ContentResponse res = req.send();
+			String resJson = new String(res.getContent());
+			CommonVO resVo = gson.fromJson(resJson, CommonVO.class);
+			resData = (Map) resVo.getData();
+			gameRoom.getServerGame().setGameId((String) resData.get("gameId"));
+		} catch (Exception e) {
+			vo.setSuccess(false);
+			vo.setMsg("SysException");
+			return vo;
+		}
+
+		String roomNo = gameRoomCmdService.createRoom(memberId, System.currentTimeMillis());
+		gameRoom.setNo(roomNo);
+
+		gameService.createGameRoom(gameRoom);
+
+		Map data = new HashMap();
+		data.put("httpDomain", gameRoom.getServerGame().getServer().getDomainForHttp());
+		data.put("httpPort", gameRoom.getServerGame().getServer().getPortForHttp());
+		data.put("wsUrl", gameRoom.getServerGame().getServer().getWsUrl());
+		data.put("roomNo", gameRoom.getNo());
+		data.put("gameId", gameRoom.getServerGame().getGameId());
+		data.put("token", resData.get("token"));
+		vo.setData(data);
+		return vo;
+
+	}
+
+	/**
+	 * 加入房间
+	 */
+	@RequestMapping(value = "/join_room")
+	@ResponseBody
+	public CommonVO joinRoom(String token, String roomNo) {
+		CommonVO vo = new CommonVO();
+		String memberId = memberAuthService.getMemberIdBySessionId(token);
+		if (memberId == null) {
+			vo.setSuccess(false);
+			vo.setMsg("invalid token");
+			return vo;
+		}
+		Member member = memberService.findMember(memberId);
+		MemberRights rights = member.getRights();
+
+		GameRoom gameRoom = gameService.findRoomOpen(roomNo);
+		if (gameRoom == null) {
+			vo.setSuccess(false);
+			vo.setMsg("invalid room number");
+			return vo;
+		}
+
+		try {
+			gameService.tryHasMoreRoom(memberId);
+		} catch (CanNotJoinMoreRoomsException e) {
+			vo.setSuccess(false);
+			vo.setMsg("CanNotJoinMoreRoomsException");
+			return vo;
+		}
+
+		// 普通会员加入vip房扣金币
+		if (gameRoom.isVip() && !member.isVip()) {
+			int gold = rights.getPlanMemberJoinRoomGoldPrice();
+			CommonRemoteVO rvo = qipaiMembersRomoteService.gold_withdraw(memberId, gold, "pay for join room");
+			if (!rvo.isSuccess()) {
+				vo.setSuccess(false);
+				vo.setMsg(rvo.getMsg());
+				return vo;
+			}
+		}
+
+		// 游戏服务器rpc加入房间
+		GameServer gameServer = gameRoom.getServerGame().getServer();
+		String serverGameId = gameRoom.getServerGame().getGameId();
+		Request req = httpClient.newRequest(
+				"http://" + gameServer.getDomainForHttp() + ":" + gameServer.getPortForHttp() + "/game/joingame");
+		req.param("playerId", memberId);
+		req.param("gameId", serverGameId);
+		Map resData;
+		try {
+			ContentResponse res = req.send();
+			String resJson = new String(res.getContent());
+			CommonVO resVo = gson.fromJson(resJson, CommonVO.class);
+			resData = (Map) resVo.getData();
+			gameRoom.getServerGame().setGameId((String) resData.get("gameId"));
+		} catch (Exception e) {
+			vo.setSuccess(false);
+			vo.setMsg("SysException");
+			return vo;
+		}
+
+		Map data = new HashMap();
+		data.put("httpDomain", gameRoom.getServerGame().getServer().getDomainForHttp());
+		data.put("httpPort", gameRoom.getServerGame().getServer().getPortForHttp());
+		data.put("wsUrl", gameRoom.getServerGame().getServer().getWsUrl());
+		data.put("roomNo", gameRoom.getNo());
+		data.put("gameId", gameRoom.getServerGame().getGameId());
+		data.put("token", resData.get("token"));
+		vo.setData(data);
+		return vo;
 
 	}
 

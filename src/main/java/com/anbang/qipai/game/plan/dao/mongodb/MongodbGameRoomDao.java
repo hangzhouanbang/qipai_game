@@ -35,4 +35,9 @@ public class MongodbGameRoomDao implements GameRoomDao {
 		return (int) mongoTemplate.count(query, GameRoom.class);
 	}
 
+	@Override
+	public GameRoom findRoomOpen(String roomNo) {
+		return repository.findByNoAndFinished(roomNo, false);
+	}
+
 }
