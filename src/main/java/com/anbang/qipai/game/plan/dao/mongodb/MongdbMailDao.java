@@ -7,6 +7,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
+import org.springframework.data.mongodb.core.query.Update;
 import org.springframework.stereotype.Component;
 
 import com.anbang.qipai.game.plan.bean.mail.MailState;
@@ -63,11 +64,23 @@ public class MongdbMailDao implements MailDao{
 		Long count = total%size==0?total/size:total/size+1;
 		return count;
 	}
-	/**添加或修改邮件状态
+	/**添加邮件状态
 	 * **/
 	@Override
-	public void addmailstate(MailState mailstate) {
-		mongoTemplate.save(mailstate);
+	public MailState addmailstate(MailState mailstate) {
+		mongoTemplate.insert(mailstate);
+		return mailstate;
+	}
+	/**修改邮件状态
+	 * **/
+	@Override
+	public void updateMailState(MailState mailstate) {
+		Query query =new Query(Criteria.where("id").is(mailstate.getId()));
+		Update update = new Update();
+		update.set("receive",mailstate.getReceive());
+		update.set("statemail",mailstate.getStatemail());
+		update.set("deletestate",mailstate.getDeletestate());
+		mongoTemplate.updateFirst(query, update, MailState.class);
 	}
 
 	/**根据会员id查询会员注册时间

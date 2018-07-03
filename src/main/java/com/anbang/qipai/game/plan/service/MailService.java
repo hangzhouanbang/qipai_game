@@ -76,6 +76,28 @@ public class MailService {
 		}
 	}
 	
+	/**根据id添加邮件
+	 * **/
+	public List<MailState> addMailById(SystemMail mail,String[] ids){
+		MailState mailStates = new MailState();
+		List<MailState> list = new ArrayList<MailState>();
+		for(String id : ids){
+			MailState mailstate = new MailState();
+			mailstate.setMailid(mail.getId());
+			mailstate.setMemberid(id);
+			if(mail.getNumber() == 0 && mail.getIntegral() == 0 && mail.getVipcard() == 0) {
+				mailstate.setReceive("2");
+			}else {
+				mailstate.setReceive("1");
+			}
+			mailstate.setStatemail("1");
+			mailstate.setDeletestate("1");
+			mailStates = maildao.addmailstate(mailstate);
+			list.add(mailStates);
+		}
+		return list;
+	}
+	
 	/**用户点击单个邮件，查看详情
 	 * @param memberid 会员id
 	 * @param mailid 邮件id
@@ -99,46 +121,48 @@ public class MailService {
 	public Map<String,Object> findall(String memberid) throws ParseException{
 		Map<String,Object> map = new HashMap<String,Object>();
 		 Member member = maildao.findMemberById(memberid);
-		 long newtime = TimeUtil.creducedate(member.getCreateTime(), 20);
 		 List<SystemMailState> lists = new ArrayList<>();
 		 List<SystemMailState> wdwl = new ArrayList<>();
 		 List<SystemMailState> wd = new ArrayList<>();
 		 List<SystemMailState> ydwl = new ArrayList<>();
 		 List<SystemMailState> ydyl = new ArrayList<>();
 		 List<SystemMailState> yl = new ArrayList<>();
-		 List<MailState> list = maildao.findall(memberid);
-		 for (MailState mailState1 : list) {
-			 if(mailState1.getDeletestate().equals("1")) {
-				 SystemMail sys = maildao.findByIdtime(mailState1.getMailid(), newtime);
-				 SystemMailState systemMailState = new SystemMailState();
-				 if(sys != null) {
-					 systemMailState.setStatemail(mailState1.getStatemail());
-					 systemMailState.setReceive(mailState1.getReceive());
-					 if(mailState1.getStatemail().equals("1") && mailState1.getReceive().equals("1")) {
-						 systemMailState.setSystemMail(sys);
-						 wdwl.add(systemMailState);
-					 }else if(mailState1.getStatemail().equals("1") && mailState1.getReceive().equals("2") || mailState1.getReceive().equals("0")) {
-						 systemMailState.setSystemMail(sys);
-						 wd.add(systemMailState);
-					 }else if(mailState1.getStatemail().equals("0") && mailState1.getReceive().equals("1")) {
-						 systemMailState.setSystemMail(sys);
-						 ydwl.add(systemMailState);
-					 }else if(mailState1.getStatemail().equals("0") && mailState1.getReceive().equals("0")) {
-						 systemMailState.setSystemMail(sys);
-						 ydyl.add(systemMailState);
-					 }else if(mailState1.getStatemail().equals("0") && mailState1.getReceive().equals("2")) {
-						 systemMailState.setSystemMail(sys);
-						 yl.add(systemMailState);
+		 if(member != null) {
+			 long newtime = TimeUtil.creducedate(member.getCreateTime(), 20);
+			 List<MailState> list = maildao.findall(memberid);
+			 for (MailState mailState1 : list) {
+				 if(mailState1.getDeletestate().equals("1")) {
+					 SystemMail sys = maildao.findByIdtime(mailState1.getMailid(), newtime);
+					 SystemMailState systemMailState = new SystemMailState();
+					 if(sys != null) {
+						 systemMailState.setStatemail(mailState1.getStatemail());
+						 systemMailState.setReceive(mailState1.getReceive());
+						 if(mailState1.getStatemail().equals("1") && mailState1.getReceive().equals("1")) {
+							 systemMailState.setSystemMail(sys);
+							 wdwl.add(systemMailState);
+						 }else if(mailState1.getStatemail().equals("1") && mailState1.getReceive().equals("2") || mailState1.getReceive().equals("0")) {
+							 systemMailState.setSystemMail(sys);
+							 wd.add(systemMailState);
+						 }else if(mailState1.getStatemail().equals("0") && mailState1.getReceive().equals("1")) {
+							 systemMailState.setSystemMail(sys);
+							 ydwl.add(systemMailState);
+						 }else if(mailState1.getStatemail().equals("0") && mailState1.getReceive().equals("0")) {
+							 systemMailState.setSystemMail(sys);
+							 ydyl.add(systemMailState);
+						 }else if(mailState1.getStatemail().equals("0") && mailState1.getReceive().equals("2")) {
+							 systemMailState.setSystemMail(sys);
+							 yl.add(systemMailState);
+						 }
+					 }
 					 }
 				 }
-				 }
-			 	}
-		 lists.addAll(wdwl);
-		 lists.addAll(wd);
-		 lists.addAll(ydwl);
-		 lists.addAll(ydyl);
-		 lists.addAll(yl);
-		 
+			 
+			 lists.addAll(wdwl);
+			 lists.addAll(wd);
+			 lists.addAll(ydwl);
+			 lists.addAll(ydyl);
+			 lists.addAll(yl);
+		 }
 		 map.put("lists",lists);
 	    return map;
 	}
@@ -146,6 +170,7 @@ public class MailService {
 	
 	/**查询有多少未读未领的，小红点个数
 	 * 
+	 * **/
 	public Integer redmailcount(String memberid) {
 		Integer count = 0;
 		List<MailState> list = maildao.findall(memberid);
@@ -156,7 +181,12 @@ public class MailService {
 		}
 		return count;
 	}
-	 **/
+	
+	/**查询哪个会员的哪个邮件的状态**/
+	public MailState findmembermail(String memberId,String mailid) {
+		return maildao.findmembermail(memberId, mailid);
+	}
+	 
 	/**用户点开邮件，改变邮件状态
 	 *@param memberid 会员id
 	 *@param mailid 邮件id
@@ -191,7 +221,7 @@ public class MailService {
 		List<MailState> list = maildao.findallmembermail(memberid);
 		for (MailState mailState : list) {//循环把这个会员的所有邮件设为已读
 			mailState.setStatemail("0");
-			maildao.addmailstate(mailState);
+			maildao.updateMailState(mailState);
 		}
 	}
 	
@@ -204,7 +234,7 @@ public class MailService {
 			if(mailState.getStatemail().equals("0") && mailState.getReceive().equals("0") || mailState.getReceive().equals("2")) {
 				mailState.setDeletestate("0");
 			}
-			maildao.addmailstate(mailState);
+			maildao.updateMailState(mailState);
 		}
 	}
 	

@@ -1,16 +1,19 @@
 package com.anbang.qipai.game.web.controller;
 
 import java.text.ParseException;
+import java.util.List;
 import java.util.Map;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.anbang.qipai.game.msg.service.MailMsgService;
+import com.anbang.qipai.game.plan.bean.mail.MailState;
 import com.anbang.qipai.game.plan.bean.mail.SystemMail;
 import com.anbang.qipai.game.plan.service.MailService;
 import com.anbang.qipai.game.plan.service.MemberAuthService;
@@ -58,11 +61,41 @@ public class MailController {
 		mails.setCreatetime(System.currentTimeMillis());
 		mails.setStatus(mail1.getStatus());
 		SystemMail mail2 = mailService.addmail(mails);
-		//给会员发送邮件
+		//给所有会员发送邮件
 		mailService.pagingfind(mail2.getId());
 		mailMsgService.createmail(mail2);
 		return new CommonVO();
 	}
+	
+	/**发布邮件,并给所选中的用户发送邮件
+	 * @param mail 管理系统传过来的json字符串
+	 * @param id 选中的用户id
+	 * @return 接收成功
+	 * **/
+	@RequestMapping("/addmailbyid")
+	public CommonVO addMailById(String mail,@RequestBody String[] ids) {
+		JSONObject json = JSONObject.fromObject(mail);
+		SystemMail mail1 = (SystemMail) JSONObject.toBean(json, SystemMail.class);
+		SystemMail mails = new SystemMail();
+		mails.setAdminname(mail1.getAdminname());
+		mails.setTitle(mail1.getTitle());
+		mails.setFile(mail1.getFile());
+		mails.setIntegral(mail1.getIntegral());
+		mails.setNumber(mail1.getNumber());
+		mails.setVipcard(mail1.getVipcard());
+		mails.setCreatetime(System.currentTimeMillis());
+		mails.setMailType(mail1.getMailType());
+		mails.setValidTime(mail1.getValidTime());
+		mails.setStatus(mail1.getStatus());
+		SystemMail mail2 = mailService.addmail(mails);
+		//给选中的id发送邮件
+		List<MailState> list = mailService.addMailById(mail2, ids);
+		//发送kafka消息
+		mailMsgService.createmail(mail2);
+		mailMsgService.createMailState(list);
+		return new CommonVO();
+	}
+	
 	
 	/**用户查看本身的邮件
 	 * @param 用户的id
@@ -70,7 +103,7 @@ public class MailController {
 	 * **/
 	@RequestMapping("/querymail")
 	@ResponseBody
-	public CommonVO querymail(String token,String you) throws ParseException{
+	public CommonVO querymail(String token) throws ParseException{
 		CommonVO vo = new CommonVO();
 		String memberId = memberAuthService.getMemberIdBySessionId(token);
 		if (memberId == null) {
@@ -78,8 +111,10 @@ public class MailController {
 			vo.setMsg("invalid token");
 			return vo;
 		}
-		logger.info("id"+memberId+you);
+		logger.info("id"+memberId);
 		Map<String,Object> map =  mailService.findall(memberId); 
+		Integer count = mailService.redmailcount(memberId);
+		vo.setMsg(count.toString());
 		vo.setData(map);
 		return vo;
 	}
@@ -104,6 +139,8 @@ public class MailController {
 			return vo;
 		}
 		Map<String,Object> map = mailService.findonemail(memberId, mailid);
+		MailState mailstate = (MailState) map.get("mailstate");
+		mailMsgService.updateMailState(mailstate);
 		vo.setData(map);
 		return vo;
 	}
@@ -128,6 +165,9 @@ public class MailController {
 			return vo;
 		}
 		vo = mailService.changestate(memberId, mailid);
+		Integer count = mailService.redmailcount(memberId);
+		mailMsgService.updateMailState(mailService.findmembermail(memberId, mailid));
+		vo.setMsg(count.toString());
 		return vo;
 	}
 	
@@ -145,6 +185,7 @@ public class MailController {
 			return vo;
 		}
 		 mailService.findallmembermail(memberId);
+		 mailMsgService.updateMailStateAll(memberId);
 		 return new CommonVO();
 	}
 	
@@ -162,6 +203,7 @@ public class MailController {
 			return vo;
 		}
 		mailService.deleteallmail(memberId);
+		mailMsgService.deleteMailStateAll(memberId);
 		return new CommonVO();
 	}
 	

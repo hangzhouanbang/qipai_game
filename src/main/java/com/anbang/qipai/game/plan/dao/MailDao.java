@@ -49,7 +49,10 @@ public interface MailDao {
 	/**添加会员状态表
 	 * @param mailstate 会员邮件信息
 	 * **/
-	void addmailstate(MailState mailstate);
+	MailState addmailstate(MailState mailstate);
+	
+	/**修改邮件状态**/
+	void updateMailState(MailState mailState);
 	
 	/**根据会员id查询会员注册时间
 	 * @param memberid 会员id

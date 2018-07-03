@@ -18,6 +18,10 @@ public class SystemMail {
 	private Integer vipcard;//会员体验时间，按日来计算
 	
 	private Integer status;//状态；0-维护，1-恢复
+	
+	private String mailType;//邮件类型
+	
+	private long validTime;//有效时间
 
 	public String getId() {
 		return id;
@@ -89,6 +93,22 @@ public class SystemMail {
 
 	public void setStatus(Integer status) {
 		this.status = status;
+	}
+
+	public String getMailType() {
+		return mailType;
+	}
+
+	public void setMailType(String mailType) {
+		this.mailType = mailType;
+	}
+
+	public long getValidTime() {
+		return validTime;
+	}
+
+	public void setValidTime(long validTime) {
+		this.validTime = validTime;
 	}
 
 	

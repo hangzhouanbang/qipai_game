@@ -7,5 +7,9 @@ package com.anbang.qipai.game.plan.bean.games;
  *
  */
 public enum Game {
-	ruianMajiang
+	ruianMajiang,
+	
+	wenzhouMajiang,
+	
+	dianpaoMajiang
 }
