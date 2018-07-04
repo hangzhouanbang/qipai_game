@@ -101,7 +101,7 @@ public class MongdbMailDao implements MailDao{
 	@Override
 	public MailState findmembermail(String memberid, String mailid) {
 		Criteria criteria = new Criteria();
-		criteria.andOperator(Criteria.where("memberid").is(memberid),Criteria.where("mailid").gte(mailid));//多条件查询
+		criteria.andOperator(Criteria.where("memberid").is(memberid),Criteria.where("mailid").is(mailid));//多条件查询
 		return mongoTemplate.findOne(new Query(criteria), MailState.class);
 	}
 

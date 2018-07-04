@@ -70,6 +70,8 @@ public class MailService {
 				}
 				mailstate.setStatemail("1");
 				mailstate.setDeletestate("1");
+				mailstate.setRewardTime(0);
+				mailstate.setCreateTime(System.currentTimeMillis());
 				maildao.addmailstate(mailstate);
 			}
 			page++;
@@ -92,6 +94,8 @@ public class MailService {
 			}
 			mailstate.setStatemail("1");
 			mailstate.setDeletestate("1");
+			mailstate.setRewardTime(0);
+			mailstate.setCreateTime(System.currentTimeMillis());
 			mailStates = maildao.addmailstate(mailstate);
 			list.add(mailStates);
 		}
@@ -204,7 +208,9 @@ public class MailService {
 				if(cvo.isSuccess()) {
 					mailstate.setStatemail("0");
 					mailstate.setReceive("0");
+					mailstate.setRewardTime(System.currentTimeMillis());
 					maildao.updatemembermail(mailstate);
+					vo.setData(mailstate);
 				}else {
 					vo.setSuccess(false);
 					vo.setMsg("调用服务出错");

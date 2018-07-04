@@ -86,7 +86,7 @@ public class MailController {
 		mails.setCreatetime(System.currentTimeMillis());
 		mails.setMailType(mail1.getMailType());
 		mails.setValidTime(mail1.getValidTime());
-		mails.setStatus(mail1.getStatus());
+		mails.setStatus(2);
 		SystemMail mail2 = mailService.addmail(mails);
 		//给选中的id发送邮件
 		List<MailState> list = mailService.addMailById(mail2, ids);
@@ -141,6 +141,8 @@ public class MailController {
 		Map<String,Object> map = mailService.findonemail(memberId, mailid);
 		MailState mailstate = (MailState) map.get("mailstate");
 		mailMsgService.updateMailState(mailstate);
+		Integer count = mailService.redmailcount(memberId);
+		vo.setMsg(count.toString());
 		vo.setData(map);
 		return vo;
 	}
@@ -166,7 +168,10 @@ public class MailController {
 		}
 		vo = mailService.changestate(memberId, mailid);
 		Integer count = mailService.redmailcount(memberId);
-		mailMsgService.updateMailState(mailService.findmembermail(memberId, mailid));
+		MailState mailState = (MailState) vo.getData();
+		if(vo.isSuccess() == true) {
+			mailMsgService.updateMailState(mailState);
+		}
 		vo.setMsg(count.toString());
 		return vo;
 	}
@@ -203,7 +208,7 @@ public class MailController {
 			return vo;
 		}
 		mailService.deleteallmail(memberId);
-		mailMsgService.deleteMailStateAll(memberId);
+		//mailMsgService.deleteMailStateAll(memberId);
 		return new CommonVO();
 	}
 	
