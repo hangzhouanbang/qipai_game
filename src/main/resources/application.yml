@@ -80,19 +80,15 @@ spring:
           
         mail:
           destination: mail
-          group: qipai-game
-          consumer:
-            concurrency: 1
-            partitioned: false
           contentType: application/json
+          producer:
+            partitionCount: 1
           
         memberrightsconfiguration:
           destination: memberrightsconfiguration
-          group: qipai-game
-          consumer:
-            concurrency: 1
-            partitioned: false
           contentType: application/json
+          producer:
+            partitionCount: 1
   
   application:
     name: qipai-game
