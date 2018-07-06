@@ -13,10 +13,10 @@ public class MemberRightsConfigurationMsgService {
 
 	@Autowired
 	private MemberRightsConfigurationSource memberRightsConfigurationSource;
-	
+
 	public void createMemberRights(MemberRightsConfiguration memberRightsConfiguration) {
 		CommonMO mo = new CommonMO();
-		mo.setMsg("newMemberRightsConfiguration");
+		mo.setMsg("qipai_game_conf");
 		mo.setData(memberRightsConfiguration);
 		memberRightsConfigurationSource.memberrightsconfiguration().send(MessageBuilder.withPayload(mo).build());
 	}
