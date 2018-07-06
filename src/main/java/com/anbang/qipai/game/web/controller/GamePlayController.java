@@ -27,7 +27,7 @@ import com.anbang.qipai.game.plan.bean.members.NotVIPMemberException;
 import com.anbang.qipai.game.plan.service.GameService;
 import com.anbang.qipai.game.plan.service.MemberAuthService;
 import com.anbang.qipai.game.plan.service.MemberService;
-import com.anbang.qipai.game.remote.service.QipaiMembersRomoteService;
+import com.anbang.qipai.game.remote.service.QipaiMembersRemoteService;
 import com.anbang.qipai.game.remote.vo.CommonRemoteVO;
 import com.anbang.qipai.game.web.fb.RamjLawsFB;
 import com.anbang.qipai.game.web.vo.CommonVO;
@@ -59,7 +59,7 @@ public class GamePlayController {
 	private GameServerMsgService gameServerMsgService;
 
 	@Autowired
-	private QipaiMembersRomoteService qipaiMembersRomoteService;
+	private QipaiMembersRemoteService qipaiMembersRomoteService;
 
 	@Autowired
 	private HttpClient httpClient;

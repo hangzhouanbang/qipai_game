@@ -5,7 +5,7 @@ import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import com.anbang.qipai.game.remote.service.QipaiMembersRomoteService;
+import com.anbang.qipai.game.remote.service.QipaiMembersRemoteService;
 import com.anbang.qipai.game.remote.vo.CommonRemoteVO;
 import com.dml.users.UserSessionsManager;
 
@@ -16,7 +16,7 @@ public class MemberAuthService {
 	private UserSessionsManager userSessionsManager;
 
 	@Autowired
-	private QipaiMembersRomoteService qipaiMembersRomoteService;
+	private QipaiMembersRemoteService qipaiMembersRomoteService;
 
 	public String getMemberIdBySessionId(String sessionId) {
 

@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.anbang.qipai.game.conf.WebsocketConfig;
 import com.anbang.qipai.game.plan.service.MemberAuthService;
-import com.anbang.qipai.game.remote.service.QipaiMembersRomoteService;
+import com.anbang.qipai.game.remote.service.QipaiMembersRemoteService;
 import com.anbang.qipai.game.remote.vo.MemberRemoteVO;
 import com.anbang.qipai.game.web.vo.CommonVO;
 
@@ -31,7 +31,7 @@ public class HallController {
 	private WebsocketConfig wsConfig;
 
 	@Autowired
-	private QipaiMembersRomoteService qipaiMembersRomoteService;
+	private QipaiMembersRemoteService qipaiMembersRomoteService;
 
 	/**
 	 * 大厅首页
