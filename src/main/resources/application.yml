@@ -2,7 +2,6 @@ spring:
   data:
     mongodb:
       uri: mongodb://localhost:27017/qipai_game
-      
   cloud:
     stream:
       kafka:
@@ -23,7 +22,6 @@ spring:
                   ms: 5
                 batch:
                   size: 16384
-                  
           gameServer:
             producer:
               configuration:
@@ -34,7 +32,6 @@ spring:
                   ms: 5
                 batch:
                   size: 16384
-                  
           mail:
             producer:
               configuration:
@@ -45,7 +42,6 @@ spring:
                   ms: 5
                 batch:
                   size: 16384
-                  
           memberrightsconfiguration:
             producer:
               configuration:
@@ -56,20 +52,17 @@ spring:
                   ms: 5
                 batch:
                   size: 16384
-
       bindings:
         notice:
           destination: notice
           contentType: application/json
           producer:
             partitionCount: 1
-            
         gameServer:
           destination: gameServer
           contentType: application/json
           producer:
             partitionCount: 1
-            
         members:
           destination: members
           group: qipai-game
@@ -77,41 +70,23 @@ spring:
             concurrency: 1
             partitioned: false
           contentType: application/json
-          
         mail:
           destination: mail
-          group: qipai-game
-          consumer:
-            concurrency: 1
-            partitioned: false
           contentType: application/json
-          
+          producer:
+            partitionCount: 1
         memberrightsconfiguration:
           destination: memberrightsconfiguration
-          group: qipai-game
-          consumer:
-            concurrency: 1
-            partitioned: false
           contentType: application/json
-  
+          producer:
+            partitionCount: 1
   application:
     name: qipai-game
 server:
   port: 83
-  
-logging:
-  path: D:/data/log
-  level:
-    xatu.zsl: debug
-    org.springfromework.web: info
-    org.hibernate: error
-  file: log\myspringboot.log
-  
-  
 eureka:
   client:
     serviceUrl:
       defaultZone: http://127.0.0.1:8761/eureka/
-      
 websocket:
   url: ws://192.168.0.9:83/hall

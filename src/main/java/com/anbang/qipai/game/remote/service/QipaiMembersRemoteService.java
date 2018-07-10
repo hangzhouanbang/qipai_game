@@ -14,7 +14,7 @@ import com.anbang.qipai.game.remote.vo.MemberRemoteVO;
  *
  */
 @FeignClient("qipai-members")
-public interface QipaiMembersRomoteService {
+public interface QipaiMembersRemoteService {
 
 	@RequestMapping(value = "/auth/trytoken")
 	public CommonRemoteVO auth_trytoken(@RequestParam("token") String token);
@@ -26,7 +26,7 @@ public interface QipaiMembersRomoteService {
 	public CommonRemoteVO gold_withdraw(@RequestParam("memberId") String memberId, @RequestParam("amount") int amount,
 			@RequestParam("textSummary") String textSummary);
 
-	@RequestMapping(value = "/game/mail_reward")
+	@RequestMapping(value = "/reward/mail_reward")
 	public CommonRemoteVO game_mail_reward(@RequestParam("memberId") String memberId,
 			@RequestParam("number") Integer number, @RequestParam("integral") Integer integral,
 			@RequestParam("vipcard") Integer vipcard);
