@@ -6,8 +6,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -26,8 +24,6 @@ import com.anbang.qipai.game.web.vo.CommonVO;
 
 @Component
 public class MailService {
-
-	private static Logger logger = LoggerFactory.getLogger(MailService.class);
 
 	@Autowired
 	private QipaiMembersRemoteService qipaiMembersRemoteService;

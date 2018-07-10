@@ -4,8 +4,6 @@ import java.text.ParseException;
 import java.util.List;
 import java.util.Map;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -40,8 +38,6 @@ public class MailController {
 
 	private Gson gson = new Gson();
 
-	private static Logger logger = LoggerFactory.getLogger(MailController.class);
-
 	/**
 	 * 新发布的系统公告,并给所有用户发送邮件
 	 * 
@@ -53,7 +49,6 @@ public class MailController {
 	@ResponseBody
 	public CommonVO addmail(String mail) {
 		SystemMail mail1 = gson.fromJson(mail, SystemMail.class);
-		logger.info("管理员名称" + mail1.getAdminname());
 		SystemMail mails = new SystemMail();
 		mails.setAdminname(mail1.getAdminname());
 		mails.setTitle(mail1.getTitle());
@@ -118,7 +113,6 @@ public class MailController {
 			vo.setMsg("invalid token");
 			return vo;
 		}
-		logger.info("id" + memberId);
 		Map<String, Object> map = mailService.findall(memberId);
 		Integer count = mailService.redmailcount(memberId);
 		vo.setMsg(count.toString());
