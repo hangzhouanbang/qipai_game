@@ -27,7 +27,7 @@ import com.anbang.qipai.game.plan.bean.members.NotVIPMemberException;
 import com.anbang.qipai.game.plan.service.GameService;
 import com.anbang.qipai.game.plan.service.MemberAuthService;
 import com.anbang.qipai.game.plan.service.MemberService;
-import com.anbang.qipai.game.remote.service.QipaiMembersRomoteService;
+import com.anbang.qipai.game.remote.service.QipaiMembersRemoteService;
 import com.anbang.qipai.game.remote.vo.CommonRemoteVO;
 import com.anbang.qipai.game.web.fb.RamjLawsFB;
 import com.anbang.qipai.game.web.vo.CommonVO;
@@ -59,7 +59,7 @@ public class GamePlayController {
 	private GameServerMsgService gameServerMsgService;
 
 	@Autowired
-	private QipaiMembersRomoteService qipaiMembersRomoteService;
+	private QipaiMembersRemoteService qipaiMembersRomoteService;
 
 	@Autowired
 	private HttpClient httpClient;
@@ -213,7 +213,6 @@ public class GamePlayController {
 			String resJson = new String(res.getContent());
 			CommonVO resVo = gson.fromJson(resJson, CommonVO.class);
 			resData = (Map) resVo.getData();
-			gameRoom.getServerGame().setGameId((String) resData.get("gameId"));
 		} catch (Exception e) {
 			vo.setSuccess(false);
 			vo.setMsg("SysException");
@@ -225,8 +224,8 @@ public class GamePlayController {
 		data.put("httpPort", gameRoom.getServerGame().getServer().getPortForHttp());
 		data.put("wsUrl", gameRoom.getServerGame().getServer().getWsUrl());
 		data.put("roomNo", gameRoom.getNo());
-		data.put("gameId", gameRoom.getServerGame().getGameId());
 		data.put("token", resData.get("token"));
+		data.put("gameId", serverGameId);
 		vo.setData(data);
 		return vo;
 
