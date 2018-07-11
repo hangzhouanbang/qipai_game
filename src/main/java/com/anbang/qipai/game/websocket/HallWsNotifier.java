@@ -56,9 +56,17 @@ public class HallWsNotifier {
 		sessionIdActivetimeMap.put(session.getId(), System.currentTimeMillis());
 	}
 
-	public void updateSession(String sessionId, String memberId) throws SessionAlreadyExistsException {
-		if (memberIdSessionIdMap.containsKey(memberId)) {
-			throw new SessionAlreadyExistsException();
+	public void updateSession(String sessionId, String memberId) {
+		String sessionAlreadyExistsId = memberIdSessionIdMap.get(memberId);
+		if (sessionAlreadyExistsId != null) {
+			WebSocketSession removedSession = removeSession(sessionAlreadyExistsId);
+			if (removedSession != null) {
+				try {
+					removedSession.close();
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+			}
 		}
 		sessionIdActivetimeMap.put(sessionId, System.currentTimeMillis());
 		sessionIdMemberIdMap.put(sessionId, memberId);
