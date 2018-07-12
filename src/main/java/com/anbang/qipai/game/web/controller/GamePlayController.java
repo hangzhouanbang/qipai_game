@@ -212,7 +212,13 @@ public class GamePlayController {
 			ContentResponse res = req.send();
 			String resJson = new String(res.getContent());
 			CommonVO resVo = gson.fromJson(resJson, CommonVO.class);
-			resData = (Map) resVo.getData();
+			if (resVo.isSuccess()) {
+				resData = (Map) resVo.getData();
+			} else {
+				vo.setSuccess(false);
+				vo.setMsg(resVo.getMsg());
+				return vo;
+			}
 		} catch (Exception e) {
 			vo.setSuccess(false);
 			vo.setMsg("SysException");
