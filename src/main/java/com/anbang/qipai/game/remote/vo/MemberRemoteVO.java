@@ -18,6 +18,8 @@ public class MemberRemoteVO {
 
 	private int gold;
 
+	private int score;
+
 	public boolean isSuccess() {
 		return success;
 	}
@@ -56,6 +58,14 @@ public class MemberRemoteVO {
 
 	public void setGold(int gold) {
 		this.gold = gold;
+	}
+
+	public int getScore() {
+		return score;
+	}
+
+	public void setScore(int score) {
+		this.score = score;
 	}
 
 }
