@@ -179,4 +179,8 @@ public class GameService {
 		}
 	}
 
+	public MemberGameRoom findMemberGameRoom(String memberId, String GameRoomId) {
+		return memberGameRoomDao.findByMemberIdAndGameRoomId(memberId, GameRoomId);
+	}
+
 }

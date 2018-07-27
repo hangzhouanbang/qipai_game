@@ -20,6 +20,7 @@ import com.anbang.qipai.game.plan.bean.games.Game;
 import com.anbang.qipai.game.plan.bean.games.GameRoom;
 import com.anbang.qipai.game.plan.bean.games.GameServer;
 import com.anbang.qipai.game.plan.bean.games.IllegalGameLawsException;
+import com.anbang.qipai.game.plan.bean.games.MemberGameRoom;
 import com.anbang.qipai.game.plan.bean.games.NoServerAvailableForGameException;
 import com.anbang.qipai.game.plan.bean.members.Member;
 import com.anbang.qipai.game.plan.bean.members.MemberRights;
@@ -159,7 +160,7 @@ public class GamePlayController {
 	}
 
 	/**
-	 * 加入房间
+	 * 加入房间。如果加入的是自己暂时离开的房间，那么就变成返回房间
 	 */
 	@RequestMapping(value = "/join_room")
 	@ResponseBody
@@ -186,6 +187,43 @@ public class GamePlayController {
 		} catch (CanNotJoinMoreRoomsException e) {
 			vo.setSuccess(false);
 			vo.setMsg("CanNotJoinMoreRoomsException");
+			return vo;
+		}
+
+		// 处理如果是自己暂时离开的房间
+		MemberGameRoom memberGameRoom = gameService.findMemberGameRoom(memberId, gameRoom.getId());
+		if (memberGameRoom != null) {
+			// 游戏服务器rpc返回房间
+			GameServer gameServer = gameRoom.getServerGame().getServer();
+			Request req = httpClient.newRequest(
+					"http://" + gameServer.getDomainForHttp() + ":" + gameServer.getPortForHttp() + "/game/backtogame");
+			req.param("playerId", memberId);
+			Map resData;
+			try {
+				ContentResponse res = req.send();
+				String resJson = new String(res.getContent());
+				CommonVO resVo = gson.fromJson(resJson, CommonVO.class);
+				if (resVo.isSuccess()) {
+					resData = (Map) resVo.getData();
+				} else {
+					vo.setSuccess(false);
+					vo.setMsg(resVo.getMsg());
+					return vo;
+				}
+			} catch (Exception e) {
+				vo.setSuccess(false);
+				vo.setMsg("SysException");
+				return vo;
+			}
+
+			Map data = new HashMap();
+			data.put("httpDomain", gameRoom.getServerGame().getServer().getDomainForHttp());
+			data.put("httpPort", gameRoom.getServerGame().getServer().getPortForHttp());
+			data.put("wsUrl", gameRoom.getServerGame().getServer().getWsUrl());
+			data.put("roomNo", gameRoom.getNo());
+			data.put("token", resData.get("token"));
+			data.put("gameId", resData.get("gameId"));
+			vo.setData(data);
 			return vo;
 		}
 

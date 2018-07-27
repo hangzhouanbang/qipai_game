@@ -8,4 +8,6 @@ public interface MemberGameRoomDao {
 
 	int count(String memberId);
 
+	MemberGameRoom findByMemberIdAndGameRoomId(String memberId, String gameRoomId);
+
 }

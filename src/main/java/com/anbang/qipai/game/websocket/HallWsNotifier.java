@@ -109,14 +109,20 @@ public class HallWsNotifier {
 			memberIdSessionIdMap.values().forEach((sessionId) -> {
 				WebSocketSession session = idSessionMap.get(sessionId);
 				if (session != null) {
-					try {
-						session.sendMessage(new TextMessage(payLoad));
-					} catch (IOException e) {
-						e.printStackTrace();
-					}
+					sendMessage(session, payLoad);
 				}
 			});
 		});
+	}
+
+	private void sendMessage(WebSocketSession session, String message) {
+		synchronized (session) {
+			try {
+				session.sendMessage(new TextMessage(message));
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
 	}
 
 }

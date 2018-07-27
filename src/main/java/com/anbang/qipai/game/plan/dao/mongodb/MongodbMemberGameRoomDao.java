@@ -33,4 +33,9 @@ public class MongodbMemberGameRoomDao implements MemberGameRoomDao {
 		return (int) mongoTemplate.count(query, MemberGameRoom.class);
 	}
 
+	@Override
+	public MemberGameRoom findByMemberIdAndGameRoomId(String memberId, String gameRoomId) {
+		return repository.findByMemberIdAndGameRoomId(memberId, gameRoomId);
+	}
+
 }

@@ -115,10 +115,12 @@ public class HallWsController extends TextWebSocketHandler {
 	}
 
 	private void sendMessage(WebSocketSession session, String message) {
-		try {
-			session.sendMessage(new TextMessage(message));
-		} catch (IOException e) {
-			e.printStackTrace();
+		synchronized (session) {
+			try {
+				session.sendMessage(new TextMessage(message));
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
 		}
 	}
 

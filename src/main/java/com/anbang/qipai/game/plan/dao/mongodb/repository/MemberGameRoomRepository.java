@@ -6,4 +6,6 @@ import com.anbang.qipai.game.plan.bean.games.MemberGameRoom;
 
 public interface MemberGameRoomRepository extends MongoRepository<MemberGameRoom, String> {
 
+	MemberGameRoom findByMemberIdAndGameRoomId(String memberId, String gameRoomId);
+
 }
