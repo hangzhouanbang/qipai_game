@@ -60,6 +60,7 @@ public class HallController {
 			mm.put("nickname", memberRemoteVO.getNickname());
 			mm.put("headimgurl", memberRemoteVO.getHeadimgurl());
 			mm.put("gold", memberRemoteVO.getGold());
+			mm.put("score", memberRemoteVO.getScore());
 		}
 		return vo;
 	}
