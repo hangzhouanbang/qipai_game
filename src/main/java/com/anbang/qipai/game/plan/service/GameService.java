@@ -140,6 +140,13 @@ public class GameService {
 		memberGameRoomDao.save(mgr);
 	}
 
+	public void joinGameRoom(GameRoom gameRoom, String memberId) {
+		MemberGameRoom mgr = new MemberGameRoom();
+		mgr.setGameRoom(gameRoom);
+		mgr.setMemberId(memberId);
+		memberGameRoomDao.save(mgr);
+	}
+
 	public void createGameLaw(Game game, String name, String desc, String mutexGroupId, boolean vip) {
 		GameLaw law = new GameLaw();
 		law.setDesc(desc);
@@ -181,6 +188,10 @@ public class GameService {
 
 	public MemberGameRoom findMemberGameRoom(String memberId, String GameRoomId) {
 		return memberGameRoomDao.findByMemberIdAndGameRoomId(memberId, GameRoomId);
+	}
+
+	public void ruianMajiangPlayerQuitQame(String serverGameId, String playerId) {
+		memberGameRoomDao.remove(Game.ruianMajiang, serverGameId, playerId);
 	}
 
 }

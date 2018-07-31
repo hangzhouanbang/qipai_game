@@ -181,14 +181,7 @@ public class GamePlayController {
 			vo.setMsg("invalid room number");
 			return vo;
 		}
-
-		try {
-			gameService.tryHasMoreRoom(memberId);
-		} catch (CanNotJoinMoreRoomsException e) {
-			vo.setSuccess(false);
-			vo.setMsg("CanNotJoinMoreRoomsException");
-			return vo;
-		}
+		String serverGameId = gameRoom.getServerGame().getGameId();
 
 		// 处理如果是自己暂时离开的房间
 		MemberGameRoom memberGameRoom = gameService.findMemberGameRoom(memberId, gameRoom.getId());
@@ -198,6 +191,7 @@ public class GamePlayController {
 			Request req = httpClient.newRequest(
 					"http://" + gameServer.getDomainForHttp() + ":" + gameServer.getPortForHttp() + "/game/backtogame");
 			req.param("playerId", memberId);
+			req.param("gameId", serverGameId);
 			Map resData;
 			try {
 				ContentResponse res = req.send();
@@ -222,8 +216,16 @@ public class GamePlayController {
 			data.put("wsUrl", gameRoom.getServerGame().getServer().getWsUrl());
 			data.put("roomNo", gameRoom.getNo());
 			data.put("token", resData.get("token"));
-			data.put("gameId", resData.get("gameId"));
+			data.put("gameId", serverGameId);
 			vo.setData(data);
+			return vo;
+		}
+
+		try {
+			gameService.tryHasMoreRoom(memberId);
+		} catch (CanNotJoinMoreRoomsException e) {
+			vo.setSuccess(false);
+			vo.setMsg("CanNotJoinMoreRoomsException");
 			return vo;
 		}
 
@@ -240,7 +242,6 @@ public class GamePlayController {
 
 		// 游戏服务器rpc加入房间
 		GameServer gameServer = gameRoom.getServerGame().getServer();
-		String serverGameId = gameRoom.getServerGame().getGameId();
 		Request req = httpClient.newRequest(
 				"http://" + gameServer.getDomainForHttp() + ":" + gameServer.getPortForHttp() + "/game/joingame");
 		req.param("playerId", memberId);
@@ -262,6 +263,7 @@ public class GamePlayController {
 			vo.setMsg("SysException");
 			return vo;
 		}
+		gameService.joinGameRoom(gameRoom, memberId);
 
 		Map data = new HashMap();
 		data.put("httpDomain", gameRoom.getServerGame().getServer().getDomainForHttp());
