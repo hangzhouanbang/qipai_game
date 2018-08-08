@@ -147,13 +147,7 @@ public class GameService {
 		memberGameRoomDao.save(mgr);
 	}
 
-	public void createGameLaw(Game game, String name, String desc, String mutexGroupId, boolean vip) {
-		GameLaw law = new GameLaw();
-		law.setDesc(desc);
-		law.setGame(game);
-		law.setMutexGroupId(mutexGroupId);
-		law.setName(name);
-		law.setVip(vip);
+	public void createGameLaw(GameLaw law) {
 		gameLawDao.save(law);
 	}
 
@@ -161,11 +155,7 @@ public class GameService {
 		gameLawDao.remove(lawId);
 	}
 
-	public void addLawsMutexGroup(Game game, String name, String desc) {
-		LawsMutexGroup lawsMutexGroup = new LawsMutexGroup();
-		lawsMutexGroup.setDesc(desc);
-		lawsMutexGroup.setGame(game);
-		lawsMutexGroup.setName(name);
+	public void addLawsMutexGroup(LawsMutexGroup lawsMutexGroup) {
 		lawsMutexGroupDao.save(lawsMutexGroup);
 	}
 
@@ -194,4 +184,7 @@ public class GameService {
 		memberGameRoomDao.remove(Game.ruianMajiang, serverGameId, playerId);
 	}
 
+	public List<MemberGameRoom> queryMemberGameRoomForMember(String memberId) {
+		return memberGameRoomDao.findByMemberId(memberId);
+	}
 }

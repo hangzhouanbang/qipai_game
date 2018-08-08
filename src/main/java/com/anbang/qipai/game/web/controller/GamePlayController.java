@@ -16,10 +16,11 @@ import org.springframework.web.bind.annotation.RestController;
 import com.anbang.qipai.game.cqrs.c.service.GameRoomCmdService;
 import com.anbang.qipai.game.msg.service.GameServerMsgService;
 import com.anbang.qipai.game.plan.bean.games.CanNotJoinMoreRoomsException;
-import com.anbang.qipai.game.plan.bean.games.Game;
+import com.anbang.qipai.game.plan.bean.games.GameLaw;
 import com.anbang.qipai.game.plan.bean.games.GameRoom;
 import com.anbang.qipai.game.plan.bean.games.GameServer;
 import com.anbang.qipai.game.plan.bean.games.IllegalGameLawsException;
+import com.anbang.qipai.game.plan.bean.games.LawsMutexGroup;
 import com.anbang.qipai.game.plan.bean.games.MemberGameRoom;
 import com.anbang.qipai.game.plan.bean.games.NoServerAvailableForGameException;
 import com.anbang.qipai.game.plan.bean.members.Member;
@@ -319,9 +320,10 @@ public class GamePlayController {
 	 */
 	@RequestMapping(value = "/add_law")
 	@ResponseBody
-	public CommonVO addlaw(Game game, String name, String desc, String mutexGroupId, boolean vip) {
+	public CommonVO addlaw(@RequestBody GameLaw law) {
 		CommonVO vo = new CommonVO();
-		gameService.createGameLaw(game, name, desc, mutexGroupId, vip);
+		gameService.createGameLaw(law);
+		gameServerMsgService.createGameLaw(law);
 		return vo;
 	}
 
@@ -336,6 +338,7 @@ public class GamePlayController {
 	public CommonVO removelaw(String lawId) {
 		CommonVO vo = new CommonVO();
 		gameService.removeGameLaw(lawId);
+		gameServerMsgService.removeGameLaw(lawId);
 		return vo;
 	}
 
@@ -349,9 +352,10 @@ public class GamePlayController {
 	 */
 	@RequestMapping(value = "/add_mutexgroup")
 	@ResponseBody
-	public CommonVO addmutexgroup(Game game, String name, String desc) {
+	public CommonVO addmutexgroup(@RequestBody LawsMutexGroup lawsMutexGroup) {
 		CommonVO vo = new CommonVO();
-		gameService.addLawsMutexGroup(game, name, desc);
+		gameService.addLawsMutexGroup(lawsMutexGroup);
+		gameServerMsgService.addLawsMutexGroup(lawsMutexGroup);
 		return vo;
 	}
 
@@ -366,7 +370,35 @@ public class GamePlayController {
 	public CommonVO removemutexgroup(String groupId) {
 		CommonVO vo = new CommonVO();
 		gameService.removeLawsMutexGroup(groupId);
+		gameServerMsgService.removeLawsMutexGroup(groupId);
 		return vo;
 	}
 
+	/**
+	 * 查询玩家当前正在游戏的房间
+	 * 
+	 * @param token
+	 * @return
+	 */
+	@RequestMapping(value = "/query_membergameroom")
+	public CommonVO queryMemberGameRoom(String token) {
+		CommonVO vo = new CommonVO();
+		String memberId = memberAuthService.getMemberIdBySessionId(token);
+		if (memberId == null) {
+			vo.setSuccess(false);
+			vo.setMsg("invalid token");
+			return vo;
+		}
+		List<MemberGameRoom> roomList = gameService.queryMemberGameRoomForMember(memberId);
+		vo.setMsg("room list");
+		vo.setData(roomList);
+		return vo;
+	}
+	
+	/**
+	 * 房间到时定时器
+	 */
+	private void removeGameRoom() {
+		
+	}
 }

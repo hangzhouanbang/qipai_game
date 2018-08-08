@@ -1,5 +1,7 @@
 package com.anbang.qipai.game.plan.dao;
 
+import java.util.List;
+
 import com.anbang.qipai.game.plan.bean.games.Game;
 import com.anbang.qipai.game.plan.bean.games.MemberGameRoom;
 
@@ -13,4 +15,5 @@ public interface MemberGameRoomDao {
 
 	void remove(Game game, String serverGameId, String memberId);
 
+	List<MemberGameRoom> findByMemberId(String memberId);
 }

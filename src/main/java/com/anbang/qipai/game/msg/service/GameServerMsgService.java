@@ -6,7 +6,9 @@ import org.springframework.messaging.support.MessageBuilder;
 
 import com.anbang.qipai.game.msg.channel.GameServerSource;
 import com.anbang.qipai.game.msg.msjobj.CommonMO;
+import com.anbang.qipai.game.plan.bean.games.GameLaw;
 import com.anbang.qipai.game.plan.bean.games.GameServer;
+import com.anbang.qipai.game.plan.bean.games.LawsMutexGroup;
 
 @EnableBinding(GameServerSource.class)
 public class GameServerMsgService {
@@ -25,6 +27,34 @@ public class GameServerMsgService {
 		CommonMO mo = new CommonMO();
 		mo.setMsg("offline");
 		mo.setData(gameServerId);
+		gameServerSource.gameServer().send(MessageBuilder.withPayload(mo).build());
+	}
+
+	public void createGameLaw(GameLaw law) {
+		CommonMO mo = new CommonMO();
+		mo.setMsg("create gamelaw");
+		mo.setData(law);
+		gameServerSource.gameServer().send(MessageBuilder.withPayload(mo).build());
+	}
+
+	public void removeGameLaw(String lawId) {
+		CommonMO mo = new CommonMO();
+		mo.setMsg("remove gamelaw");
+		mo.setData(lawId);
+		gameServerSource.gameServer().send(MessageBuilder.withPayload(mo).build());
+	}
+
+	public void addLawsMutexGroup(LawsMutexGroup lawsMutexGroup) {
+		CommonMO mo = new CommonMO();
+		mo.setMsg("create lawsmutexgroup");
+		mo.setData(lawsMutexGroup);
+		gameServerSource.gameServer().send(MessageBuilder.withPayload(mo).build());
+	}
+
+	public void removeLawsMutexGroup(String groupId) {
+		CommonMO mo = new CommonMO();
+		mo.setMsg("remove lawsmutexgroup");
+		mo.setData(groupId);
 		gameServerSource.gameServer().send(MessageBuilder.withPayload(mo).build());
 	}
 }

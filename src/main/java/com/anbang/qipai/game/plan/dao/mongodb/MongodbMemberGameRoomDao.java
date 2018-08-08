@@ -1,5 +1,7 @@
 package com.anbang.qipai.game.plan.dao.mongodb;
 
+import java.util.List;
+
 import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.MongoTemplate;
@@ -48,6 +50,12 @@ public class MongodbMemberGameRoomDao implements MemberGameRoomDao {
 	@Override
 	public void remove(Game game, String serverGameId, String memberId) {
 		repository.deleteByMemberIdAndGameRoomGameAndGameRoomServerGameGameId(memberId, game, serverGameId);
+	}
+
+	@Override
+	public List<MemberGameRoom> findByMemberId(String memberId) {
+		Query query = new Query(Criteria.where("memberId").is(memberId));
+		return mongoTemplate.find(query, MemberGameRoom.class);
 	}
 
 }
