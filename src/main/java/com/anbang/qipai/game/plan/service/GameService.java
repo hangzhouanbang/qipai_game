@@ -184,7 +184,19 @@ public class GameService {
 		memberGameRoomDao.remove(Game.ruianMajiang, serverGameId, playerId);
 	}
 
+	public void expireMemberGameRoom(Game game, String serverGameId) {
+		memberGameRoomDao.removeExpireRoom(game, serverGameId);
+	}
+
 	public List<MemberGameRoom> queryMemberGameRoomForMember(String memberId) {
 		return memberGameRoomDao.findByMemberId(memberId);
+	}
+
+	public List<GameRoom> findExpireGameRoom(long deadlineTime) {
+		return gameRoomDao.findExpireGameRoom(deadlineTime, false);
+	}
+
+	public void expireGameRoom(List<String> ids) {
+		gameRoomDao.updateGameRoomFinished(ids, true);
 	}
 }

@@ -58,4 +58,9 @@ public class MongodbMemberGameRoomDao implements MemberGameRoomDao {
 		return mongoTemplate.find(query, MemberGameRoom.class);
 	}
 
+	@Override
+	public void removeExpireRoom(Game game, String serverGameId) {
+		repository.deleteByGameRoomGameAndGameRoomServerGameGameId(game, serverGameId);
+	}
+
 }

@@ -9,4 +9,5 @@ public interface MemberGameRoomRepository extends MongoRepository<MemberGameRoom
 
 	void deleteByMemberIdAndGameRoomGameAndGameRoomServerGameGameId(String memberId, Game game, String serverGameId);
 
+	void deleteByGameRoomGameAndGameRoomServerGameGameId(Game game, String serverGameId);
 }

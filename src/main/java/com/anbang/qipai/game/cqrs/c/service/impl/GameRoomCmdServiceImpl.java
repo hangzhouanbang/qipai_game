@@ -15,4 +15,10 @@ public class GameRoomCmdServiceImpl extends CmdServiceBase implements GameRoomCm
 		return roomNo;
 	}
 
+	@Override
+	public String removeRoom(String no) {
+		GameRoomNoManager gameRoomNoManager = singletonEntityRepository.getEntity(GameRoomNoManager.class);
+		return gameRoomNoManager.removeNo(no);
+	}
+
 }

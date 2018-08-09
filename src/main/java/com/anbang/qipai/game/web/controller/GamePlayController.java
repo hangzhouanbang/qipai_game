@@ -1,5 +1,6 @@
 package com.anbang.qipai.game.web.controller;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -8,6 +9,7 @@ import org.eclipse.jetty.client.HttpClient;
 import org.eclipse.jetty.client.api.ContentResponse;
 import org.eclipse.jetty.client.api.Request;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -16,6 +18,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.anbang.qipai.game.cqrs.c.service.GameRoomCmdService;
 import com.anbang.qipai.game.msg.service.GameServerMsgService;
 import com.anbang.qipai.game.plan.bean.games.CanNotJoinMoreRoomsException;
+import com.anbang.qipai.game.plan.bean.games.Game;
 import com.anbang.qipai.game.plan.bean.games.GameLaw;
 import com.anbang.qipai.game.plan.bean.games.GameRoom;
 import com.anbang.qipai.game.plan.bean.games.GameServer;
@@ -394,11 +397,24 @@ public class GamePlayController {
 		vo.setData(roomList);
 		return vo;
 	}
-	
+
 	/**
-	 * 房间到时定时器
+	 * 房间到时定时器，每小时
 	 */
+	@Scheduled(cron = "0 0 0/1 * * ?")
 	private void removeGameRoom() {
-		
+		long deadlineTime = System.currentTimeMillis();
+		List<GameRoom> roomList = gameService.findExpireGameRoom(deadlineTime);
+		List<String> ids = new ArrayList<>();
+		for (GameRoom room : roomList) {
+			String id = room.getId();
+			ids.add(id);
+			String no = room.getNo();
+			gameRoomCmdService.removeRoom(no);
+			Game game = room.getGame();
+			String serverGameId = room.getServerGame().getGameId();
+			gameService.expireMemberGameRoom(game, serverGameId);
+		}
+		gameService.expireGameRoom(ids);
 	}
 }

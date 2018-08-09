@@ -37,8 +37,9 @@ public class GameRoomNoManager {
 		return newNo;
 	}
 
-	public void removeNo(String no) {
+	public String removeNo(String no) {
 		noSet.remove(no);
+		return no;
 	}
 
 }

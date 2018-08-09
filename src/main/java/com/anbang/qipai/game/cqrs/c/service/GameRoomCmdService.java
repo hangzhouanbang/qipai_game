@@ -4,4 +4,5 @@ public interface GameRoomCmdService {
 
 	String createRoom(String memberId, Long createTime);
 
+	String removeRoom(String no);
 }

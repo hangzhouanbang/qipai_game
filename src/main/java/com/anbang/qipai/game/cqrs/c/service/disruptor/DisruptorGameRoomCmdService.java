@@ -29,4 +29,18 @@ public class DisruptorGameRoomCmdService extends DisruptorCmdServiceBase impleme
 		}
 	}
 
+	@Override
+	public String removeRoom(String no) {
+		CommonCommand cmd = new CommonCommand(GameRoomCmdServiceImpl.class.getName(), "removeRoom", no);
+		DeferredResult<String> result = publishEvent(disruptorFactory.getCoreCmdDisruptor(), cmd, () -> {
+			String roomNo = gameRoomCmdServiceImpl.removeRoom(cmd.getParameter());
+			return roomNo;
+		});
+		try {
+			return result.getResult();
+		} catch (Exception e) {
+			throw new RuntimeException(e);
+		}
+	}
+
 }

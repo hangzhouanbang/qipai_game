@@ -1,9 +1,12 @@
 package com.anbang.qipai.game.plan.dao.mongodb;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
+import org.springframework.data.mongodb.core.query.Update;
 import org.springframework.stereotype.Component;
 
 import com.anbang.qipai.game.plan.bean.games.GameRoom;
@@ -38,6 +41,23 @@ public class MongodbGameRoomDao implements GameRoomDao {
 	@Override
 	public GameRoom findRoomOpen(String roomNo) {
 		return repository.findByNoAndFinished(roomNo, false);
+	}
+
+	@Override
+	public List<GameRoom> findExpireGameRoom(long deadlineTime, boolean finished) {
+		Query query = new Query();
+		Criteria criteria = new Criteria();
+		criteria.andOperator(Criteria.where("deadlineTime").lt(deadlineTime), Criteria.where("finished").is(finished));
+		query.addCriteria(criteria);
+		return mongoTemplate.find(query, GameRoom.class);
+	}
+
+	@Override
+	public void updateGameRoomFinished(List<String> ids, boolean finished) {
+		Query query = new Query(Criteria.where("id").in(ids));
+		Update update = new Update();
+		update.set("finished", finished);
+		mongoTemplate.updateMulti(query, update, GameRoom.class);
 	}
 
 }
