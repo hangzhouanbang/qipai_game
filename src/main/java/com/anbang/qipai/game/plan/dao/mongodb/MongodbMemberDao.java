@@ -46,7 +46,7 @@ public class MongodbMemberDao implements MemberDao {
 						.set("rights.planMemberRoomsAliveHours", planMemberRoomsAliveHours)
 						.set("rights.planMemberMaxCreateRoomDaily", planMemberMaxCreateRoomDaily)
 						.set("rights.planMemberCreateRoomDailyGoldPrice", planMemberCreateRoomDailyGoldPrice)
-						.set("rights.planMemberaddRoomDailyGoldPrice", planMemberaddRoomDailyGoldPrice),
+						.set("rights.planMemberJoinRoomGoldPrice", planMemberaddRoomDailyGoldPrice),
 				Member.class);
 	}
 
