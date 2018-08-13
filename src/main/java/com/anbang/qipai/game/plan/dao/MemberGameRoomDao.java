@@ -14,8 +14,10 @@ public interface MemberGameRoomDao {
 	MemberGameRoom findByMemberIdAndGameRoomId(String memberId, String gameRoomId);
 
 	void remove(Game game, String serverGameId, String memberId);
-	
+
 	void removeExpireRoom(Game game, String serverGameId);
 
 	List<MemberGameRoom> findByMemberId(String memberId);
+
+	void updateMemberGameRoomCurrentPanNum(Game game, String serverGameId,List<String> playerIds, int no);
 }

@@ -199,4 +199,14 @@ public class GameService {
 	public void expireGameRoom(List<String> ids) {
 		gameRoomDao.updateGameRoomFinished(ids, true);
 	}
+
+	public void gameRoomFinished(Game game, String serverGameId) {
+		gameRoomDao.updateFinishGameRoom(game, serverGameId, true);
+		memberGameRoomDao.removeExpireRoom(game, serverGameId);
+	}
+
+	public void panFinished(Game game, String serverGameId, int no, List<String> playerIds) {
+		gameRoomDao.updateGameRoomCurrentPanNum(game, serverGameId, no);
+		memberGameRoomDao.updateMemberGameRoomCurrentPanNum(game, serverGameId,playerIds, no);
+	}
 }

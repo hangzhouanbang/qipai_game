@@ -9,6 +9,7 @@ import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.data.mongodb.core.query.Update;
 import org.springframework.stereotype.Component;
 
+import com.anbang.qipai.game.plan.bean.games.Game;
 import com.anbang.qipai.game.plan.bean.games.GameRoom;
 import com.anbang.qipai.game.plan.dao.GameRoomDao;
 import com.anbang.qipai.game.plan.dao.mongodb.repository.GameRoomRepository;
@@ -58,6 +59,26 @@ public class MongodbGameRoomDao implements GameRoomDao {
 		Update update = new Update();
 		update.set("finished", finished);
 		mongoTemplate.updateMulti(query, update, GameRoom.class);
+	}
+
+	@Override
+	public void updateFinishGameRoom(Game game, String serverGameId, boolean finished) {
+		Query query = new Query();
+		query.addCriteria(
+				Criteria.where("game").is(game).andOperator(Criteria.where("serverGame.gameId").is(serverGameId)));
+		Update update = new Update();
+		update.set("finished", finished);
+		mongoTemplate.updateFirst(query, update, GameRoom.class);
+	}
+
+	@Override
+	public void updateGameRoomCurrentPanNum(Game game, String serverGameId, int no) {
+		Query query = new Query();
+		query.addCriteria(
+				Criteria.where("game").is(game).andOperator(Criteria.where("serverGame.gameId").is(serverGameId)));
+		Update update = new Update();
+		update.set("currentPanNum", no);
+		mongoTemplate.updateFirst(query, update, GameRoom.class);
 	}
 
 }

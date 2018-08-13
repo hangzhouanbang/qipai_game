@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
+import org.springframework.data.mongodb.core.query.Update;
 import org.springframework.stereotype.Component;
 
 import com.anbang.qipai.game.plan.bean.games.Game;
@@ -61,6 +62,16 @@ public class MongodbMemberGameRoomDao implements MemberGameRoomDao {
 	@Override
 	public void removeExpireRoom(Game game, String serverGameId) {
 		repository.deleteByGameRoomGameAndGameRoomServerGameGameId(game, serverGameId);
+	}
+
+	@Override
+	public void updateMemberGameRoomCurrentPanNum(Game game, String serverGameId, List<String> playerIds, int no) {
+		Query query = new Query(Criteria.where("memberId").in(playerIds));
+		query.addCriteria(Criteria.where("gameRoom.game").is(game)
+				.andOperator(Criteria.where("gameRoom.serverGame.gameId").is(serverGameId)));
+		Update update = new Update();
+		update.set("gameRoom.currentPanNum", no);
+		mongoTemplate.updateFirst(query, update, MemberGameRoom.class);
 	}
 
 }
