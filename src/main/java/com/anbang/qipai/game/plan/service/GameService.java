@@ -127,8 +127,8 @@ public class GameService {
 		gameServerDao.save(gameServer);
 	}
 
-	public void offlineServer(String gameServerId) {
-		gameServerDao.remove(gameServerId);
+	public void offlineServer(String[] gameServerIds) {
+		gameServerDao.remove(gameServerIds);
 	}
 
 	public void createGameRoom(GameRoom gameRoom) {
@@ -207,6 +207,6 @@ public class GameService {
 
 	public void panFinished(Game game, String serverGameId, int no, List<String> playerIds) {
 		gameRoomDao.updateGameRoomCurrentPanNum(game, serverGameId, no);
-		memberGameRoomDao.updateMemberGameRoomCurrentPanNum(game, serverGameId,playerIds, no);
+		memberGameRoomDao.updateMemberGameRoomCurrentPanNum(game, serverGameId, playerIds, no);
 	}
 }

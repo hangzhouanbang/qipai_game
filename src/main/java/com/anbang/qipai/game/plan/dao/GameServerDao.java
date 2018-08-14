@@ -8,7 +8,7 @@ public interface GameServerDao {
 
 	void save(GameServer gameServer);
 
-	void remove(String id);
+	void remove(String[] ids);
 
 	List<GameServer> findAll();
 

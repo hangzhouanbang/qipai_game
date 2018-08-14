@@ -304,10 +304,10 @@ public class GamePlayController {
 	 */
 	@RequestMapping(value = "/game_server_offline")
 	@ResponseBody
-	public CommonVO gameserveroffline(String gameServerId) {
+	public CommonVO gameserveroffline(@RequestBody String[] gameServerIds) {
 		CommonVO vo = new CommonVO();
-		gameService.offlineServer(gameServerId);
-		gameServerMsgService.gameServerOffline(gameServerId);
+		gameService.offlineServer(gameServerIds);
+		gameServerMsgService.gameServerOffline(gameServerIds);
 		return vo;
 	}
 

@@ -23,10 +23,10 @@ public class GameServerMsgService {
 		gameServerSource.gameServer().send(MessageBuilder.withPayload(mo).build());
 	}
 
-	public void gameServerOffline(String gameServerId) {
+	public void gameServerOffline(String[] gameServerIds) {
 		CommonMO mo = new CommonMO();
 		mo.setMsg("offline");
-		mo.setData(gameServerId);
+		mo.setData(gameServerIds);
 		gameServerSource.gameServer().send(MessageBuilder.withPayload(mo).build());
 	}
 
