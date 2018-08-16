@@ -23,10 +23,10 @@ public class MemberController {
 	@RequestMapping("/plan_rights_conf")
 	@ResponseBody
 	public CommonVO planrightsconf(int planMemberRoomsCount, int planMemberRoomsAliveHours, int planMemberMaxCreateRoomDaily,
-			int planMemberCreateRoomDailyGoldPrice,int planMemberaddRoomDailyGoldPrice) {
+			int planMemberCreateRoomDailyGoldPrice,int planMemberJoinRoomGoldPrice) {
 		CommonVO vo = new CommonVO();
 		memberService.setPlanMembersRights(planMemberRoomsCount, planMemberRoomsAliveHours, planMemberMaxCreateRoomDaily,
-				planMemberCreateRoomDailyGoldPrice,planMemberaddRoomDailyGoldPrice);
+				planMemberCreateRoomDailyGoldPrice,planMemberJoinRoomGoldPrice);
 		MemberRightsConfiguration memberRightsConfiguration = memberService.findMemberRightsById();
 		memberRightsConfigurationMsgService.createMemberRights(memberRightsConfiguration);
 		return vo;
