@@ -47,9 +47,8 @@ public class MongodbGameRoomDao implements GameRoomDao {
 	@Override
 	public List<GameRoom> findExpireGameRoom(long deadlineTime, boolean finished) {
 		Query query = new Query();
-		Criteria criteria = new Criteria();
-		criteria.andOperator(Criteria.where("deadlineTime").lt(deadlineTime), Criteria.where("finished").is(finished));
-		query.addCriteria(criteria);
+		query.addCriteria(Criteria.where("deadlineTime").lte(deadlineTime));
+		query.addCriteria(Criteria.where("finished").is(finished));
 		return mongoTemplate.find(query, GameRoom.class);
 	}
 
@@ -64,8 +63,8 @@ public class MongodbGameRoomDao implements GameRoomDao {
 	@Override
 	public void updateFinishGameRoom(Game game, String serverGameId, boolean finished) {
 		Query query = new Query();
-		query.addCriteria(
-				Criteria.where("game").is(game).andOperator(Criteria.where("serverGame.gameId").is(serverGameId)));
+		query.addCriteria(Criteria.where("game").is(game));
+		query.addCriteria(Criteria.where("serverGame.gameId").is(serverGameId));
 		Update update = new Update();
 		update.set("finished", finished);
 		mongoTemplate.updateFirst(query, update, GameRoom.class);

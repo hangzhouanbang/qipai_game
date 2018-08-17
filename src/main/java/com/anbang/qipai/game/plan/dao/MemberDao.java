@@ -13,6 +13,8 @@ public interface MemberDao {
 	MemberRightsConfiguration findMemberRightsById();
 
 	void updateRights(String memberId, MemberRights rights);
+	
+	void updateVIP(String memberId, boolean vip);
 
 	void updatePlanMembersRights(int planMemberRoomsCount, int planMemberRoomsAliveHours, int planMemberMaxCreateRoomDaily,
 			int planMemberCreateRoomDailyGoldPrice,int planMemberJoinRoomGoldPrice);

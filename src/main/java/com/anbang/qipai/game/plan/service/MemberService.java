@@ -26,6 +26,10 @@ public class MemberService {
 		memberDao.save(member);
 	}
 
+	public void updateMemberVip(String memberId,boolean vip) {
+		memberDao.updateVIP(memberId, vip);
+	}
+	
 	public MemberRightsConfiguration findMemberRightsById() {
 		return memberDao.findMemberRightsById();
 	}

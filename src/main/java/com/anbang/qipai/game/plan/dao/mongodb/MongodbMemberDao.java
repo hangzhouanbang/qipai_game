@@ -40,7 +40,7 @@ public class MongodbMemberDao implements MemberDao {
 
 	@Override
 	public void updatePlanMembersRights(int planMemberRoomsCount, int planMemberRoomsAliveHours,
-			int planMemberMaxCreateRoomDaily, int planMemberCreateRoomDailyGoldPrice,int planMemberJoinRoomGoldPrice) {
+			int planMemberMaxCreateRoomDaily, int planMemberCreateRoomDailyGoldPrice, int planMemberJoinRoomGoldPrice) {
 		mongoTemplate.updateMulti(new Query(Criteria.where("vip").is(false)),
 				new Update().set("rights.planMemberRoomsCount", planMemberRoomsCount)
 						.set("rights.planMemberRoomsAliveHours", planMemberRoomsAliveHours)
@@ -53,13 +53,19 @@ public class MongodbMemberDao implements MemberDao {
 	@Override
 	public void updateVipMembersRights(int vipMemberRoomsCount, int vipMemberRoomsAliveHours) {
 		mongoTemplate.updateMulti(new Query(Criteria.where("vip").is(true)),
-				new Update().set("rights.vipMemberRoomsCount", vipMemberRoomsCount).set("rights.vipMemberRoomsAliveHours",
-						vipMemberRoomsAliveHours),
+				new Update().set("rights.vipMemberRoomsCount", vipMemberRoomsCount)
+						.set("rights.vipMemberRoomsAliveHours", vipMemberRoomsAliveHours),
 				Member.class);
 	}
 
 	@Override
 	public MemberRightsConfiguration findMemberRightsById() {
 		return mongoTemplate.findById("1", MemberRightsConfiguration.class);
+	}
+
+	@Override
+	public void updateVIP(String memberId, boolean vip) {
+		mongoTemplate.updateFirst(new Query(Criteria.where("id").is(memberId)), new Update().set("vip", vip),
+				Member.class);
 	}
 }

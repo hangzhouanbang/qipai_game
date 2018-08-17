@@ -61,7 +61,10 @@ public class MongodbMemberGameRoomDao implements MemberGameRoomDao {
 
 	@Override
 	public void removeExpireRoom(Game game, String serverGameId) {
-		repository.deleteByGameRoomGameAndGameRoomServerGameGameId(game, serverGameId);
+		Query query = new Query();
+		query.addCriteria(Criteria.where("gameRoom.game").is(game));
+		query.addCriteria(Criteria.where("gameRoom.serverGame.gameId").is(serverGameId));
+		mongoTemplate.remove(query, MemberGameRoom.class);
 	}
 
 	@Override
@@ -71,7 +74,7 @@ public class MongodbMemberGameRoomDao implements MemberGameRoomDao {
 				.andOperator(Criteria.where("gameRoom.serverGame.gameId").is(serverGameId)));
 		Update update = new Update();
 		update.set("gameRoom.currentPanNum", no);
-		mongoTemplate.updateFirst(query, update, MemberGameRoom.class);
+		mongoTemplate.updateMulti(query, update, MemberGameRoom.class);
 	}
 
 }

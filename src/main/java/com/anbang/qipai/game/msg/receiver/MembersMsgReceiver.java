@@ -27,6 +27,9 @@ public class MembersMsgReceiver {
 			// 更新会员权益
 			memberService.updateMemberRights(member.getId());
 		}
+		if ("update member vip".equals(mo.getMsg())) {
+			memberService.updateMemberVip(member.getId(), member.isVip());
+		}
 	}
 
 }
