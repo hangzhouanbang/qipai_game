@@ -80,4 +80,12 @@ public class MongodbGameRoomDao implements GameRoomDao {
 		mongoTemplate.updateFirst(query, update, GameRoom.class);
 	}
 
+	@Override
+	public GameRoom findRoomByGameAndServerGameGameId(Game game, String serverGameId) {
+		Query query = new Query();
+		query.addCriteria(
+				Criteria.where("game").is(game).andOperator(Criteria.where("serverGame.gameId").is(serverGameId)));
+		return mongoTemplate.findOne(query, GameRoom.class);
+	}
+
 }

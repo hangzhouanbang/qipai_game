@@ -209,4 +209,8 @@ public class GameService {
 		gameRoomDao.updateGameRoomCurrentPanNum(game, serverGameId, no);
 		memberGameRoomDao.updateMemberGameRoomCurrentPanNum(game, serverGameId, playerIds, no);
 	}
+
+	public GameRoom findRoomByGameAndServerGameGameId(Game game, String serverGameId) {
+		return gameRoomDao.findRoomByGameAndServerGameGameId(game, serverGameId);
+	}
 }

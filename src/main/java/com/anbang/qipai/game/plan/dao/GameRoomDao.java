@@ -13,6 +13,8 @@ public interface GameRoomDao {
 
 	GameRoom findRoomOpen(String roomNo);
 
+	GameRoom findRoomByGameAndServerGameGameId(Game game, String serverGameId);
+
 	List<GameRoom> findExpireGameRoom(long deadlineTime, boolean finished);
 
 	void updateGameRoomFinished(List<String> ids, boolean finished);
