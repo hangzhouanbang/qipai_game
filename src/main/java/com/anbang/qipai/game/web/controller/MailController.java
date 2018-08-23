@@ -1,6 +1,7 @@
 package com.anbang.qipai.game.web.controller;
 
 import java.text.ParseException;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -181,7 +182,13 @@ public class MailController {
 		if (vo.isSuccess() == true) {
 			mailMsgService.updateMailState(mailState);
 		}
+		SystemMail mail = mailService.findmailById(mailid);
+		Map data = new HashMap();
+		data.put("gold", mail.getNumber());
+		data.put("score", mail.getIntegral());
+		data.put("number", mail.getVipcard());
 		vo.setMsg(count.toString());
+		vo.setData(data);
 		return vo;
 	}
 
