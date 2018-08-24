@@ -61,6 +61,7 @@ public class HallController {
 			mm.put("headimgurl", memberRemoteVO.getHeadimgurl());
 			mm.put("gold", memberRemoteVO.getGold());
 			mm.put("score", memberRemoteVO.getScore());
+			mm.put("verifyUser", memberRemoteVO.isVerifyUser());
 		}
 		return vo;
 	}

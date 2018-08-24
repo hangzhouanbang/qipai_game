@@ -19,6 +19,8 @@ public class MemberRemoteVO {
 	private int gold;
 
 	private int score;
+	
+	private boolean verifyUser;// 实名认证，true:通过认证,false:未通过认证
 
 	public boolean isSuccess() {
 		return success;
@@ -66,6 +68,14 @@ public class MemberRemoteVO {
 
 	public void setScore(int score) {
 		this.score = score;
+	}
+
+	public boolean isVerifyUser() {
+		return verifyUser;
+	}
+
+	public void setVerifyUser(boolean verifyUser) {
+		this.verifyUser = verifyUser;
 	}
 
 }
