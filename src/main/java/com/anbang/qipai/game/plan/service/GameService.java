@@ -189,7 +189,7 @@ public class GameService {
 	}
 
 	public List<MemberGameRoom> queryMemberGameRoomForMember(String memberId) {
-		return memberGameRoomDao.findByMemberId(memberId);
+		return memberGameRoomDao.findMemberGameRoomByMemberId(memberId);
 	}
 
 	public List<GameRoom> findExpireGameRoom(long deadlineTime) {

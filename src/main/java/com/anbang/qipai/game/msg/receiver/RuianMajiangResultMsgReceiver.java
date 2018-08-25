@@ -8,7 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cloud.stream.annotation.EnableBinding;
 import org.springframework.cloud.stream.annotation.StreamListener;
 
-import com.anbang.qipai.game.msg.channel.RuianMajiangResultSink;
+import com.anbang.qipai.game.msg.channel.sink.RuianMajiangResultSink;
 import com.anbang.qipai.game.msg.msjobj.CommonMO;
 import com.anbang.qipai.game.plan.bean.games.Game;
 import com.anbang.qipai.game.plan.bean.games.GameRoom;

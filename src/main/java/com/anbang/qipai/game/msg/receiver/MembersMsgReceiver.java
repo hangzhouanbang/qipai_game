@@ -4,7 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cloud.stream.annotation.EnableBinding;
 import org.springframework.cloud.stream.annotation.StreamListener;
 
-import com.anbang.qipai.game.msg.channel.MembersSink;
+import com.anbang.qipai.game.msg.channel.sink.MembersSink;
 import com.anbang.qipai.game.msg.msjobj.CommonMO;
 import com.anbang.qipai.game.plan.bean.members.Member;
 import com.anbang.qipai.game.plan.service.MemberService;
