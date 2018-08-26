@@ -37,6 +37,7 @@ import com.anbang.qipai.game.remote.service.QipaiMembersRemoteService;
 import com.anbang.qipai.game.remote.vo.CommonRemoteVO;
 import com.anbang.qipai.game.web.fb.RamjLawsFB;
 import com.anbang.qipai.game.web.vo.CommonVO;
+import com.anbang.qipai.game.web.vo.MemberPlayingRoomVO;
 import com.google.gson.Gson;
 
 /**
@@ -399,6 +400,24 @@ public class GamePlayController {
 		List<MemberGameRoom> roomList = gameService.queryMemberGameRoomForMember(memberId);
 		vo.setMsg("room list");
 		vo.setData(roomList);
+		return vo;
+	}
+
+	/**
+	 * 后台rpc查询会员游戏房间
+	 * 
+	 * @return
+	 */
+	@RequestMapping(value = "/query_memberplayingroom")
+	public CommonVO queryMemberPlayingRoom(String memberId) {
+		CommonVO vo = new CommonVO();
+		List<MemberGameRoom> roomList = gameService.queryMemberGameRoomForMember(memberId);
+		List<MemberPlayingRoomVO> gameRoomList = new ArrayList<>();
+		roomList.forEach((memberGameRoom) -> {
+			gameRoomList.add(new MemberPlayingRoomVO(memberGameRoom.getGameRoom()));
+		});
+		vo.setMsg("room list");
+		vo.setData(gameRoomList);
 		return vo;
 	}
 
