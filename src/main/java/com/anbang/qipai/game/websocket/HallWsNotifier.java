@@ -40,6 +40,7 @@ public class HallWsNotifier {
 		if (removedSession != null) {
 			String removedMemberId = sessionIdMemberIdMap.remove(id);
 			if (removedMemberId != null) {
+				// 更新用户在线时间
 				noticeMsgService.memberLogoutNotice(removedMemberId);
 				memberIdSessionIdMap.remove(removedMemberId);
 			}
@@ -77,10 +78,15 @@ public class HallWsNotifier {
 		sessionIdActivetimeMap.put(sessionId, System.currentTimeMillis());
 		sessionIdMemberIdMap.put(sessionId, memberId);
 		memberIdSessionIdMap.put(memberId, sessionId);
+		// 更新用户在线时间
+		noticeMsgService.updateMemberOnlineNotice(memberId);
 	}
 
 	public void updateSession(String id) {
 		sessionIdActivetimeMap.put(id, System.currentTimeMillis());
+		String memberId = sessionIdMemberIdMap.get(id);
+		// 更新用户在线时间
+		noticeMsgService.updateMemberOnlineNotice(memberId);
 	}
 
 	@Scheduled(cron = "0/10 * * * * ?")
