@@ -4,7 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cloud.stream.annotation.EnableBinding;
 import org.springframework.messaging.support.MessageBuilder;
 
-import com.anbang.qipai.game.msg.channel.GameServerSource;
+import com.anbang.qipai.game.msg.channel.source.GameServerSource;
 import com.anbang.qipai.game.msg.msjobj.CommonMO;
 import com.anbang.qipai.game.plan.bean.games.GameLaw;
 import com.anbang.qipai.game.plan.bean.games.GameServer;

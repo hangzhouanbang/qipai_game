@@ -7,11 +7,13 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 import org.springframework.web.socket.TextMessage;
 import org.springframework.web.socket.WebSocketSession;
 
+import com.anbang.qipai.game.msg.service.NoticeMsgService;
 import com.google.gson.Gson;
 
 @Component
@@ -27,6 +29,9 @@ public class HallWsNotifier {
 
 	private ExecutorService executorService = Executors.newCachedThreadPool();
 
+	@Autowired
+	private NoticeMsgService noticeMsgService;
+
 	private Gson gson = new Gson();
 
 	public WebSocketSession removeSession(String id) {
@@ -35,6 +40,7 @@ public class HallWsNotifier {
 		if (removedSession != null) {
 			String removedMemberId = sessionIdMemberIdMap.remove(id);
 			if (removedMemberId != null) {
+				noticeMsgService.memberLogoutNotice(removedMemberId);
 				memberIdSessionIdMap.remove(removedMemberId);
 			}
 		}

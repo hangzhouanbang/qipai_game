@@ -54,7 +54,7 @@ public class MongodbMemberGameRoomDao implements MemberGameRoomDao {
 	}
 
 	@Override
-	public List<MemberGameRoom> findByMemberId(String memberId) {
+	public List<MemberGameRoom> findMemberGameRoomByMemberId(String memberId) {
 		Query query = new Query(Criteria.where("memberId").is(memberId));
 		return mongoTemplate.find(query, MemberGameRoom.class);
 	}

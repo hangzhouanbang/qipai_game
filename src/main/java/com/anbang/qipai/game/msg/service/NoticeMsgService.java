@@ -4,7 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cloud.stream.annotation.EnableBinding;
 import org.springframework.messaging.support.MessageBuilder;
 
-import com.anbang.qipai.game.msg.channel.NoticeSource;
+import com.anbang.qipai.game.msg.channel.source.NoticeSource;
 import com.anbang.qipai.game.msg.msjobj.CommonMO;
 import com.anbang.qipai.game.plan.bean.notice.Notices;
 
@@ -18,6 +18,13 @@ public class NoticeMsgService {
 		CommonMO mo = new CommonMO();
 		mo.setMsg("newNotice");
 		mo.setData(notices);
+		noticeSource.notice().send(MessageBuilder.withPayload(mo).build());
+	}
+
+	public void memberLogoutNotice(String memberId) {
+		CommonMO mo = new CommonMO();
+		mo.setMsg("member logout");
+		mo.setData(memberId);
 		noticeSource.notice().send(MessageBuilder.withPayload(mo).build());
 	}
 

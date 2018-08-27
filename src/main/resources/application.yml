@@ -52,6 +52,16 @@ spring:
                   ms: 5
                 batch:
                   size: 16384
+          ruianGameRoom:
+            producer:
+              configuration:
+                request:
+                  timeout:
+                    ms: 30000
+                linger:
+                  ms: 5
+                batch:
+                  size: 16384
       bindings:
         notice:
           destination: notice
@@ -60,6 +70,11 @@ spring:
             partitionCount: 1
         gameServer:
           destination: gameServer
+          contentType: application/json
+          producer:
+            partitionCount: 1
+        ruianGameRoom:
+          destination: ruianGameRoom
           contentType: application/json
           producer:
             partitionCount: 1

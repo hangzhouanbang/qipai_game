@@ -1,9 +1,11 @@
-package com.anbang.qipai.game.msg.channel;
+package com.anbang.qipai.game.msg.channel.source;
 
 import org.springframework.cloud.stream.annotation.Output;
 import org.springframework.messaging.MessageChannel;
 
-public interface GameServerSource {
+public interface NoticeSource {
+
 	@Output
-	MessageChannel gameServer();
+	MessageChannel notice();
+
 }
