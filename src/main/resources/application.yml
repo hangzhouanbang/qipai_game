@@ -119,4 +119,4 @@ eureka:
     serviceUrl:
       defaultZone: http://127.0.0.1:8761/eureka/
 websocket:
-  url: ws://192.168.0.122:83/hall
+  url: ws://192.168.0.134:83/hall
