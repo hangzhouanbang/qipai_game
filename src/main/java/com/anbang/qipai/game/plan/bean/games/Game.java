@@ -11,5 +11,5 @@ public enum Game {
 	
 	wenzhouMajiang,
 	
-	dianpaoMajiang
+	fangpaoMajiang
 }

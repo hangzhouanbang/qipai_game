@@ -8,19 +8,20 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cloud.stream.annotation.EnableBinding;
 import org.springframework.cloud.stream.annotation.StreamListener;
 
+import com.anbang.qipai.game.msg.channel.sink.FangpaoMajiangResultSink;
 import com.anbang.qipai.game.msg.channel.sink.RuianMajiangResultSink;
 import com.anbang.qipai.game.msg.msjobj.CommonMO;
 import com.anbang.qipai.game.plan.bean.games.Game;
 import com.anbang.qipai.game.plan.bean.games.GameRoom;
+import com.anbang.qipai.game.plan.bean.historicalresult.FangpaoMajiangJuPlayerResult;
 import com.anbang.qipai.game.plan.bean.historicalresult.MajiangHistoricalResult;
 import com.anbang.qipai.game.plan.bean.historicalresult.MajiangJuPlayerResult;
-import com.anbang.qipai.game.plan.bean.historicalresult.RuianMajiangJuPlayerResult;
 import com.anbang.qipai.game.plan.service.GameService;
 import com.anbang.qipai.game.plan.service.MajiangHistoricalResultService;
 import com.google.gson.Gson;
 
-@EnableBinding(RuianMajiangResultSink.class)
-public class RuianMajiangResultMsgReceiver {
+@EnableBinding(FangpaoMajiangResultSink.class)
+public class FangpaoMajiangResultMsgReceiver {
 	@Autowired
 	private MajiangHistoricalResultService majiangHistoricalResultService;
 
@@ -34,19 +35,19 @@ public class RuianMajiangResultMsgReceiver {
 		String msg = mo.getMsg();
 		String json = gson.toJson(mo.getData());
 		Map map = gson.fromJson(json, Map.class);
-		if ("ruianmajiang ju result".equals(msg)) {
+		if ("fangpaomajiang ju result".equals(msg)) {
 			String gameId = (String) map.get("gameId");
 			MajiangHistoricalResult majiangHistoricalResult = new MajiangHistoricalResult();
 			majiangHistoricalResult.setGameId(gameId);
-			GameRoom room = gameService.findRoomByGameAndServerGameGameId(Game.ruianMajiang, gameId);
+			GameRoom room = gameService.findRoomByGameAndServerGameGameId(Game.fangpaoMajiang, gameId);
 			majiangHistoricalResult.setRoomNo(room.getNo());
-			majiangHistoricalResult.setGame(Game.ruianMajiang);
+			majiangHistoricalResult.setGame(Game.fangpaoMajiang);
 			majiangHistoricalResult.setDayingjiaId((String) map.get("dayingjiaId"));
 			majiangHistoricalResult.setDatuhaoId((String) map.get("datuhaoId"));
 
 			List<MajiangJuPlayerResult> juPlayerResultList = new ArrayList<>();
 			((List) map.get("playerResultList")).forEach(
-					(juPlayerResult) -> juPlayerResultList.add(new RuianMajiangJuPlayerResult((Map) juPlayerResult)));
+					(juPlayerResult) -> juPlayerResultList.add(new FangpaoMajiangJuPlayerResult((Map) juPlayerResult)));
 			majiangHistoricalResult.setPlayerResultList(juPlayerResultList);
 
 			majiangHistoricalResult.setPanshu(((Double) map.get("panshu")).intValue());

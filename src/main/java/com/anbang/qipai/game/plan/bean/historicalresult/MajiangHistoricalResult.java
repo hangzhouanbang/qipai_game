@@ -11,7 +11,7 @@ public class MajiangHistoricalResult {
 	private String roomNo;
 	private String dayingjiaId;
 	private String datuhaoId;
-	private List<MajiangJuPlayerResultVO> playerResultList;
+	private List<MajiangJuPlayerResult> playerResultList;
 	private int lastPanNo;
 	private int panshu;
 	private long finishTime;
@@ -32,11 +32,11 @@ public class MajiangHistoricalResult {
 		this.datuhaoId = datuhaoId;
 	}
 
-	public List<MajiangJuPlayerResultVO> getPlayerResultList() {
+	public List<MajiangJuPlayerResult> getPlayerResultList() {
 		return playerResultList;
 	}
 
-	public void setPlayerResultList(List<MajiangJuPlayerResultVO> playerResultList) {
+	public void setPlayerResultList(List<MajiangJuPlayerResult> playerResultList) {
 		this.playerResultList = playerResultList;
 	}
 

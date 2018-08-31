@@ -2,7 +2,7 @@ package com.anbang.qipai.game.plan.bean.historicalresult;
 
 import java.util.Map;
 
-public class MajiangJuPlayerResultVO {
+public class RuianMajiangJuPlayerResult implements MajiangJuPlayerResult {
 	private String playerId;
 	private String nickname;
 	private String headimgurl;
@@ -12,7 +12,7 @@ public class MajiangJuPlayerResultVO {
 	private int maxHushu;
 	private int totalScore;
 
-	public MajiangJuPlayerResultVO(Map juPlayerResult) {
+	public RuianMajiangJuPlayerResult(Map juPlayerResult) {
 		this.playerId = (String) juPlayerResult.get("playerId");
 		this.nickname = (String) juPlayerResult.get("nickname");
 		this.headimgurl = (String) juPlayerResult.get("headimgurl");
@@ -23,7 +23,7 @@ public class MajiangJuPlayerResultVO {
 		this.totalScore = ((Double) juPlayerResult.get("totalScore")).intValue();
 	}
 
-	public MajiangJuPlayerResultVO() {
+	public RuianMajiangJuPlayerResult() {
 
 	}
 
