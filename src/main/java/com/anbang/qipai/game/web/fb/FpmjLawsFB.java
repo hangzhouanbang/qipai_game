@@ -7,7 +7,7 @@ public class FpmjLawsFB {
 	private String renshu;
 	private String hognzhongcaishen = "false";
 	private String zhuaniao = "false";
-	private String niaoshu;
+	private String niaoshu = "4";
 
 	public FpmjLawsFB(List<String> lawNames) {
 		lawNames.forEach((lawName) -> {
@@ -27,9 +27,11 @@ public class FpmjLawsFB {
 				renshu = "4";
 			} else if (lawName.equals("hzdcs")) {// 红中当财神
 				hognzhongcaishen = "true";
-			} else if (lawName.equals("zn")) {// 抓鸟
+			}
+			if (lawName.equals("zn")) {// 抓鸟
 				zhuaniao = "true";
-			} else if (lawName.equals("szn")) {// 四只鸟
+			}
+			if (lawName.equals("szn")) {// 四只鸟
 				setNiaoshu("4");
 			} else if (lawName.equals("lzn")) {// 六只鸟
 				setNiaoshu("6");

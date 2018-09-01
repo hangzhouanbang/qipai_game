@@ -67,7 +67,7 @@ public class GameService {
 			throw new CanNotJoinMoreRoomsException();
 		}
 
-		List<GameServer> allServers = gameServerDao.findAll();
+		List<GameServer> allServers = gameServerDao.findByGame(Game.ruianMajiang);
 		if (allServers == null || allServers.isEmpty()) {
 			throw new NoServerAvailableForGameException();
 		}
@@ -135,7 +135,7 @@ public class GameService {
 			throw new CanNotJoinMoreRoomsException();
 		}
 
-		List<GameServer> allServers = gameServerDao.findAll();
+		List<GameServer> allServers = gameServerDao.findByGame(Game.fangpaoMajiang);
 		if (allServers == null || allServers.isEmpty()) {
 			throw new NoServerAvailableForGameException();
 		}

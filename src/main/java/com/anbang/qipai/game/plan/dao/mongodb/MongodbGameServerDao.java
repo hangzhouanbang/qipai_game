@@ -8,6 +8,7 @@ import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Component;
 
+import com.anbang.qipai.game.plan.bean.games.Game;
 import com.anbang.qipai.game.plan.bean.games.GameServer;
 import com.anbang.qipai.game.plan.dao.GameServerDao;
 import com.anbang.qipai.game.plan.dao.mongodb.repository.GameServerRepository;
@@ -36,6 +37,13 @@ public class MongodbGameServerDao implements GameServerDao {
 	@Override
 	public List<GameServer> findAll() {
 		return repository.findAll();
+	}
+
+	@Override
+	public List<GameServer> findByGame(Game game) {
+		Query query = new Query();
+		query.addCriteria(Criteria.where("game").is(game));
+		return mognoTempalte.find(query, GameServer.class);
 	}
 
 }

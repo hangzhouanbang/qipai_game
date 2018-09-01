@@ -164,6 +164,7 @@ public class GamePlayController {
 		data.put("roomNo", gameRoom.getNo());
 		data.put("gameId", gameRoom.getServerGame().getGameId());
 		data.put("token", resData.get("token"));
+		data.put("game", gameRoom.getGame());
 		vo.setData(data);
 		return vo;
 
@@ -228,7 +229,7 @@ public class GamePlayController {
 		req.param("playerId", memberId);
 		req.param("panshu", fb.getPanshu());
 		req.param("renshu", fb.getRenshu());
-		req.param("hognzhongcaishen", fb.getHognzhongcaishen());
+		req.param("hongzhongcaishen", fb.getHognzhongcaishen());
 		req.param("zhuaniao", fb.getZhuaniao());
 		req.param("niaoshu", fb.getNiaoshu());
 		Map resData;
@@ -256,6 +257,7 @@ public class GamePlayController {
 		data.put("roomNo", gameRoom.getNo());
 		data.put("gameId", gameRoom.getServerGame().getGameId());
 		data.put("token", resData.get("token"));
+		data.put("game", gameRoom.getGame());
 		vo.setData(data);
 		return vo;
 
@@ -319,6 +321,7 @@ public class GamePlayController {
 			data.put("roomNo", gameRoom.getNo());
 			data.put("token", resData.get("token"));
 			data.put("gameId", serverGameId);
+			data.put("game", gameRoom.getGame());
 			vo.setData(data);
 			return vo;
 		}
@@ -374,6 +377,7 @@ public class GamePlayController {
 		data.put("roomNo", gameRoom.getNo());
 		data.put("token", resData.get("token"));
 		data.put("gameId", serverGameId);
+		data.put("game", gameRoom.getGame());
 		vo.setData(data);
 		return vo;
 
