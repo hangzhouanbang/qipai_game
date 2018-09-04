@@ -9,7 +9,6 @@ import org.springframework.cloud.stream.annotation.EnableBinding;
 import org.springframework.cloud.stream.annotation.StreamListener;
 
 import com.anbang.qipai.game.msg.channel.sink.FangpaoMajiangResultSink;
-import com.anbang.qipai.game.msg.channel.sink.RuianMajiangResultSink;
 import com.anbang.qipai.game.msg.msjobj.CommonMO;
 import com.anbang.qipai.game.plan.bean.games.Game;
 import com.anbang.qipai.game.plan.bean.games.GameRoom;
@@ -30,7 +29,7 @@ public class FangpaoMajiangResultMsgReceiver {
 
 	private Gson gson = new Gson();
 
-	@StreamListener(RuianMajiangResultSink.RUIANMAJIANGRESULT)
+	@StreamListener(FangpaoMajiangResultSink.FANGPAOMAJIANGRESULT)
 	public void recordMajiangHistoricalResult(CommonMO mo) {
 		String msg = mo.getMsg();
 		String json = gson.toJson(mo.getData());

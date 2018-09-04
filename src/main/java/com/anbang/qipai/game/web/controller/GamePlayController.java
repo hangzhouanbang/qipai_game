@@ -135,7 +135,7 @@ public class GamePlayController {
 		GameServer gameServer = gameRoom.getServerGame().getServer();
 		// 游戏服务器rpc，需要手动httpclientrpc
 		RamjLawsFB fb = new RamjLawsFB(lawNames);
-		Request req = httpClient.newRequest("http://" + gameServer.getHttpUrl() + "/game/newgame");
+		Request req = httpClient.newRequest(gameServer.getHttpUrl() + "/game/newgame");
 		req.param("playerId", memberId);
 		req.param("difen", fb.getDifen());
 		req.param("taishu", fb.getTaishu());
@@ -226,7 +226,7 @@ public class GamePlayController {
 		GameServer gameServer = gameRoom.getServerGame().getServer();
 		// 游戏服务器rpc，需要手动httpclientrpc
 		FpmjLawsFB fb = new FpmjLawsFB(lawNames);
-		Request req = httpClient.newRequest("http://" + gameServer.getHttpUrl() + "/game/newgame");
+		Request req = httpClient.newRequest(gameServer.getHttpUrl() + "/game/newgame");
 		req.param("playerId", memberId);
 		req.param("panshu", fb.getPanshu());
 		req.param("renshu", fb.getRenshu());
@@ -292,7 +292,7 @@ public class GamePlayController {
 		if (memberGameRoom != null) {
 			// 游戏服务器rpc返回房间
 			GameServer gameServer = gameRoom.getServerGame().getServer();
-			Request req = httpClient.newRequest("http://" + gameServer.getHttpUrl() + "/game/backtogame");
+			Request req = httpClient.newRequest(gameServer.getHttpUrl() + "/game/backtogame");
 			req.param("playerId", memberId);
 			req.param("gameId", serverGameId);
 			Map resData;
@@ -345,7 +345,7 @@ public class GamePlayController {
 
 		// 游戏服务器rpc加入房间
 		GameServer gameServer = gameRoom.getServerGame().getServer();
-		Request req = httpClient.newRequest("http://" + gameServer.getHttpUrl() + "/game/joingame");
+		Request req = httpClient.newRequest(gameServer.getHttpUrl() + "/game/joingame");
 		req.param("playerId", memberId);
 		req.param("gameId", serverGameId);
 		Map resData;
@@ -538,6 +538,8 @@ public class GamePlayController {
 			gameService.expireMemberGameRoom(game, serverGameId);
 		}
 		gameService.expireGameRoom(roomIds);
+		System.out.println(ruianGameIds);
+		System.out.println(fangpaoGameIds);
 		ruianGameRoomMsgService.removeGameRoom(ruianGameIds);
 		fangpaoGameRoomMsgService.removeGameRoom(fangpaoGameIds);
 	}

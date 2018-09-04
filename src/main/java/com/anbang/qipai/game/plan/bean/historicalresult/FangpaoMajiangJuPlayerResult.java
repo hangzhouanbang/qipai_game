@@ -9,10 +9,8 @@ public class FangpaoMajiangJuPlayerResult implements MajiangJuPlayerResult {
 	private String headimgurl;
 	private int huCount;
 	private int caishenCount;
-	private int gangCount;
-	private int paoCount;
-	private int niaoCount;
-	private int maxHushu;
+	private int zimoCount;
+	private int fangPaoCount;
 	private int totalScore;
 
 	public FangpaoMajiangJuPlayerResult(Map juPlayerResult) {
@@ -21,10 +19,8 @@ public class FangpaoMajiangJuPlayerResult implements MajiangJuPlayerResult {
 		this.headimgurl = (String) juPlayerResult.get("headimgurl");
 		this.huCount = ((Double) juPlayerResult.get("huCount")).intValue();
 		this.caishenCount = ((Double) juPlayerResult.get("caishenCount")).intValue();
-		this.gangCount = ((Double) juPlayerResult.get("gangCount")).intValue();
-		this.paoCount = ((Double) juPlayerResult.get("paoCount")).intValue();
-		this.niaoCount = ((Double) juPlayerResult.get("niaoCount")).intValue();
-		this.maxHushu = ((Double) juPlayerResult.get("maxHushu")).intValue();
+		this.zimoCount = ((Double) juPlayerResult.get("zimoCount")).intValue();
+		this.fangPaoCount = ((Double) juPlayerResult.get("fangPaoCount")).intValue();
 		this.totalScore = ((Double) juPlayerResult.get("totalScore")).intValue();
 	}
 
@@ -72,36 +68,20 @@ public class FangpaoMajiangJuPlayerResult implements MajiangJuPlayerResult {
 		this.caishenCount = caishenCount;
 	}
 
-	public int getGangCount() {
-		return gangCount;
+	public int getZimoCount() {
+		return zimoCount;
 	}
 
-	public void setGangCount(int gangCount) {
-		this.gangCount = gangCount;
+	public void setZimoCount(int zimoCount) {
+		this.zimoCount = zimoCount;
 	}
 
-	public int getPaoCount() {
-		return paoCount;
+	public int getFangPaoCount() {
+		return fangPaoCount;
 	}
 
-	public void setPaoCount(int paoCount) {
-		this.paoCount = paoCount;
-	}
-
-	public int getNiaoCount() {
-		return niaoCount;
-	}
-
-	public void setNiaoCount(int niaoCount) {
-		this.niaoCount = niaoCount;
-	}
-
-	public int getMaxHushu() {
-		return maxHushu;
-	}
-
-	public void setMaxHushu(int maxHushu) {
-		this.maxHushu = maxHushu;
+	public void setFangPaoCount(int fangPaoCount) {
+		this.fangPaoCount = fangPaoCount;
 	}
 
 	public int getTotalScore() {
@@ -111,4 +91,5 @@ public class FangpaoMajiangJuPlayerResult implements MajiangJuPlayerResult {
 	public void setTotalScore(int totalScore) {
 		this.totalScore = totalScore;
 	}
+
 }

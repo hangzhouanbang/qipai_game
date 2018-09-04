@@ -4,6 +4,9 @@ import java.util.List;
 
 import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.Sort.Direction;
+import org.springframework.data.domain.Sort.Order;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
@@ -56,6 +59,7 @@ public class MongodbMemberGameRoomDao implements MemberGameRoomDao {
 	@Override
 	public List<MemberGameRoom> findMemberGameRoomByMemberId(String memberId) {
 		Query query = new Query(Criteria.where("memberId").is(memberId));
+		query.with(new Sort(new Order(Direction.DESC, "gameRoom.createTime")));
 		return mongoTemplate.find(query, MemberGameRoom.class);
 	}
 
