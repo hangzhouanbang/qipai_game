@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.anbang.qipai.game.cqrs.c.service.GameRoomCmdService;
+import com.anbang.qipai.game.msg.service.FangpaoGameRoomMsgService;
 import com.anbang.qipai.game.msg.service.GameServerMsgService;
 import com.anbang.qipai.game.msg.service.RuianGameRoomMsgService;
 import com.anbang.qipai.game.plan.bean.games.CanNotJoinMoreRoomsException;
@@ -71,6 +72,9 @@ public class GamePlayController {
 
 	@Autowired
 	private RuianGameRoomMsgService ruianGameRoomMsgService;
+
+	@Autowired
+	private FangpaoGameRoomMsgService fangpaoGameRoomMsgService;
 
 	@Autowired
 	private HttpClient httpClient;
@@ -520,7 +524,9 @@ public class GamePlayController {
 		List<String> roomIds = new ArrayList<>();
 		Map<Game, List<String>> gameIdMap = new HashMap<>();
 		List<String> ruianGameIds = new ArrayList<>();
+		List<String> fangpaoGameIds = new ArrayList<>();
 		gameIdMap.put(Game.ruianMajiang, ruianGameIds);
+		gameIdMap.put(Game.fangpaoMajiang, fangpaoGameIds);
 		for (GameRoom room : roomList) {
 			String id = room.getId();
 			roomIds.add(id);
@@ -533,5 +539,6 @@ public class GamePlayController {
 		}
 		gameService.expireGameRoom(roomIds);
 		ruianGameRoomMsgService.removeGameRoom(ruianGameIds);
+		fangpaoGameRoomMsgService.removeGameRoom(fangpaoGameIds);
 	}
 }
