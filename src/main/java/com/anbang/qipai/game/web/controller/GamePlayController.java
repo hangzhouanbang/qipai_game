@@ -538,6 +538,7 @@ public class GamePlayController {
 			gameService.expireMemberGameRoom(game, serverGameId);
 		}
 		gameService.expireGameRoom(roomIds);
+		System.out.println(roomIds);
 		System.out.println(ruianGameIds);
 		System.out.println(fangpaoGameIds);
 		ruianGameRoomMsgService.removeGameRoom(ruianGameIds);

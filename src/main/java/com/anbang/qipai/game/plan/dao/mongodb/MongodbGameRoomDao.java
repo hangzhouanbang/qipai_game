@@ -47,7 +47,7 @@ public class MongodbGameRoomDao implements GameRoomDao {
 	@Override
 	public List<GameRoom> findExpireGameRoom(long deadlineTime, boolean finished) {
 		Query query = new Query();
-		query.addCriteria(Criteria.where("deadlineTime").gte(deadlineTime));
+		query.addCriteria(Criteria.where("deadlineTime").lte(deadlineTime));
 		query.addCriteria(Criteria.where("finished").is(finished));
 		return mongoTemplate.find(query, GameRoom.class);
 	}
