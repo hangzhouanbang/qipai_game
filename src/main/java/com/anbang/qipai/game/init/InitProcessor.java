@@ -76,7 +76,7 @@ public class InitProcessor {
 		// core member snapshot恢复
 		CoreSnapshot memberSnapshot = null;
 		try {
-			memberSnapshot = (CoreSnapshot) snapshotJsonUtil.recovery(coreCommandEventHandler.getFileBasePath(),
+			memberSnapshot = (CoreSnapshot) snapshotJsonUtil.recovery(coreCommandEventHandler.getSnapshotFileBasePath(),
 					CoreSnapshot.class);
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -95,7 +95,7 @@ public class InitProcessor {
 
 		// core 命令
 
-		List<Command> commands = fileUtil.read("./", coreCommandEventHandler.getjFileNamePrefix());
+		List<Command> commands = fileUtil.read(coreCommandEventHandler.getjFileBasePath());
 		invokeCommands(commands);
 
 	}
