@@ -6,6 +6,8 @@ public class FpmjLawsFB {
 	private String panshu;
 	private String renshu;
 	private String hognzhongcaishen = "false";
+	private String dapao = "false";
+	private String sipaofanbei = "false";
 	private String zhuaniao = "false";
 	private String niaoshu = "4";
 
@@ -27,6 +29,12 @@ public class FpmjLawsFB {
 				renshu = "4";
 			} else if (lawName.equals("hzdcs")) {// 红中当财神
 				hognzhongcaishen = "true";
+			}
+			if (lawName.equals("dp")) {// 打炮
+				dapao = "true";
+			}
+			if (lawName.equals("spfb")) {// 四炮翻倍
+				sipaofanbei = "true";
 			}
 			if (lawName.equals("zn")) {// 抓鸟
 				zhuaniao = "true";
@@ -79,6 +87,22 @@ public class FpmjLawsFB {
 
 	public void setNiaoshu(String niaoshu) {
 		this.niaoshu = niaoshu;
+	}
+
+	public String getDapao() {
+		return dapao;
+	}
+
+	public void setDapao(String dapao) {
+		this.dapao = dapao;
+	}
+
+	public String getSipaofanbei() {
+		return sipaofanbei;
+	}
+
+	public void setSipaofanbei(String sipaofanbei) {
+		this.sipaofanbei = sipaofanbei;
 	}
 
 }

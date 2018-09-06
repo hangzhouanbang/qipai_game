@@ -231,6 +231,8 @@ public class GamePlayController {
 		req.param("panshu", fb.getPanshu());
 		req.param("renshu", fb.getRenshu());
 		req.param("hongzhongcaishen", fb.getHognzhongcaishen());
+		req.param("dapao", fb.getDapao());
+		req.param("sipaofanbei", fb.getSipaofanbei());
 		req.param("zhuaniao", fb.getZhuaniao());
 		req.param("niaoshu", fb.getNiaoshu());
 		Map resData;
