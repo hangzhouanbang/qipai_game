@@ -38,6 +38,7 @@ import com.anbang.qipai.game.remote.service.QipaiMembersRemoteService;
 import com.anbang.qipai.game.remote.vo.CommonRemoteVO;
 import com.anbang.qipai.game.web.fb.FpmjLawsFB;
 import com.anbang.qipai.game.web.fb.RamjLawsFB;
+import com.anbang.qipai.game.web.fb.WzmjLawsFB;
 import com.anbang.qipai.game.web.vo.CommonVO;
 import com.anbang.qipai.game.web.vo.MemberPlayingRoomVO;
 import com.google.gson.Gson;
@@ -235,6 +236,99 @@ public class GamePlayController {
 		req.param("sipaofanbei", fb.getSipaofanbei());
 		req.param("zhuaniao", fb.getZhuaniao());
 		req.param("niaoshu", fb.getNiaoshu());
+		Map resData;
+		try {
+			ContentResponse res = req.send();
+			String resJson = new String(res.getContent());
+			CommonVO resVo = gson.fromJson(resJson, CommonVO.class);
+			resData = (Map) resVo.getData();
+			gameRoom.getServerGame().setGameId((String) resData.get("gameId"));
+		} catch (Exception e) {
+			vo.setSuccess(false);
+			vo.setMsg("SysException");
+			return vo;
+		}
+
+		String roomNo = gameRoomCmdService.createRoom(memberId, System.currentTimeMillis());
+		gameRoom.setNo(roomNo);
+
+		gameService.createGameRoom(gameRoom);
+
+		Map data = new HashMap();
+		data.put("httpUrl", gameRoom.getServerGame().getServer().getHttpUrl());
+		data.put("wsUrl", gameRoom.getServerGame().getServer().getWsUrl());
+		data.put("roomNo", gameRoom.getNo());
+		data.put("gameId", gameRoom.getServerGame().getGameId());
+		data.put("token", resData.get("token"));
+		data.put("game", gameRoom.getGame());
+		vo.setData(data);
+		return vo;
+
+	}
+
+	/**
+	 * 创建温州麻将房间
+	 * 
+	 * @param token
+	 * @return
+	 */
+	@RequestMapping(value = "/create_wzmj_room")
+	@ResponseBody
+	public CommonVO createWzmjRoom(String token, @RequestBody List<String> lawNames) {
+		CommonVO vo = new CommonVO();
+		String memberId = memberAuthService.getMemberIdBySessionId(token);
+		if (memberId == null) {
+			vo.setSuccess(false);
+			vo.setMsg("invalid token");
+			return vo;
+		}
+		Member member = memberService.findMember(memberId);
+		MemberRights rights = member.getRights();
+
+		GameRoom gameRoom;
+		try {
+			gameRoom = gameService.buildWzmjGameRoom(memberId, lawNames);
+		} catch (IllegalGameLawsException e) {
+			vo.setSuccess(false);
+			vo.setMsg("IllegalGameLawsException");
+			return vo;
+		} catch (NotVIPMemberException e) {
+			vo.setSuccess(false);
+			vo.setMsg("NotVIPMemberException");
+			return vo;
+		} catch (CanNotJoinMoreRoomsException e) {
+			vo.setSuccess(false);
+			vo.setMsg("CanNotJoinMoreRoomsException");
+			return vo;
+		} catch (NoServerAvailableForGameException e) {
+			vo.setSuccess(false);
+			vo.setMsg("NoServerAvailableForGameException");
+			return vo;
+		}
+
+		// 普通会员开vip房扣金币
+		if (!member.isVip() && gameRoom.isVip()) {
+			int gold = rights.getPlanMemberCreateRoomDailyGoldPrice();
+			CommonRemoteVO rvo = qipaiMembersRomoteService.gold_withdraw(memberId, gold, "pay for create room");
+			if (!rvo.isSuccess()) {
+				vo.setSuccess(false);
+				vo.setMsg(rvo.getMsg());
+				return vo;
+			}
+		}
+
+		GameServer gameServer = gameRoom.getServerGame().getServer();
+		// 游戏服务器rpc，需要手动httpclientrpc
+		WzmjLawsFB fb = new WzmjLawsFB(lawNames);
+		Request req = httpClient.newRequest(gameServer.getHttpUrl() + "/game/newgame");
+		req.param("playerId", memberId);
+		req.param("panshu", fb.getPanshu());
+		req.param("renshu", fb.getRenshu());
+		req.param("jinjie", fb.getJinjie());
+		req.param("teshushuangfan", fb.getTeshushuangfan());
+		req.param("caishenqian", fb.getCaishenqian());
+		req.param("shaozhongfa", fb.getShaozhongfa());
+		req.param("lazila", fb.getLazila());
 		Map resData;
 		try {
 			ContentResponse res = req.send();

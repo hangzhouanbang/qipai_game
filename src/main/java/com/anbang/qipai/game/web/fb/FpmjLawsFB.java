@@ -2,6 +2,12 @@ package com.anbang.qipai.game.web.fb;
 
 import java.util.List;
 
+/**
+ * 放炮麻将规则
+ * 
+ * @author lsc
+ *
+ */
 public class FpmjLawsFB {
 	private String panshu;
 	private String renshu;

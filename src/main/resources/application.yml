@@ -72,6 +72,16 @@ spring:
                   ms: 5
                 batch:
                   size: 16384
+          wenzhouGameRoom:
+            producer:
+              configuration:
+                request:
+                  timeout:
+                    ms: 30000
+                linger:
+                  ms: 5
+                batch:
+                  size: 16384
       bindings:
         notice:
           destination: notice
@@ -90,6 +100,11 @@ spring:
             partitionCount: 1
         fangpaoGameRoom:
           destination: fangpaoGameRoom
+          contentType: application/json
+          producer:
+            partitionCount: 1
+        wenzhoupaoGameRoom:
+          destination: wenzhouGameRoom
           contentType: application/json
           producer:
             partitionCount: 1
@@ -133,6 +148,20 @@ spring:
           contentType: application/json
         fangpaoMajiangResult:
           destination: fangpaoMajiangResult
+          group: qipai-game
+          consumer:
+            concurrency: 1
+            partitioned: false
+          contentType: application/json
+        wenzhouMajiangGame:
+          destination: wenzhouMajiangGame
+          group: qipai-game
+          consumer:
+            concurrency: 1
+            partitioned: false
+          contentType: application/json
+        wenzhouMajiangResult:
+          destination: wenzhouMajiangResult
           group: qipai-game
           consumer:
             concurrency: 1
