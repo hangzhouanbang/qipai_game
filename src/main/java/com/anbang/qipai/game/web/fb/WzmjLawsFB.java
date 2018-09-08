@@ -38,7 +38,7 @@ public class WzmjLawsFB {
 				jinjie = "true";
 			} else if (lawName.equals("tssf")) {// 特殊双翻
 				teshushuangfan = "true";
-			} else if (lawName.equals("sir")) {// 财神钱
+			} else if (lawName.equals("csq")) {// 财神钱
 				caishenqian = "true";
 			} else if (lawName.equals("szf")) {// 少中发
 				shaozhongfa = "true";

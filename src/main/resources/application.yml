@@ -103,7 +103,7 @@ spring:
           contentType: application/json
           producer:
             partitionCount: 1
-        wenzhoupaoGameRoom:
+        wenzhouGameRoom:
           destination: wenzhouGameRoom
           contentType: application/json
           producer:

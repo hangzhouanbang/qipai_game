@@ -19,6 +19,7 @@ import com.anbang.qipai.game.cqrs.c.service.GameRoomCmdService;
 import com.anbang.qipai.game.msg.service.FangpaoGameRoomMsgService;
 import com.anbang.qipai.game.msg.service.GameServerMsgService;
 import com.anbang.qipai.game.msg.service.RuianGameRoomMsgService;
+import com.anbang.qipai.game.msg.service.WenzhouGameRoomMsgService;
 import com.anbang.qipai.game.plan.bean.games.CanNotJoinMoreRoomsException;
 import com.anbang.qipai.game.plan.bean.games.Game;
 import com.anbang.qipai.game.plan.bean.games.GameLaw;
@@ -76,6 +77,9 @@ public class GamePlayController {
 
 	@Autowired
 	private FangpaoGameRoomMsgService fangpaoGameRoomMsgService;
+
+	@Autowired
+	private WenzhouGameRoomMsgService wenzhouGameRoomMsgService;
 
 	@Autowired
 	private HttpClient httpClient;
@@ -621,8 +625,10 @@ public class GamePlayController {
 		Map<Game, List<String>> gameIdMap = new HashMap<>();
 		List<String> ruianGameIds = new ArrayList<>();
 		List<String> fangpaoGameIds = new ArrayList<>();
+		List<String> wenzhouGameIds = new ArrayList<>();
 		gameIdMap.put(Game.ruianMajiang, ruianGameIds);
 		gameIdMap.put(Game.fangpaoMajiang, fangpaoGameIds);
+		gameIdMap.put(Game.wenzhouMajiang, wenzhouGameIds);
 		for (GameRoom room : roomList) {
 			String id = room.getId();
 			roomIds.add(id);
@@ -634,10 +640,8 @@ public class GamePlayController {
 			gameService.expireMemberGameRoom(game, serverGameId);
 		}
 		gameService.expireGameRoom(roomIds);
-		System.out.println(roomIds);
-		System.out.println(ruianGameIds);
-		System.out.println(fangpaoGameIds);
 		ruianGameRoomMsgService.removeGameRoom(ruianGameIds);
 		fangpaoGameRoomMsgService.removeGameRoom(fangpaoGameIds);
+		wenzhouGameRoomMsgService.removeGameRoom(fangpaoGameIds);
 	}
 }
