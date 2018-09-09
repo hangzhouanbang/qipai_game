@@ -42,6 +42,16 @@ spring:
                   ms: 5
                 batch:
                   size: 16384
+          gameDataReport:
+            producer:
+              configuration:
+                request:
+                  timeout:
+                    ms: 30000
+                linger:
+                  ms: 5
+                batch:
+                  size: 16384
           memberrightsconfiguration:
             producer:
               configuration:
@@ -117,6 +127,11 @@ spring:
           contentType: application/json
         mail:
           destination: mail
+          contentType: application/json
+          producer:
+            partitionCount: 1
+        gameDataReport:
+          destination: gameDataReport
           contentType: application/json
           producer:
             partitionCount: 1

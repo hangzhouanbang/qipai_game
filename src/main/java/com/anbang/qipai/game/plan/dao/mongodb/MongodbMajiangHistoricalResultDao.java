@@ -1,5 +1,6 @@
 package com.anbang.qipai.game.plan.dao.mongodb;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,8 +12,13 @@ import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Component;
 
+import com.anbang.qipai.game.plan.bean.games.Game;
 import com.anbang.qipai.game.plan.bean.historicalresult.MajiangHistoricalResult;
 import com.anbang.qipai.game.plan.dao.MajiangHistoricalResultDao;
+import com.mongodb.AggregationOptions;
+import com.mongodb.BasicDBObject;
+import com.mongodb.Cursor;
+import com.mongodb.DBObject;
 
 @Component
 public class MongodbMajiangHistoricalResultDao implements MajiangHistoricalResultDao {
@@ -45,6 +51,29 @@ public class MongodbMajiangHistoricalResultDao implements MajiangHistoricalResul
 	public MajiangHistoricalResult findMajiangHistoricalResultById(String id) {
 		Query query = new Query(Criteria.where("id").is(id));
 		return mongoTemplate.findOne(query, MajiangHistoricalResult.class);
+	}
+
+	@Override
+	public int countGameNumByGameAndTime(Game game, long startTime, long endTime) {
+		List<DBObject> pipeline = new ArrayList<>();
+		BasicDBObject match = new BasicDBObject();
+		match.put("finishTime", new BasicDBObject("$gt", startTime).put("$lt", endTime));
+		match.put("game", game);
+		DBObject queryMatch = new BasicDBObject("$match", match);
+		pipeline.add(queryMatch);
+
+		BasicDBObject group = new BasicDBObject();
+		group.put("_id", null);
+		group.put("num", new BasicDBObject("$sum", "$lastPanNo"));
+		DBObject queryGroup = new BasicDBObject("$group", group);
+		pipeline.add(queryGroup);
+		Cursor cursor = mongoTemplate.getCollection("memberLoginRecord").aggregate(pipeline,
+				AggregationOptions.builder().outputMode(AggregationOptions.OutputMode.CURSOR).build());
+		if (cursor == null) {
+			return 0;
+		} else {
+			return (int) cursor.next().get("num");
+		}
 	}
 
 }
