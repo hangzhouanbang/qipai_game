@@ -20,14 +20,15 @@ public class MembersMsgReceiver {
 
 	@StreamListener(MembersSink.MEMBERS)
 	public void addMember(CommonMO mo) {
+		String msg = mo.getMsg();
 		String json = gson.toJson(mo.getData());
 		Member member = gson.fromJson(json, Member.class);
-		if ("newMember".equals(mo.getMsg())) {
+		if ("newMember".equals(msg)) {
 			memberService.addMember(member);
 			// 更新会员权益
 			memberService.updateMemberRights(member.getId());
 		}
-		if ("update member vip".equals(mo.getMsg())) {
+		if ("memberOrder delive".equals(msg) || "recharge vip".equals(msg) || "update member vip".equals(msg)) {
 			memberService.updateMemberVip(member.getId(), member.isVip());
 		}
 	}

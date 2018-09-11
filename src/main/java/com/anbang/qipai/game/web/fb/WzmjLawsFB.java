@@ -12,7 +12,9 @@ public class WzmjLawsFB {
 
 	private String panshu;
 	private String renshu;
-	private String jinjie = "false";
+	private String jinjie1 = "false";
+	private String jinjie2 = "false";
+	private String gangsuanfen = "false";
 	private String teshushuangfan = "false";
 	private String caishenqian = "false";
 	private String shaozhongfa = "false";
@@ -34,8 +36,10 @@ public class WzmjLawsFB {
 				renshu = "3";
 			} else if (lawName.equals("sir")) {// 四人
 				renshu = "4";
-			} else if (lawName.equals("jj")) {// 进阶
-				jinjie = "true";
+			} else if (lawName.equals("jj1")) {// 进阶
+				jinjie1 = "true";
+			} else if (lawName.equals("jj2")) {// 进阶
+				jinjie2 = "true";
 			} else if (lawName.equals("tssf")) {// 特殊双翻
 				teshushuangfan = "true";
 			} else if (lawName.equals("csq")) {// 财神钱
@@ -44,6 +48,8 @@ public class WzmjLawsFB {
 				shaozhongfa = "true";
 			} else if (lawName.equals("lzl")) {// 辣子辣
 				lazila = "true";
+			} else if (lawName.equals("gsf")) {// 杠算分
+				gangsuanfen = "true";
 			} else {
 
 			}
@@ -66,12 +72,28 @@ public class WzmjLawsFB {
 		this.renshu = renshu;
 	}
 
-	public String getJinjie() {
-		return jinjie;
+	public String getJinjie1() {
+		return jinjie1;
 	}
 
-	public void setJinjie(String jinjie) {
-		this.jinjie = jinjie;
+	public void setJinjie1(String jinjie1) {
+		this.jinjie1 = jinjie1;
+	}
+
+	public String getJinjie2() {
+		return jinjie2;
+	}
+
+	public void setJinjie2(String jinjie2) {
+		this.jinjie2 = jinjie2;
+	}
+
+	public String getGangsuanfen() {
+		return gangsuanfen;
+	}
+
+	public void setGangsuanfen(String gangsuanfen) {
+		this.gangsuanfen = gangsuanfen;
 	}
 
 	public String getTeshushuangfan() {

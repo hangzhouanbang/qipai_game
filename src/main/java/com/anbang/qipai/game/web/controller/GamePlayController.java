@@ -328,7 +328,9 @@ public class GamePlayController {
 		req.param("playerId", memberId);
 		req.param("panshu", fb.getPanshu());
 		req.param("renshu", fb.getRenshu());
-		req.param("jinjie", fb.getJinjie());
+		req.param("jinjie1", fb.getJinjie1());
+		req.param("jinjie2", fb.getJinjie2());
+		req.param("gangsuanfen", fb.getGangsuanfen());
 		req.param("teshushuangfan", fb.getTeshushuangfan());
 		req.param("caishenqian", fb.getCaishenqian());
 		req.param("shaozhongfa", fb.getShaozhongfa());
