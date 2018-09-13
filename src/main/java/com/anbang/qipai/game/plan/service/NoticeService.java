@@ -24,7 +24,11 @@ public class NoticeService {
 	
 	public void updateNotice() {
 		Notices notices = noticeDao.queryById("1");
-		notices.setState(0);
+		if (notices.getState() == 1) {
+			notices.setState(0);
+		}else {
+			notices.setState(1);
+		}
 		noticeDao.addNotice(notices);
 	}
 
