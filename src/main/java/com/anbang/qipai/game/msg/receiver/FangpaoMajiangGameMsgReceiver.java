@@ -7,9 +7,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cloud.stream.annotation.EnableBinding;
 import org.springframework.cloud.stream.annotation.StreamListener;
 
+import com.anbang.qipai.game.cqrs.c.service.GameRoomCmdService;
 import com.anbang.qipai.game.msg.channel.sink.FangpaoMajiangGameSink;
 import com.anbang.qipai.game.msg.msjobj.CommonMO;
 import com.anbang.qipai.game.plan.bean.games.Game;
+import com.anbang.qipai.game.plan.bean.games.GameRoom;
 import com.anbang.qipai.game.plan.service.GameService;
 import com.google.gson.Gson;
 
@@ -17,6 +19,9 @@ import com.google.gson.Gson;
 public class FangpaoMajiangGameMsgReceiver {
 	@Autowired
 	private GameService gameService;
+
+	@Autowired
+	private GameRoomCmdService gameRoomCmdService;
 
 	private Gson gson = new Gson();
 
@@ -32,6 +37,8 @@ public class FangpaoMajiangGameMsgReceiver {
 		if ("ju finished".equals(msg)) {// 一局游戏结束
 			Map data = (Map) mo.getData();
 			String gameId = (String) data.get("gameId");
+			GameRoom gameRoom = gameService.findRoomByGameAndServerGameGameId(Game.fangpaoMajiang, gameId);
+			gameRoomCmdService.removeRoom(gameRoom.getNo());
 			gameService.gameRoomFinished(Game.fangpaoMajiang, gameId);
 		}
 		if ("pan finished".equals(msg)) {// 一盘游戏结束

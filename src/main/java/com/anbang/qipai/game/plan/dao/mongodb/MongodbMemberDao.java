@@ -42,8 +42,8 @@ public class MongodbMemberDao implements MemberDao {
 	public void updatePlanMembersRights(int planMemberRoomsCount, int planMemberRoomsAliveHours,
 			int planMemberMaxCreateRoomDaily, int planMemberCreateRoomDailyGoldPrice, int planMemberJoinRoomGoldPrice) {
 		mongoTemplate.updateMulti(new Query(Criteria.where("vip").is(false)),
-				new Update().set("rights.planMemberRoomsCount", planMemberRoomsCount)
-						.set("rights.planMemberRoomsAliveHours", planMemberRoomsAliveHours)
+				new Update().set("rights.roomsCount", planMemberRoomsCount)
+						.set("rights.roomsAliveHours", planMemberRoomsAliveHours)
 						.set("rights.planMemberMaxCreateRoomDaily", planMemberMaxCreateRoomDaily)
 						.set("rights.planMemberCreateRoomDailyGoldPrice", planMemberCreateRoomDailyGoldPrice)
 						.set("rights.planMemberJoinRoomGoldPrice", planMemberJoinRoomGoldPrice),
@@ -52,9 +52,8 @@ public class MongodbMemberDao implements MemberDao {
 
 	@Override
 	public void updateVipMembersRights(int vipMemberRoomsCount, int vipMemberRoomsAliveHours) {
-		mongoTemplate.updateMulti(new Query(Criteria.where("vip").is(true)),
-				new Update().set("rights.vipMemberRoomsCount", vipMemberRoomsCount)
-						.set("rights.vipMemberRoomsAliveHours", vipMemberRoomsAliveHours),
+		mongoTemplate.updateMulti(new Query(Criteria.where("vip").is(true)), new Update()
+				.set("rights.roomsCount", vipMemberRoomsCount).set("rights.roomsAliveHours", vipMemberRoomsAliveHours),
 				Member.class);
 	}
 
