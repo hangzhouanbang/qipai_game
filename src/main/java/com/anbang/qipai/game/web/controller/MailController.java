@@ -76,7 +76,7 @@ public class MailController {
 	 * @return 接收成功
 	 **/
 	@RequestMapping("/addmailbyid")
-	public CommonVO addMailById(String mail, @RequestBody String[] ids) {
+	public CommonVO addMailById(String mail, @RequestBody List<String> idss) {
 		SystemMail mail1 = gson.fromJson(mail, SystemMail.class);
 		SystemMail mails = new SystemMail();
 		mails.setAdminname(mail1.getAdminname());
@@ -91,7 +91,7 @@ public class MailController {
 		mails.setStatus(2);
 		SystemMail mail2 = mailService.addmail(mails);
 		// 给选中的id发送邮件
-		List<MailState> list = mailService.addMailById(mail2, ids);
+		List<MailState> list = mailService.addMailById(mail2, idss);
 		// 发送kafka消息
 		mailMsgService.createmail(mail2);
 		mailMsgService.createMailState(list);
