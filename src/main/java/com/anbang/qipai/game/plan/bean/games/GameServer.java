@@ -14,6 +14,7 @@ public class GameServer {
 	private String httpUrl;
 	private String wsUrl;
 	private long onlineTime;
+	private int state;
 
 	public String getId() {
 		return id;
@@ -63,4 +64,11 @@ public class GameServer {
 		this.onlineTime = onlineTime;
 	}
 
+    public int getState() {
+        return state;
+    }
+
+    public void setState(int state) {
+        this.state = state;
+    }
 }

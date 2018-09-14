@@ -5,7 +5,12 @@ import java.util.Date;
 import java.util.List;
 import java.util.Random;
 
+import com.anbang.qipai.game.msg.GameServerMsgConstant;
+import com.anbang.qipai.game.msg.channel.source.GameServerSource;
+import com.anbang.qipai.game.msg.msjobj.CommonMO;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cloud.stream.annotation.EnableBinding;
+import org.springframework.messaging.support.MessageBuilder;
 import org.springframework.stereotype.Component;
 
 import com.anbang.qipai.game.plan.bean.games.CanNotJoinMoreRoomsException;
@@ -30,7 +35,11 @@ import com.anbang.qipai.game.plan.dao.MemberGameRoomDao;
 import com.anbang.qipai.game.util.TimeUtil;
 
 @Component
+@EnableBinding(GameServerSource.class)
 public class GameService {
+
+	public static final int GAME_SERVER_STATE_RUNNINT = 0;
+	public static final int GAME_SERVER_STATE_STOP = 1;
 
 	@Autowired
 	private GameLawDao gameLawDao;
@@ -50,6 +59,9 @@ public class GameService {
 	@Autowired
 	private LawsMutexGroupDao lawsMutexGroupDao;
 
+	@Autowired
+	private GameServerSource gameServerSource;
+
 	public GameLaw findGameLaw(Game game, String lawName) {
 		return gameLawDao.findByGameAndName(game, lawName);
 	}
@@ -67,7 +79,7 @@ public class GameService {
 			throw new CanNotJoinMoreRoomsException();
 		}
 
-		List<GameServer> allServers = gameServerDao.findByGame(Game.ruianMajiang);
+		List<GameServer> allServers = gameServerDao.findServersByState(Game.ruianMajiang,GameService.GAME_SERVER_STATE_RUNNINT);
 		if (allServers == null || allServers.isEmpty()) {
 			throw new NoServerAvailableForGameException();
 		}
@@ -355,4 +367,27 @@ public class GameService {
 	public GameRoom findRoomByGameAndServerGameGameId(Game game, String serverGameId) {
 		return gameRoomDao.findRoomByGameAndServerGameGameId(game, serverGameId);
 	}
+
+	public void stopGameServer(List<String> ids) {
+        try {
+            this.gameServerDao.updateGameServerState(ids,GameService.GAME_SERVER_STATE_STOP);
+        } catch (Exception e) {
+            CommonMO commonMO=new CommonMO();
+            commonMO.setMsg(GameServerMsgConstant.STOP_GAME_SERVERS_FAILED);
+            commonMO.setData(ids);
+            this.gameServerSource.gameServer().send(MessageBuilder.withPayload(commonMO).build());
+        }
+    }
+
+	public void recoverGameServer(List<String> ids){
+        try {
+            this.gameServerDao.updateGameServerState(ids,GAME_SERVER_STATE_RUNNINT);
+        } catch (Throwable e) {
+            CommonMO commonMO=new CommonMO();
+            commonMO.setMsg(GameServerMsgConstant.RECOVER_GAME_SERVERS_FAILED);
+            commonMO.setData(ids);
+            this.gameServerSource.gameServer().send(MessageBuilder.withPayload(commonMO).build());
+        }
+    }
+
 }

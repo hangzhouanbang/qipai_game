@@ -14,4 +14,8 @@ public interface GameServerDao {
 	List<GameServer> findAll();
 
 	List<GameServer> findByGame(Game game);
+
+    void updateGameServerState(List<String> ids, int gameServerStateStop);
+
+	List<GameServer> findServersByState(Game game,int state);
 }
