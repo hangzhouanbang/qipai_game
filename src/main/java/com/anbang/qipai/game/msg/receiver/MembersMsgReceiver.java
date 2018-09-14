@@ -22,7 +22,6 @@ public class MembersMsgReceiver {
 	public void addMember(CommonMO mo) {
 		String msg = mo.getMsg();
 		String json = gson.toJson(mo.getData());
-		System.out.println(">>> "+json);
 		Member member = gson.fromJson(json, Member.class);
 		if ("newMember".equals(msg)) {
 			memberService.addMember(member);

@@ -41,6 +41,7 @@ import com.anbang.qipai.game.web.fb.FpmjLawsFB;
 import com.anbang.qipai.game.web.fb.RamjLawsFB;
 import com.anbang.qipai.game.web.fb.WzmjLawsFB;
 import com.anbang.qipai.game.web.vo.CommonVO;
+import com.anbang.qipai.game.web.vo.MemberGameRoomVO;
 import com.anbang.qipai.game.web.vo.MemberPlayingRoomVO;
 import com.google.gson.Gson;
 
@@ -592,7 +593,17 @@ public class GamePlayController {
 			vo.setMsg("invalid token");
 			return vo;
 		}
-		List<MemberGameRoom> roomList = gameService.queryMemberGameRoomForMember(memberId);
+		List<MemberGameRoomVO> roomList = new ArrayList<>();
+		List<MemberGameRoom> rooms = gameService.queryMemberGameRoomForMember(memberId);
+		// List<MemberGameRoom> roomList =
+		// gameService.queryMemberGameRoomForMember(memberId);
+		for (MemberGameRoom room : rooms) {
+			GameRoom gameRoom = room.getGameRoom();
+			MemberGameRoomVO roomVo = new MemberGameRoomVO(gameRoom.getNo(), gameRoom.getGame(),
+					gameRoom.getPlayersCount(), gameRoom.getCurrentPanNum(), gameRoom.getPanCountPerJu(),
+					gameRoom.getDeadlineTime());
+			roomList.add(roomVo);
+		}
 		vo.setMsg("room list");
 		vo.setData(roomList);
 		return vo;
