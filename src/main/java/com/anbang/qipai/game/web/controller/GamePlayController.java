@@ -435,17 +435,6 @@ public class GamePlayController {
 			return vo;
 		}
 
-		// 普通会员加入vip房扣金币
-		if (gameRoom.isVip() && !member.isVip()) {
-			int gold = rights.getPlanMemberJoinRoomGoldPrice();
-			CommonRemoteVO rvo = qipaiMembersRomoteService.gold_withdraw(memberId, gold, "pay for join room");
-			if (!rvo.isSuccess()) {
-				vo.setSuccess(false);
-				vo.setMsg(rvo.getMsg());
-				return vo;
-			}
-		}
-
 		// 游戏服务器rpc加入房间
 		GameServer gameServer = gameRoom.getServerGame().getServer();
 		Request req = httpClient.newRequest(gameServer.getHttpUrl() + "/game/joingame");
@@ -468,6 +457,18 @@ public class GamePlayController {
 			vo.setMsg("SysException");
 			return vo;
 		}
+
+		// 普通会员加入vip房扣金币
+		if (gameRoom.isVip() && !member.isVip()) {
+			int gold = rights.getPlanMemberJoinRoomGoldPrice();
+			CommonRemoteVO rvo = qipaiMembersRomoteService.gold_withdraw(memberId, gold, "pay for join room");
+			if (!rvo.isSuccess()) {
+				vo.setSuccess(false);
+				vo.setMsg(rvo.getMsg());
+				return vo;
+			}
+		}
+
 		gameService.joinGameRoom(gameRoom, memberId);
 
 		Map data = new HashMap();
