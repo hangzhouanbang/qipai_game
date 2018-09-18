@@ -26,6 +26,10 @@ public class MemberService {
 		memberDao.save(member);
 	}
 
+	public void updateMemberGold(String memberId,int balanceAfter) {
+		memberDao.updateMemberGold(memberId, balanceAfter);
+	}
+	
 	public void updateMemberVip(String memberId,boolean vip) {
 		memberDao.updateVIP(memberId, vip);
 	}

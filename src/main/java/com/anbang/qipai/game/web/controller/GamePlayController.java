@@ -37,6 +37,7 @@ import com.anbang.qipai.game.plan.service.MemberAuthService;
 import com.anbang.qipai.game.plan.service.MemberService;
 import com.anbang.qipai.game.remote.service.QipaiMembersRemoteService;
 import com.anbang.qipai.game.remote.vo.CommonRemoteVO;
+import com.anbang.qipai.game.remote.vo.MemberRemoteVO;
 import com.anbang.qipai.game.web.fb.FpmjLawsFB;
 import com.anbang.qipai.game.web.fb.RamjLawsFB;
 import com.anbang.qipai.game.web.fb.WzmjLawsFB;
@@ -435,6 +436,14 @@ public class GamePlayController {
 			return vo;
 		}
 
+		//判断普通会员个人账户的余额能否支付加入房间的费用
+		int balance = memberService.findMember(memberId).getBalanceAfter();
+		if (gameRoom.isVip() && !member.isVip() && balance < rights.getPlanMemberJoinRoomGoldPrice()) {
+			vo.setSuccess(false);
+			vo.setMsg("Lack of balance");
+			return vo;
+		}
+		
 		// 游戏服务器rpc加入房间
 		GameServer gameServer = gameRoom.getServerGame().getServer();
 		Request req = httpClient.newRequest(gameServer.getHttpUrl() + "/game/joingame");
@@ -458,7 +467,7 @@ public class GamePlayController {
 			return vo;
 		}
 
-		// 普通会员加入vip房扣金币
+		// 普通会员加入vip房完成玉石扣除才能加入房间
 		if (gameRoom.isVip() && !member.isVip()) {
 			int gold = rights.getPlanMemberJoinRoomGoldPrice();
 			CommonRemoteVO rvo = qipaiMembersRomoteService.gold_withdraw(memberId, gold, "pay for join room");
@@ -468,7 +477,7 @@ public class GamePlayController {
 				return vo;
 			}
 		}
-
+		
 		gameService.joinGameRoom(gameRoom, memberId);
 
 		Map data = new HashMap();
