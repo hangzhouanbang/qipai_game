@@ -12,6 +12,8 @@ public interface MemberDao {
 	
 	MemberRightsConfiguration findMemberRightsById();
 
+    void updateMemberGold(String memberId,int balanceAfter);
+	
 	void updateRights(String memberId, MemberRights rights);
 	
 	void updateVIP(String memberId, boolean vip);

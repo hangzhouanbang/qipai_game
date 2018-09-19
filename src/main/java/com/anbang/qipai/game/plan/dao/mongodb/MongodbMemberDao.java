@@ -33,6 +33,12 @@ public class MongodbMemberDao implements MemberDao {
 	}
 
 	@Override
+	public void updateMemberGold(String memberId, int balanceAfter) {
+		mongoTemplate.updateFirst(new Query(Criteria.where("id").is(memberId)), new Update().set("balanceAfter", balanceAfter),
+				Member.class);	
+	}
+	
+	@Override
 	public void updateRights(String memberId, MemberRights rights) {
 		mongoTemplate.updateFirst(new Query(Criteria.where("id").is(memberId)), new Update().set("rights", rights),
 				Member.class);
@@ -67,4 +73,5 @@ public class MongodbMemberDao implements MemberDao {
 		mongoTemplate.updateFirst(new Query(Criteria.where("id").is(memberId)), new Update().set("vip", vip),
 				Member.class);
 	}
+
 }
