@@ -440,7 +440,7 @@ public class GamePlayController {
 		int balance = memberService.findMember(memberId).getBalanceAfter();
 		if (gameRoom.isVip() && !member.isVip() && balance < rights.getPlanMemberJoinRoomGoldPrice()) {
 			vo.setSuccess(false);
-			vo.setMsg("Lack of balance");
+			vo.setMsg("InsufficientBalanceException");
 			return vo;
 		}
 		
