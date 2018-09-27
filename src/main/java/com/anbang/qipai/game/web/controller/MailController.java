@@ -42,8 +42,7 @@ public class MailController {
 	/**
 	 * 新发布的系统公告,并给所有用户发送邮件
 	 * 
-	 * @param mail
-	 *            管理系统传过来的json字符串
+	 * @param mail 管理系统传过来的json字符串
 	 * @return 接收成功
 	 **/
 	@RequestMapping("/addmail")
@@ -69,10 +68,8 @@ public class MailController {
 	/**
 	 * 发布邮件,并给所选中的用户发送邮件
 	 * 
-	 * @param mail
-	 *            管理系统传过来的json字符串
-	 * @param id
-	 *            选中的用户id
+	 * @param mail 管理系统传过来的json字符串
+	 * @param id   选中的用户id
 	 * @return 接收成功
 	 **/
 	@RequestMapping("/addmailbyid")
@@ -124,10 +121,8 @@ public class MailController {
 	/**
 	 * 用户点击单个邮件，查看邮件详情
 	 * 
-	 * @param memberid
-	 *            会员id
-	 * @param mailid
-	 *            邮件id
+	 * @param memberid 会员id
+	 * @param mailid   邮件id
 	 **/
 	@RequestMapping("/findonemail")
 	@ResponseBody
@@ -156,10 +151,8 @@ public class MailController {
 	/**
 	 * 领取奖利
 	 * 
-	 * @param memberid
-	 *            会员id
-	 * @param mailid
-	 *            邮件id
+	 * @param memberid 会员id
+	 * @param mailid   邮件id
 	 **/
 	@RequestMapping("/updatemailstate")
 	@ResponseBody
@@ -195,8 +188,7 @@ public class MailController {
 	/**
 	 * 所有邮件设为已读
 	 * 
-	 * @param memberid
-	 *            会员id
+	 * @param memberid 会员id
 	 **/
 	@RequestMapping("/updateallmail")
 	@ResponseBody
@@ -216,12 +208,12 @@ public class MailController {
 	/**
 	 * 删除所有已读
 	 * 
-	 * @param memberid
-	 *            会员id
+	 * @param memberid 会员id
+	 * @throws ParseException
 	 **/
 	@RequestMapping("/deleteallmail")
 	@ResponseBody
-	public CommonVO deleteallmail(String token) {
+	public CommonVO deleteallmail(String token) throws ParseException {
 		CommonVO vo = new CommonVO();
 		String memberId = memberAuthService.getMemberIdBySessionId(token);
 		if (memberId == null) {
@@ -231,7 +223,18 @@ public class MailController {
 		}
 		mailService.deleteallmail(memberId);
 		// mailMsgService.deleteMailStateAll(memberId);
-		return new CommonVO();
+		Integer count = mailService.redmailcount(memberId);
+		if (count > 0) {
+			Map<String, Object> map = mailService.findall(memberId);
+			vo.setSuccess(true);
+			vo.setMsg(count.toString());
+			vo.setData(map);
+			return vo;
+		}
+		vo.setSuccess(true);
+		vo.setMsg("0");
+		return vo;
+
 	}
 
 }

@@ -118,6 +118,13 @@ spring:
           contentType: application/json
           producer:
             partitionCount: 1
+        memberGolds:
+          destination: memberGolds
+          group: qipai-game
+          consumer:
+            concurrency: 1
+            partitioned: false
+          contentType: application/json    
         members:
           destination: members
           group: qipai-game
@@ -184,6 +191,12 @@ spring:
           contentType: application/json
         gameServerManager:
           destination: gameServer
+          consumer:
+            concurrency: 1
+            partitioned: false
+          contentType: application/json
+        signInPrize:
+          destination: signInPrize
           consumer:
             concurrency: 1
             partitioned: false
