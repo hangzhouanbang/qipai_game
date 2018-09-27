@@ -183,7 +183,9 @@ public class GameService {
 			gameRoom.setPanCountPerJu(4);
 		} else if (lawNames.contains("bj")) {
 			gameRoom.setPanCountPerJu(8);
-		} else if (lawNames.contains("slj")) {
+		}else if (lawNames.contains("sej")){
+			gameRoom.setPanCountPerJu(12);
+		}else if (lawNames.contains("slj")) {
 			gameRoom.setPanCountPerJu(16);
 		} else {
 			gameRoom.setPanCountPerJu(4);
@@ -250,6 +252,8 @@ public class GameService {
 			gameRoom.setPanCountPerJu(4);
 		} else if (lawNames.contains("bj")) {
 			gameRoom.setPanCountPerJu(8);
+		} else if (lawNames.contains("sej")){
+			gameRoom.setPanCountPerJu(12);
 		} else if (lawNames.contains("slj")) {
 			gameRoom.setPanCountPerJu(16);
 		} else {
