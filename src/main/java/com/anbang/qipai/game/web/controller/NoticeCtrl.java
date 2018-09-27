@@ -13,6 +13,7 @@ import com.anbang.qipai.game.websocket.HallWsNotifier;
 
 /**
  * 系统通告controller
+ * 
  * @author 程佳 2018.6.1
  **/
 @Controller
@@ -24,8 +25,8 @@ public class NoticeCtrl {
 
 	@Autowired
 	private HallWsNotifier wsNotifier;
-	
-	@Autowired 
+
+	@Autowired
 	private NoticeMsgService noticeMsgService;
 
 	/**
@@ -34,9 +35,9 @@ public class NoticeCtrl {
 	 **/
 	@RequestMapping("/addnotice")
 	@ResponseBody
-	public CommonVO addNotice(String notice,String place,String adminname) {
-		noticeService.addNotice(notice,place,adminname);
-		//发送消息
+	public CommonVO addNotice(String notice, String place, String adminname) {
+		noticeService.addNotice(notice, place, adminname);
+		// 发送消息
 		Notices notices = noticeService.findPublicNotice();
 		Notices notices1 = new Notices();
 		notices1.setPlace(notices.getPlace());
@@ -47,19 +48,19 @@ public class NoticeCtrl {
 		wsNotifier.publishSysNotice(notice);
 		return new CommonVO();
 	}
-	
+
 	/**
 	 * 修改系统公告状态
 	 * 
 	 **/
 	@RequestMapping("/updatenotice")
 	@ResponseBody
-	public CommonVO updateNotice(String id) {
-		noticeService.updateNotice();
+	public CommonVO updateNotice(String id, String notice, String place, Integer state, String adminname) {
+		noticeService.updateNotice(notice, place, state, adminname);
 		Notices notices = noticeService.queryById();
 		notices.setId(id);
 		noticeMsgService.createNotice(notices);
 		return new CommonVO();
 	}
-	
+
 }
