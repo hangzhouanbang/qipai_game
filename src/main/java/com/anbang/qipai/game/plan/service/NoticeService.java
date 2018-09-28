@@ -22,13 +22,16 @@ public class NoticeService {
 		noticeDao.addNotice(notices);
 	}
 	
-	public void updateNotice() {
+	public void updateNotice(String notice, String place, Integer state, String adminname) {
 		Notices notices = noticeDao.queryById("1");
-		if (notices.getState() == 1) {
+		if (state == 1) {
 			notices.setState(0);
 		}else {
 			notices.setState(1);
 		}
+		notices.setNotice(notice);
+		notices.setPlace(place);
+		notices.setAdminname(adminname);
 		noticeDao.addNotice(notices);
 	}
 
