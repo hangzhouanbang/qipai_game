@@ -66,6 +66,10 @@ public class GameService {
 		return gameLawDao.findByGameAndName(game, lawName);
 	}
 
+	public void saveGameRoom(GameRoom gameRoom) {
+		gameRoomDao.save(gameRoom);
+	}
+	
 	/**
 	 * 创建瑞安麻将房间
 	 */

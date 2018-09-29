@@ -29,6 +29,7 @@ import com.anbang.qipai.game.plan.bean.games.IllegalGameLawsException;
 import com.anbang.qipai.game.plan.bean.games.LawsMutexGroup;
 import com.anbang.qipai.game.plan.bean.games.MemberGameRoom;
 import com.anbang.qipai.game.plan.bean.games.NoServerAvailableForGameException;
+import com.anbang.qipai.game.plan.bean.games.PlayersRecord;
 import com.anbang.qipai.game.plan.bean.members.Member;
 import com.anbang.qipai.game.plan.bean.members.MemberRights;
 import com.anbang.qipai.game.plan.bean.members.NotVIPMemberException;
@@ -137,6 +138,15 @@ public class GamePlayController {
 				vo.setMsg(rvo.getMsg());
 				return vo;
 			}
+			//房主玩家记录
+			List<PlayersRecord> playersRecord = new ArrayList<>();
+			gameRoom.setPlayersRecord(playersRecord);
+			PlayersRecord record = new PlayersRecord();
+			record.setPlayerId(member.getId());
+			record.setVip(member.isVip());
+			record.setPayGold(gold);
+			playersRecord.add(record);
+			gameService.saveGameRoom(gameRoom);
 		}
 
 		GameServer gameServer = gameRoom.getServerGame().getServer();
@@ -228,6 +238,15 @@ public class GamePlayController {
 				vo.setMsg(rvo.getMsg());
 				return vo;
 			}
+			//房主玩家记录
+			List<PlayersRecord> playersRecord = new ArrayList<>();
+			gameRoom.setPlayersRecord(playersRecord);
+			PlayersRecord record = new PlayersRecord();
+			record.setPlayerId(member.getId());
+			record.setVip(member.isVip());
+			record.setPayGold(gold);
+			playersRecord.add(record);
+			gameService.saveGameRoom(gameRoom);
 		}
 
 		GameServer gameServer = gameRoom.getServerGame().getServer();
@@ -321,6 +340,15 @@ public class GamePlayController {
 				vo.setMsg(rvo.getMsg());
 				return vo;
 			}
+			//房主玩家记录
+			List<PlayersRecord> playersRecord = new ArrayList<>();
+			gameRoom.setPlayersRecord(playersRecord);
+			PlayersRecord record = new PlayersRecord();
+			record.setPlayerId(member.getId());
+			record.setVip(member.isVip());
+			record.setPayGold(gold);
+			playersRecord.add(record);
+			gameService.saveGameRoom(gameRoom);
 		}
 
 		GameServer gameServer = gameRoom.getServerGame().getServer();
@@ -475,7 +503,15 @@ public class GamePlayController {
 				vo.setSuccess(false);
 				vo.setMsg(rvo.getMsg());
 				return vo;
-			}
+			}			
+			//加入房间玩家记录,列表从第一开始，第0个是房主
+			List<PlayersRecord> playersRecord = gameRoom.getPlayersRecord();
+			PlayersRecord record = new PlayersRecord();
+			record.setPlayerId(member.getId());
+			record.setVip(member.isVip());
+			record.setPayGold(gold);
+			playersRecord.add(record);
+			gameService.saveGameRoom(gameRoom);
 		}
 		
 		gameService.joinGameRoom(gameRoom, memberId);
