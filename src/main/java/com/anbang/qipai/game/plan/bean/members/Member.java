@@ -11,16 +11,7 @@ public class Member {
 	private String id;
 	private boolean vip;
 	private long createTime;
-	private int balanceAfter;
 	private MemberRights rights;
-
-	public int getBalanceAfter() {
-		return balanceAfter;
-	}
-
-	public void setBalanceAfter(int balanceAfter) {
-		this.balanceAfter = balanceAfter;
-	}
 
 	public String getId() {
 		return id;

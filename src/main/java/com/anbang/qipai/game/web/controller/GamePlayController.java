@@ -35,6 +35,7 @@ import com.anbang.qipai.game.plan.bean.members.MemberRights;
 import com.anbang.qipai.game.plan.bean.members.NotVIPMemberException;
 import com.anbang.qipai.game.plan.service.GameService;
 import com.anbang.qipai.game.plan.service.MemberAuthService;
+import com.anbang.qipai.game.plan.service.MemberGoldBalanceService;
 import com.anbang.qipai.game.plan.service.MemberService;
 import com.anbang.qipai.game.remote.service.QipaiMembersRemoteService;
 import com.anbang.qipai.game.remote.vo.CommonRemoteVO;
@@ -64,6 +65,9 @@ public class GamePlayController {
 
 	@Autowired
 	private MemberService memberService;
+
+	@Autowired
+	private MemberGoldBalanceService memberGoldBalanceService;
 
 	@Autowired
 	private GameRoomCmdService gameRoomCmdService;
@@ -464,7 +468,7 @@ public class GamePlayController {
 		}
 
 		// 判断普通会员个人账户的余额能否支付加入房间的费用
-		int balance = memberService.findMember(memberId).getBalanceAfter();
+		int balance = memberGoldBalanceService.findByMemberId(memberId).getBalanceAfter();
 		if (gameRoom.isVip() && !member.isVip() && balance < rights.getPlanMemberJoinRoomGoldPrice()) {
 			vo.setSuccess(false);
 			vo.setMsg("InsufficientBalanceException");
@@ -494,23 +498,23 @@ public class GamePlayController {
 			return vo;
 		}
 
+		int gold = rights.getPlanMemberJoinRoomGoldPrice();
+		// 加入房间玩家记录,列表从第一开始，第0个是房主
+		List<PlayersRecord> playersRecord = gameRoom.getPlayersRecord();
+		PlayersRecord record = new PlayersRecord();
+		record.setPlayerId(member.getId());
+		record.setVip(member.isVip());
+		record.setPayGold(gold);
+		playersRecord.add(record);
+		gameService.saveGameRoom(gameRoom);
 		// 普通会员加入vip房完成玉石扣除才能加入房间
 		if (gameRoom.isVip() && !member.isVip()) {
-			int gold = rights.getPlanMemberJoinRoomGoldPrice();
 			CommonRemoteVO rvo = qipaiMembersRomoteService.gold_withdraw(memberId, gold, "pay for join room");
 			if (!rvo.isSuccess()) {
 				vo.setSuccess(false);
 				vo.setMsg(rvo.getMsg());
 				return vo;
 			}
-			// 加入房间玩家记录,列表从第一开始，第0个是房主
-			List<PlayersRecord> playersRecord = gameRoom.getPlayersRecord();
-			PlayersRecord record = new PlayersRecord();
-			record.setPlayerId(member.getId());
-			record.setVip(member.isVip());
-			record.setPayGold(gold);
-			playersRecord.add(record);
-			gameService.saveGameRoom(gameRoom);
 		}
 
 		gameService.joinGameRoom(gameRoom, memberId);
