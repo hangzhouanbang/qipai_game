@@ -13,7 +13,6 @@ import com.anbang.qipai.game.msg.msjobj.CommonMO;
 import com.anbang.qipai.game.plan.bean.games.Game;
 import com.anbang.qipai.game.plan.bean.games.GameRoom;
 import com.anbang.qipai.game.plan.bean.games.PlayersRecord;
-import com.anbang.qipai.game.plan.bean.historicalresult.MajiangHistoricalResult;
 import com.anbang.qipai.game.plan.service.GameService;
 import com.anbang.qipai.game.plan.service.MemberService;
 import com.anbang.qipai.game.remote.service.QipaiMembersRemoteService;
@@ -32,7 +31,7 @@ public class FangpaoMajiangGameMsgReceiver {
 
 	@Autowired
 	private MemberService memberService;
-	
+
 	private Gson gson = new Gson();
 
 	@StreamListener(FangpaoMajiangGameSink.FANGPAOMAJIANGGAME)
@@ -56,7 +55,7 @@ public class FangpaoMajiangGameMsgReceiver {
 				}
 				gameService.saveGameRoom(room);
 			}
-			gameService.ruianMajiangPlayerQuitQame(gameId, playerId);
+			gameService.fangpaoMajiangPlayerQuitQame(gameId, playerId);
 		}
 		if ("ju finished".equals(msg)) {// 一局游戏结束
 			Map data = (Map) mo.getData();
