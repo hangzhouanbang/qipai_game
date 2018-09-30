@@ -31,6 +31,7 @@ import com.anbang.qipai.game.plan.bean.games.MemberGameRoom;
 import com.anbang.qipai.game.plan.bean.games.NoServerAvailableForGameException;
 import com.anbang.qipai.game.plan.bean.games.PlayersRecord;
 import com.anbang.qipai.game.plan.bean.members.Member;
+import com.anbang.qipai.game.plan.bean.members.MemberGoldBalance;
 import com.anbang.qipai.game.plan.bean.members.MemberRights;
 import com.anbang.qipai.game.plan.bean.members.NotVIPMemberException;
 import com.anbang.qipai.game.plan.service.GameService;
@@ -468,7 +469,13 @@ public class GamePlayController {
 		}
 
 		// 判断普通会员个人账户的余额能否支付加入房间的费用
-		int balance = memberGoldBalanceService.findByMemberId(memberId).getBalanceAfter();
+		MemberGoldBalance memberGoldBalance = memberGoldBalanceService.findByMemberId(memberId);
+		if (memberGoldBalance == null) {
+			vo.setSuccess(false);
+			vo.setMsg("InsufficientBalanceException");
+			return vo;
+		}
+		int balance = memberGoldBalance.getBalanceAfter();
 		if (gameRoom.isVip() && !member.isVip() && balance < rights.getPlanMemberJoinRoomGoldPrice()) {
 			vo.setSuccess(false);
 			vo.setMsg("InsufficientBalanceException");
