@@ -15,6 +15,7 @@ import com.anbang.qipai.game.plan.bean.games.GameRoom;
 import com.anbang.qipai.game.plan.bean.games.PlayersRecord;
 import com.anbang.qipai.game.plan.bean.historicalresult.MajiangHistoricalResult;
 import com.anbang.qipai.game.plan.service.GameService;
+import com.anbang.qipai.game.plan.service.MajiangHistoricalResultService;
 import com.anbang.qipai.game.plan.service.MemberService;
 import com.anbang.qipai.game.remote.service.QipaiMembersRemoteService;
 import com.google.gson.Gson;
@@ -33,6 +34,9 @@ public class RuianMajiangGameMsgReceiver {
 
 	@Autowired
 	private MemberService memberService;
+	
+	@Autowired
+	private MajiangHistoricalResultService majiangHistoricalResultService;
 
 	private Gson gson = new Gson();
 
@@ -42,12 +46,10 @@ public class RuianMajiangGameMsgReceiver {
 		if ("playerQuit".equals(msg)) {// 有人退出游戏
 			Map data = (Map) mo.getData();
 			String gameId = (String) data.get("gameId");
-			String playerId = (String) data.get("playerId");
-
-			MajiangHistoricalResult majiangHistoricalResult = new MajiangHistoricalResult();
+			String playerId = (String) data.get("playerId");		
 			GameRoom room = gameService.findRoomByGameAndServerGameGameId(Game.ruianMajiang, gameId);
 			List<PlayersRecord> playersRecord = room.getPlayersRecord();	
-				if (majiangHistoricalResult.getLastPanNo() <= 0 && room.isVip() && !memberService.findMember(playerId).isVip()) {	
+				if (room.isVip() && !memberService.findMember(playerId).isVip()) {	
 					int amount = playersRecord.get(0).getPayGold();	
 					qipaiMembersRomoteService.gold_givegoldtomember(playerId, amount , "back gold to leave home");	
 				//删除玩家记录
@@ -56,8 +58,7 @@ public class RuianMajiangGameMsgReceiver {
 						playersRecord.remove(i);
 					}
 				}
-				gameService.saveGameRoom(room);
-					
+				gameService.saveGameRoom(room);					
 			}
 			gameService.ruianMajiangPlayerQuitQame(gameId, playerId);
 		}
@@ -69,16 +70,15 @@ public class RuianMajiangGameMsgReceiver {
 			gameRoomCmdService.removeRoom(gameRoom.getNo());
 			gameService.gameRoomFinished(Game.ruianMajiang, gameId);
 
-			MajiangHistoricalResult majiangHistoricalResult = new MajiangHistoricalResult();
-			List<PlayersRecord> playersRecord = gameRoom.getPlayersRecord();
-			
+			List<PlayersRecord> playersRecord = gameRoom.getPlayersRecord();		
 			//反还金币
-			for (int i = 0; i < playersRecord.size(); i++) {
+			for (int i = 0; i < playersRecord.size(); i++) {	
+				String playerId = playersRecord.get(i).getPlayerId();
+				MajiangHistoricalResult historicalResult = majiangHistoricalResultService.findMajiangHistoricalResultById(playerId);				
 				// 没有完成一盘，房间是vip，玩家不是vip，满足这些条件，rpc返还玉石
-				if (majiangHistoricalResult.getLastPanNo() <= 0 && gameRoom.isVip() && !playersRecord.get(i).isVip()) {
+				if (historicalResult.getLastPanNo() <= 0 && gameRoom.isVip() && !playersRecord.get(i).isVip()) {
 					int amount = playersRecord.get(i).getPayGold();
-					qipaiMembersRomoteService.gold_givegoldtomember(playersRecord.get(i).getPlayerId(), amount,
-							"back gold to leave home");
+					qipaiMembersRomoteService.gold_givegoldtomember(playersRecord.get(i).getPlayerId(), amount, "back gold to leave game");
 				}
 			}
 
