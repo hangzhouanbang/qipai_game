@@ -66,7 +66,7 @@ public class MemberHistoricalResultController {
 	 * 每日游戏数据生成
 	 */
 	@Scheduled(cron = "0 0 1 * * ?") // 每天凌晨1点
-	public void createPlatformReport() {
+	public void createGameDataReport() {
 		Game[] games = Game.values();
 		long oneDay = 3600000 * 24;
 		// 当日凌晨2点
