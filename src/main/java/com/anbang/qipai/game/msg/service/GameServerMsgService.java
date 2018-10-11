@@ -37,6 +37,13 @@ public class GameServerMsgService {
 		gameServerSource.gameServer().send(MessageBuilder.withPayload(mo).build());
 	}
 
+	public void updateGameLaw(GameLaw law) {
+		CommonMO mo = new CommonMO();
+		mo.setMsg("update gamelaw");
+		mo.setData(law);
+		gameServerSource.gameServer().send(MessageBuilder.withPayload(mo).build());
+	}
+
 	public void removeGameLaw(String lawId) {
 		CommonMO mo = new CommonMO();
 		mo.setMsg("remove gamelaw");

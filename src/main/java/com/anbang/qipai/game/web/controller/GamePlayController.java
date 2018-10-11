@@ -603,6 +603,21 @@ public class GamePlayController {
 	}
 
 	/**
+	 * 编辑玩法
+	 * 
+	 * @param lawId
+	 * @return
+	 */
+	@RequestMapping(value = "/update_law")
+	@ResponseBody
+	public CommonVO updatelaw(@RequestBody GameLaw law) {
+		CommonVO vo = new CommonVO();
+		gameService.createGameLaw(law);
+		gameServerMsgService.updateGameLaw(law);
+		return vo;
+	}
+
+	/**
 	 * 添加玩法互斥组
 	 * 
 	 * @param game
