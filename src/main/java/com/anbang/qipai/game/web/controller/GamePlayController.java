@@ -109,6 +109,8 @@ public class GamePlayController {
 			vo.setMsg("invalid token");
 			return vo;
 		}
+
+		Map data = new HashMap();
 		Member member = memberService.findMember(memberId);
 		MemberRights rights = member.getRights();
 
@@ -124,8 +126,11 @@ public class GamePlayController {
 			vo.setMsg("NotVIPMemberException");
 			return vo;
 		} catch (CanNotJoinMoreRoomsException e) {
+			int memberRoomsCount = rights.getRoomsCount();
 			vo.setSuccess(false);
 			vo.setMsg("CanNotJoinMoreRoomsException");
+			data.put("roomsCount", memberRoomsCount);
+			vo.setData(data);
 			return vo;
 		} catch (NoServerAvailableForGameException e) {
 			vo.setSuccess(false);
@@ -181,7 +186,6 @@ public class GamePlayController {
 
 		gameService.createGameRoom(gameRoom);
 
-		Map data = new HashMap();
 		data.put("httpUrl", gameRoom.getServerGame().getServer().getHttpUrl());
 		data.put("wsUrl", gameRoom.getServerGame().getServer().getWsUrl());
 		data.put("roomNo", gameRoom.getNo());
@@ -212,6 +216,7 @@ public class GamePlayController {
 		Member member = memberService.findMember(memberId);
 		MemberRights rights = member.getRights();
 
+		Map data = new HashMap();
 		GameRoom gameRoom;
 		try {
 			gameRoom = gameService.buildFpmjGameRoom(memberId, lawNames);
@@ -224,8 +229,11 @@ public class GamePlayController {
 			vo.setMsg("NotVIPMemberException");
 			return vo;
 		} catch (CanNotJoinMoreRoomsException e) {
+			int memberRoomsCount = rights.getRoomsCount();
 			vo.setSuccess(false);
 			vo.setMsg("CanNotJoinMoreRoomsException");
+			data.put("roomsCount", memberRoomsCount);
+			vo.setData(data);
 			return vo;
 		} catch (NoServerAvailableForGameException e) {
 			vo.setSuccess(false);
@@ -283,7 +291,6 @@ public class GamePlayController {
 
 		gameService.createGameRoom(gameRoom);
 
-		Map data = new HashMap();
 		data.put("httpUrl", gameRoom.getServerGame().getServer().getHttpUrl());
 		data.put("wsUrl", gameRoom.getServerGame().getServer().getWsUrl());
 		data.put("roomNo", gameRoom.getNo());
@@ -313,7 +320,7 @@ public class GamePlayController {
 		}
 		Member member = memberService.findMember(memberId);
 		MemberRights rights = member.getRights();
-
+		Map data = new HashMap();
 		GameRoom gameRoom;
 		try {
 			gameRoom = gameService.buildWzmjGameRoom(memberId, lawNames);
@@ -326,8 +333,11 @@ public class GamePlayController {
 			vo.setMsg("NotVIPMemberException");
 			return vo;
 		} catch (CanNotJoinMoreRoomsException e) {
+			int memberRoomsCount = rights.getRoomsCount();
 			vo.setSuccess(false);
 			vo.setMsg("CanNotJoinMoreRoomsException");
+			data.put("roomsCount", memberRoomsCount);
+			vo.setData(data);
 			return vo;
 		} catch (NoServerAvailableForGameException e) {
 			vo.setSuccess(false);
@@ -387,7 +397,6 @@ public class GamePlayController {
 
 		gameService.createGameRoom(gameRoom);
 
-		Map data = new HashMap();
 		data.put("httpUrl", gameRoom.getServerGame().getServer().getHttpUrl());
 		data.put("wsUrl", gameRoom.getServerGame().getServer().getWsUrl());
 		data.put("roomNo", gameRoom.getNo());
