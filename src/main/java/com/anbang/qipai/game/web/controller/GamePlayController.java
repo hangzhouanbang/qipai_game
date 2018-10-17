@@ -40,6 +40,7 @@ import com.anbang.qipai.game.plan.service.MemberGoldBalanceService;
 import com.anbang.qipai.game.plan.service.MemberService;
 import com.anbang.qipai.game.remote.service.QipaiMembersRemoteService;
 import com.anbang.qipai.game.remote.vo.CommonRemoteVO;
+import com.anbang.qipai.game.util.NumConvertChineseUtil;
 import com.anbang.qipai.game.web.fb.FpmjLawsFB;
 import com.anbang.qipai.game.web.fb.RamjLawsFB;
 import com.anbang.qipai.game.web.fb.WzmjLawsFB;
@@ -129,7 +130,7 @@ public class GamePlayController {
 			int memberRoomsCount = rights.getRoomsCount();
 			vo.setSuccess(false);
 			vo.setMsg("CanNotJoinMoreRoomsException");
-			data.put("roomsCount", memberRoomsCount);
+			data.put("roomsCount", NumConvertChineseUtil.toChinese(String.valueOf(memberRoomsCount)));
 			vo.setData(data);
 			return vo;
 		} catch (NoServerAvailableForGameException e) {
@@ -232,7 +233,7 @@ public class GamePlayController {
 			int memberRoomsCount = rights.getRoomsCount();
 			vo.setSuccess(false);
 			vo.setMsg("CanNotJoinMoreRoomsException");
-			data.put("roomsCount", memberRoomsCount);
+			data.put("roomsCount", NumConvertChineseUtil.toChinese(String.valueOf(memberRoomsCount)));
 			vo.setData(data);
 			return vo;
 		} catch (NoServerAvailableForGameException e) {
@@ -336,7 +337,7 @@ public class GamePlayController {
 			int memberRoomsCount = rights.getRoomsCount();
 			vo.setSuccess(false);
 			vo.setMsg("CanNotJoinMoreRoomsException");
-			data.put("roomsCount", memberRoomsCount);
+			data.put("roomsCount", NumConvertChineseUtil.toChinese(String.valueOf(memberRoomsCount)));
 			vo.setData(data);
 			return vo;
 		} catch (NoServerAvailableForGameException e) {
@@ -472,8 +473,12 @@ public class GamePlayController {
 		try {
 			gameService.tryHasMoreRoom(memberId);
 		} catch (CanNotJoinMoreRoomsException e) {
+			Map data = new HashMap();
+			int memberRoomsCount = rights.getRoomsCount();
 			vo.setSuccess(false);
 			vo.setMsg("CanNotJoinMoreRoomsException");
+			data.put("roomsCount", NumConvertChineseUtil.toChinese(String.valueOf(memberRoomsCount)));
+			vo.setData(data);
 			return vo;
 		}
 
