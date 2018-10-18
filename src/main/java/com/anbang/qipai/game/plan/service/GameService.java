@@ -279,6 +279,13 @@ public class GameService {
 		return gameRoom;
 	}
 
+	public int countTodayCreateVipRoomsCount(String createMemberId) {
+		Date d = new Date();
+		long startTime = TimeUtil.getDayStartTime(d);
+		long endTime = TimeUtil.getDayEndTime(d);
+		return gameRoomDao.count(startTime, endTime, createMemberId, true);
+	}
+
 	public void onlineServer(GameServer gameServer) {
 		gameServer.setOnlineTime(System.currentTimeMillis());
 		gameServerDao.save(gameServer);

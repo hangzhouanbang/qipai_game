@@ -1,27 +1,29 @@
 package com.anbang.qipai.game.plan.bean.mail;
 
 public class SystemMail {
-	private String id;//邮件id
-	
-	private String title;//邮件标题
-	
-	private String adminname;//管理员名称
-	
-	private String file;//邮件图片文档
-	
-	private Long createtime;//生成时间
-	
-	private Integer number;//金币数量
-	
-	private Integer integral;//积分数量
-	
-	private Integer vipcard;//会员体验时间，按日来计算
-	
-	private Integer status;//状态；0-维护，1-恢复
-	
-	private String mailType;//邮件类型
-	
-	private long validTime;//有效时间
+	private String id;// 邮件id
+
+	private String title;// 邮件标题
+
+	private String adminname;// 管理员名称
+
+	private String file;// 邮件图片文档
+
+	private Long createtime;// 生成时间
+
+	private Integer number;// 金币数量
+
+	private Integer integral;// 积分数量
+
+	private String vipCardId;// 会员卡
+
+	private String cardName;// 会员卡名称
+
+	private Integer status;// 状态；0-维护，1-恢复
+
+	private String mailType;// 邮件类型
+
+	private long validTime;// 有效时间
 
 	public String getId() {
 		return id;
@@ -71,12 +73,20 @@ public class SystemMail {
 		this.integral = integral;
 	}
 
-	public Integer getVipcard() {
-		return vipcard;
+	public String getVipCardId() {
+		return vipCardId;
 	}
 
-	public void setVipcard(Integer vipcard) {
-		this.vipcard = vipcard;
+	public void setVipCardId(String vipCardId) {
+		this.vipCardId = vipCardId;
+	}
+
+	public String getCardName() {
+		return cardName;
+	}
+
+	public void setCardName(String cardName) {
+		this.cardName = cardName;
 	}
 
 	public String getAdminname() {
@@ -110,7 +120,5 @@ public class SystemMail {
 	public void setValidTime(long validTime) {
 		this.validTime = validTime;
 	}
-
-	
 
 }

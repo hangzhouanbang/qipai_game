@@ -25,14 +25,14 @@ public interface QipaiMembersRemoteService {
 	@RequestMapping(value = "/gold/withdraw")
 	public CommonRemoteVO gold_withdraw(@RequestParam("memberId") String memberId, @RequestParam("amount") int amount,
 			@RequestParam("textSummary") String textSummary);
-	
+
 	@RequestMapping(value = "/gold/givegoldtomember")
-	public CommonRemoteVO gold_givegoldtomember(@RequestParam("memberId") String memberId, @RequestParam("amount") int amount,
-			@RequestParam("textSummary") String textSummary);
-	
+	public CommonRemoteVO gold_givegoldtomember(@RequestParam("memberId") String memberId,
+			@RequestParam("amount") int amount, @RequestParam("textSummary") String textSummary);
+
 	@RequestMapping(value = "/reward/mail_reward")
 	public CommonRemoteVO game_mail_reward(@RequestParam("memberId") String memberId,
 			@RequestParam("number") Integer number, @RequestParam("integral") Integer integral,
-			@RequestParam("vipcard") Integer vipcard);
+			@RequestParam("vipCardId") String vipCardId);
 
 }

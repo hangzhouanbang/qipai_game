@@ -123,15 +123,16 @@ public class GamePlayController {
 			vo.setMsg("IllegalGameLawsException");
 			return vo;
 		} catch (NotVIPMemberException e) {
+			int todayCreateVipRoomsCount = gameService.countTodayCreateVipRoomsCount(memberId);
 			vo.setSuccess(false);
 			vo.setMsg("NotVIPMemberException");
+			data.put("todayCreateVipRoomsCount",
+					NumConvertChineseUtil.toChinese(String.valueOf(todayCreateVipRoomsCount)));
+			vo.setData(data);
 			return vo;
 		} catch (CanNotJoinMoreRoomsException e) {
-			int memberRoomsCount = rights.getRoomsCount();
 			vo.setSuccess(false);
 			vo.setMsg("CanNotJoinMoreRoomsException");
-			data.put("roomsCount", NumConvertChineseUtil.toChinese(String.valueOf(memberRoomsCount)));
-			vo.setData(data);
 			return vo;
 		} catch (NoServerAvailableForGameException e) {
 			vo.setSuccess(false);
@@ -226,15 +227,16 @@ public class GamePlayController {
 			vo.setMsg("IllegalGameLawsException");
 			return vo;
 		} catch (NotVIPMemberException e) {
+			int todayCreateVipRoomsCount = gameService.countTodayCreateVipRoomsCount(memberId);
 			vo.setSuccess(false);
 			vo.setMsg("NotVIPMemberException");
+			data.put("todayCreateVipRoomsCount",
+					NumConvertChineseUtil.toChinese(String.valueOf(todayCreateVipRoomsCount)));
+			vo.setData(data);
 			return vo;
 		} catch (CanNotJoinMoreRoomsException e) {
-			int memberRoomsCount = rights.getRoomsCount();
 			vo.setSuccess(false);
 			vo.setMsg("CanNotJoinMoreRoomsException");
-			data.put("roomsCount", NumConvertChineseUtil.toChinese(String.valueOf(memberRoomsCount)));
-			vo.setData(data);
 			return vo;
 		} catch (NoServerAvailableForGameException e) {
 			vo.setSuccess(false);
@@ -330,15 +332,16 @@ public class GamePlayController {
 			vo.setMsg("IllegalGameLawsException");
 			return vo;
 		} catch (NotVIPMemberException e) {
+			int todayCreateVipRoomsCount = gameService.countTodayCreateVipRoomsCount(memberId);
 			vo.setSuccess(false);
 			vo.setMsg("NotVIPMemberException");
+			data.put("todayCreateVipRoomsCount",
+					NumConvertChineseUtil.toChinese(String.valueOf(todayCreateVipRoomsCount)));
+			vo.setData(data);
 			return vo;
 		} catch (CanNotJoinMoreRoomsException e) {
-			int memberRoomsCount = rights.getRoomsCount();
 			vo.setSuccess(false);
 			vo.setMsg("CanNotJoinMoreRoomsException");
-			data.put("roomsCount", NumConvertChineseUtil.toChinese(String.valueOf(memberRoomsCount)));
-			vo.setData(data);
 			return vo;
 		} catch (NoServerAvailableForGameException e) {
 			vo.setSuccess(false);
@@ -473,12 +476,8 @@ public class GamePlayController {
 		try {
 			gameService.tryHasMoreRoom(memberId);
 		} catch (CanNotJoinMoreRoomsException e) {
-			Map data = new HashMap();
-			int memberRoomsCount = rights.getRoomsCount();
 			vo.setSuccess(false);
 			vo.setMsg("CanNotJoinMoreRoomsException");
-			data.put("roomsCount", NumConvertChineseUtil.toChinese(String.valueOf(memberRoomsCount)));
-			vo.setData(data);
 			return vo;
 		}
 
