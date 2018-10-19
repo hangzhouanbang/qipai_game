@@ -32,11 +32,13 @@ import com.anbang.qipai.game.plan.bean.games.NoServerAvailableForGameException;
 import com.anbang.qipai.game.plan.bean.games.PlayersRecord;
 import com.anbang.qipai.game.plan.bean.members.Member;
 import com.anbang.qipai.game.plan.bean.members.MemberGoldBalance;
+import com.anbang.qipai.game.plan.bean.members.MemberLoginLimitRecord;
 import com.anbang.qipai.game.plan.bean.members.MemberRights;
 import com.anbang.qipai.game.plan.bean.members.NotVIPMemberException;
 import com.anbang.qipai.game.plan.service.GameService;
 import com.anbang.qipai.game.plan.service.MemberAuthService;
 import com.anbang.qipai.game.plan.service.MemberGoldBalanceService;
+import com.anbang.qipai.game.plan.service.MemberLoginLimitRecordService;
 import com.anbang.qipai.game.plan.service.MemberService;
 import com.anbang.qipai.game.remote.service.QipaiMembersRemoteService;
 import com.anbang.qipai.game.remote.vo.CommonRemoteVO;
@@ -90,6 +92,9 @@ public class GamePlayController {
 	private WenzhouGameRoomMsgService wenzhouGameRoomMsgService;
 
 	@Autowired
+	private MemberLoginLimitRecordService memberLoginLimitRecordService;
+
+	@Autowired
 	private HttpClient httpClient;
 
 	private Gson gson = new Gson();
@@ -110,7 +115,12 @@ public class GamePlayController {
 			vo.setMsg("invalid token");
 			return vo;
 		}
-
+		MemberLoginLimitRecord loginLimitRecord = memberLoginLimitRecordService.findByMemberId(memberId, true);
+		if (loginLimitRecord != null) {
+			vo.setSuccess(false);
+			vo.setMsg("login limited");
+			return vo;
+		}
 		Map data = new HashMap();
 		Member member = memberService.findMember(memberId);
 		MemberRights rights = member.getRights();
@@ -213,6 +223,12 @@ public class GamePlayController {
 		if (memberId == null) {
 			vo.setSuccess(false);
 			vo.setMsg("invalid token");
+			return vo;
+		}
+		MemberLoginLimitRecord loginLimitRecord = memberLoginLimitRecordService.findByMemberId(memberId, true);
+		if (loginLimitRecord != null) {
+			vo.setSuccess(false);
+			vo.setMsg("login limited");
 			return vo;
 		}
 		Member member = memberService.findMember(memberId);
@@ -321,6 +337,12 @@ public class GamePlayController {
 			vo.setMsg("invalid token");
 			return vo;
 		}
+		MemberLoginLimitRecord loginLimitRecord = memberLoginLimitRecordService.findByMemberId(memberId, true);
+		if (loginLimitRecord != null) {
+			vo.setSuccess(false);
+			vo.setMsg("login limited");
+			return vo;
+		}
 		Member member = memberService.findMember(memberId);
 		MemberRights rights = member.getRights();
 		Map data = new HashMap();
@@ -423,6 +445,12 @@ public class GamePlayController {
 		if (memberId == null) {
 			vo.setSuccess(false);
 			vo.setMsg("invalid token");
+			return vo;
+		}
+		MemberLoginLimitRecord loginLimitRecord = memberLoginLimitRecordService.findByMemberId(memberId, true);
+		if (loginLimitRecord != null) {
+			vo.setSuccess(false);
+			vo.setMsg("login limited");
 			return vo;
 		}
 		Member member = memberService.findMember(memberId);

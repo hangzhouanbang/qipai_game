@@ -2,7 +2,7 @@ spring:
   data:
     mongodb:
       uri: mongodb://localhost:27017/qipai_game
-
+      
   cloud:
     stream:
       kafka:
@@ -218,6 +218,13 @@ spring:
           contentType: application/json
           producer:
             partitionCount: 1
+        memberLoginLimitRecord:
+          destination: memberLoginLimitRecord
+          group: qipai-game
+          consumer:
+            concurrency: 1
+            partitioned: false
+          contentType: application/json
 
   application:
     name: qipai-game
@@ -228,7 +235,7 @@ eureka:
     serviceUrl:
       defaultZone: http://127.0.0.1:8761/eureka/
 websocket:
-  url: ws://localhost:83/hall
+  url: ws://47.96.20.47:83/hall
 
 filepath:
   snapshotFileBasePath: /data/app/qipai_game/snapshot
