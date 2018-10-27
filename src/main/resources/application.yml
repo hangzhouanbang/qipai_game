@@ -124,7 +124,7 @@ spring:
           consumer:
             concurrency: 1
             partitioned: false
-          contentType: application/json    
+          contentType: application/json
         members:
           destination: members
           group: qipai-game
