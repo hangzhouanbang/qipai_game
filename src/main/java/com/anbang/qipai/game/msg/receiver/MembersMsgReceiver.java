@@ -30,6 +30,8 @@ public class MembersMsgReceiver {
 		}
 		if ("memberOrder delive".equals(msg) || "recharge vip".equals(msg) || "update member vip".equals(msg)) {
 			memberService.updateMemberVip(member.getId(), member.isVip());
+			// 更新会员权益
+			memberService.updateMemberRights(member.getId());
 		}
 	}
 

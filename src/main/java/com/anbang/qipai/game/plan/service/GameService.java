@@ -5,14 +5,14 @@ import java.util.Date;
 import java.util.List;
 import java.util.Random;
 
-import com.anbang.qipai.game.msg.GameServerMsgConstant;
-import com.anbang.qipai.game.msg.channel.source.GameServerSource;
-import com.anbang.qipai.game.msg.msjobj.CommonMO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cloud.stream.annotation.EnableBinding;
 import org.springframework.messaging.support.MessageBuilder;
 import org.springframework.stereotype.Component;
 
+import com.anbang.qipai.game.msg.GameServerMsgConstant;
+import com.anbang.qipai.game.msg.channel.source.GameServerSource;
+import com.anbang.qipai.game.msg.msjobj.CommonMO;
 import com.anbang.qipai.game.plan.bean.games.CanNotJoinMoreRoomsException;
 import com.anbang.qipai.game.plan.bean.games.Game;
 import com.anbang.qipai.game.plan.bean.games.GameLaw;
@@ -66,6 +66,10 @@ public class GameService {
 		return gameLawDao.findByGameAndName(game, lawName);
 	}
 
+	public void saveGameRoom(GameRoom gameRoom) {
+		gameRoomDao.save(gameRoom);
+	}
+
 	/**
 	 * 创建瑞安麻将房间
 	 */
@@ -79,7 +83,8 @@ public class GameService {
 			throw new CanNotJoinMoreRoomsException();
 		}
 
-		List<GameServer> allServers = gameServerDao.findServersByState(Game.ruianMajiang,GameService.GAME_SERVER_STATE_RUNNINT);
+		List<GameServer> allServers = gameServerDao.findServersByState(Game.ruianMajiang,
+				GameService.GAME_SERVER_STATE_RUNNINT);
 		if (allServers == null || allServers.isEmpty()) {
 			throw new NoServerAvailableForGameException();
 		}
@@ -113,9 +118,9 @@ public class GameService {
 			gameRoom.setPanCountPerJu(4);
 		} else if (lawNames.contains("bj")) {
 			gameRoom.setPanCountPerJu(8);
-		}else if (lawNames.contains("sej")){
+		} else if (lawNames.contains("sej")) {
 			gameRoom.setPanCountPerJu(12);
-		}else if (lawNames.contains("slj")) {
+		} else if (lawNames.contains("slj")) {
 			gameRoom.setPanCountPerJu(16);
 		} else {
 			gameRoom.setPanCountPerJu(4);
@@ -183,9 +188,9 @@ public class GameService {
 			gameRoom.setPanCountPerJu(4);
 		} else if (lawNames.contains("bj")) {
 			gameRoom.setPanCountPerJu(8);
-		}else if (lawNames.contains("sej")){
+		} else if (lawNames.contains("sej")) {
 			gameRoom.setPanCountPerJu(12);
-		}else if (lawNames.contains("slj")) {
+		} else if (lawNames.contains("slj")) {
 			gameRoom.setPanCountPerJu(16);
 		} else {
 			gameRoom.setPanCountPerJu(4);
@@ -252,7 +257,7 @@ public class GameService {
 			gameRoom.setPanCountPerJu(4);
 		} else if (lawNames.contains("bj")) {
 			gameRoom.setPanCountPerJu(8);
-		} else if (lawNames.contains("sej")){
+		} else if (lawNames.contains("sej")) {
 			gameRoom.setPanCountPerJu(12);
 		} else if (lawNames.contains("slj")) {
 			gameRoom.setPanCountPerJu(16);
@@ -272,6 +277,13 @@ public class GameService {
 		gameRoom.setCreateTime(System.currentTimeMillis());
 		gameRoom.setCreateMemberId(memberId);
 		return gameRoom;
+	}
+
+	public int countTodayCreateVipRoomsCount(String createMemberId) {
+		Date d = new Date();
+		long startTime = TimeUtil.getDayStartTime(d);
+		long endTime = TimeUtil.getDayEndTime(d);
+		return gameRoomDao.count(startTime, endTime, createMemberId, true);
 	}
 
 	public void onlineServer(GameServer gameServer) {
@@ -375,25 +387,25 @@ public class GameService {
 	}
 
 	public void stopGameServer(List<String> ids) {
-        try {
-            this.gameServerDao.updateGameServerState(ids,GameService.GAME_SERVER_STATE_STOP);
-        } catch (Exception e) {
-            CommonMO commonMO=new CommonMO();
-            commonMO.setMsg(GameServerMsgConstant.STOP_GAME_SERVERS_FAILED);
-            commonMO.setData(ids);
-            this.gameServerSource.gameServer().send(MessageBuilder.withPayload(commonMO).build());
-        }
-    }
+		try {
+			this.gameServerDao.updateGameServerState(ids, GameService.GAME_SERVER_STATE_STOP);
+		} catch (Exception e) {
+			CommonMO commonMO = new CommonMO();
+			commonMO.setMsg(GameServerMsgConstant.STOP_GAME_SERVERS_FAILED);
+			commonMO.setData(ids);
+			this.gameServerSource.gameServer().send(MessageBuilder.withPayload(commonMO).build());
+		}
+	}
 
-	public void recoverGameServer(List<String> ids){
-        try {
-            this.gameServerDao.updateGameServerState(ids,GAME_SERVER_STATE_RUNNINT);
-        } catch (Throwable e) {
-            CommonMO commonMO=new CommonMO();
-            commonMO.setMsg(GameServerMsgConstant.RECOVER_GAME_SERVERS_FAILED);
-            commonMO.setData(ids);
-            this.gameServerSource.gameServer().send(MessageBuilder.withPayload(commonMO).build());
-        }
-    }
+	public void recoverGameServer(List<String> ids) {
+		try {
+			this.gameServerDao.updateGameServerState(ids, GAME_SERVER_STATE_RUNNINT);
+		} catch (Throwable e) {
+			CommonMO commonMO = new CommonMO();
+			commonMO.setMsg(GameServerMsgConstant.RECOVER_GAME_SERVERS_FAILED);
+			commonMO.setData(ids);
+			this.gameServerSource.gameServer().send(MessageBuilder.withPayload(commonMO).build());
+		}
+	}
 
 }

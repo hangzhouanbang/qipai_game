@@ -26,21 +26,20 @@ public class MemberService {
 		memberDao.save(member);
 	}
 
-	public void updateMemberGold(String memberId,int balanceAfter) {
+	public void updateMemberGold(String memberId, int balanceAfter) {
 		memberDao.updateMemberGold(memberId, balanceAfter);
 	}
-	
-	public void updateMemberVip(String memberId,boolean vip) {
+
+	public void updateMemberVip(String memberId, boolean vip) {
 		memberDao.updateVIP(memberId, vip);
 	}
-	
+
 	public MemberRightsConfiguration findMemberRightsById() {
 		return memberDao.findMemberRightsById();
 	}
 
 	public void setPlanMembersRights(int planmemberRoomsCount, int planMemberRoomsAliveHours,
-			int planMemberMaxCreateRoomDaily, int planMemberCreateRoomDailyGoldPrice,
-			int planMemberJoinRoomGoldPrice) {
+			int planMemberMaxCreateRoomDaily, int planMemberCreateRoomDailyGoldPrice, int planMemberJoinRoomGoldPrice) {
 		MemberRightsConfiguration mrc = memberRightsConfigurationDao.find();
 		if (mrc == null) {
 			mrc = new MemberRightsConfiguration();
@@ -53,7 +52,7 @@ public class MemberService {
 			memberRightsConfigurationDao.save(mrc);
 		} else {
 			memberRightsConfigurationDao.setPlanMembersRights(planmemberRoomsCount, planMemberRoomsAliveHours,
-					planMemberCreateRoomDailyGoldPrice, planMemberJoinRoomGoldPrice);
+					planMemberMaxCreateRoomDaily, planMemberCreateRoomDailyGoldPrice, planMemberJoinRoomGoldPrice);
 		}
 		memberDao.updatePlanMembersRights(planmemberRoomsCount, planMemberRoomsAliveHours, planMemberMaxCreateRoomDaily,
 				planMemberCreateRoomDailyGoldPrice, planMemberJoinRoomGoldPrice);

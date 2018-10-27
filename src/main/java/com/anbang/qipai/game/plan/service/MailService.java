@@ -34,7 +34,8 @@ public class MailService {
 	/**
 	 * 添加系统邮件
 	 * 
-	 * @param mail 邮件信息
+	 * @param mail
+	 *            邮件信息
 	 **/
 	public SystemMail addmail(SystemMail mail) {
 		return maildao.addmail(mail);
@@ -50,7 +51,8 @@ public class MailService {
 	/**
 	 * 分页查询并给所有会员添加记录
 	 * 
-	 * @param mailid 哪封邮件的id
+	 * @param mailid
+	 *            哪封邮件的id
 	 **/
 	public void pagingfind(String mailid) {
 		SystemMail systemmail = maildao.findmailById(mailid);
@@ -65,7 +67,7 @@ public class MailService {
 				MailState mailstate = new MailState();
 				mailstate.setMailid(systemmail.getId());
 				mailstate.setMemberid(member.getId());
-				if (systemmail.getNumber() == 0 && systemmail.getIntegral() == 0 && systemmail.getVipcard() == 0) {
+				if (systemmail.getNumber() == 0 && systemmail.getIntegral() == 0 && systemmail.getVipCardId() == null) {
 					mailstate.setReceive("2");
 				} else {
 					mailstate.setReceive("1");
@@ -90,7 +92,8 @@ public class MailService {
 			MailState mailstate = new MailState();
 			mailstate.setMailid(mail.getId());
 			mailstate.setMemberid(id);
-			if ((mail.getNumber() == null || mail.getNumber() == 0) && (mail.getIntegral() == null || mail.getIntegral() == 0) && mail.getVipcard() == null) {
+			if ((mail.getNumber() == null || mail.getNumber() == 0)
+					&& (mail.getIntegral() == null || mail.getIntegral() == 0) && mail.getVipCardId() == null) {
 				mailstate.setReceive("2");
 			} else {
 				mailstate.setReceive("1");
@@ -108,8 +111,10 @@ public class MailService {
 	/**
 	 * 用户点击单个邮件，查看详情
 	 * 
-	 * @param memberid 会员id
-	 * @param mailid   邮件id
+	 * @param memberid
+	 *            会员id
+	 * @param mailid
+	 *            邮件id
 	 **/
 	public Map<String, Object> findonemail(String memberid, String mailid) {
 		Map<String, Object> map = new HashMap<String, Object>();
@@ -126,7 +131,8 @@ public class MailService {
 	/**
 	 * 用户查看本身邮件
 	 * 
-	 * @param memberid 会员id
+	 * @param memberid
+	 *            会员id
 	 * @throws ParseException
 	 **/
 	public Map<String, Object> findall(String memberid) throws ParseException {
@@ -202,9 +208,12 @@ public class MailService {
 	/**
 	 * 用户点开邮件，改变邮件状态
 	 * 
-	 * @param memberid 会员id
-	 * @param mailid   邮件id
-	 * @param receive  是否领取
+	 * @param memberid
+	 *            会员id
+	 * @param mailid
+	 *            邮件id
+	 * @param receive
+	 *            是否领取
 	 **/
 	public CommonVO changestate(String memberId, String mailid) {
 		CommonVO vo = new CommonVO();
@@ -215,7 +224,7 @@ public class MailService {
 				// 往会员中心发送消息 进行奖励添加
 				SystemMail systemmail = maildao.findmailById(mailid);
 				cvo = qipaiMembersRemoteService.game_mail_reward(memberId, systemmail.getNumber(),
-						systemmail.getIntegral(), systemmail.getVipcard());
+						systemmail.getIntegral(), systemmail.getVipCardId());
 				if (cvo.isSuccess()) {
 					mailstate.setStatemail("0");
 					mailstate.setReceive("0");
@@ -246,7 +255,8 @@ public class MailService {
 	/**
 	 * 删除所有已读
 	 * 
-	 * @param memberid 会员id
+	 * @param memberid
+	 *            会员id
 	 **/
 	public void deleteallmail(String memberid) {
 		List<MailState> list = maildao.findallmembermail(memberid);

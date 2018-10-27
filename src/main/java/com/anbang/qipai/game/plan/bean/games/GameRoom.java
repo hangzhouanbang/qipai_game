@@ -24,7 +24,7 @@ public class GameRoom {
 	private long createTime;
 	private long deadlineTime;
 	private boolean finished;
-
+	private List<PlayersRecord> playersRecord;//房间玩家记录
 	public void calculateVip() {
 		if (laws != null) {
 			for (GameLaw law : laws) {
@@ -156,4 +156,12 @@ public class GameRoom {
 		this.finished = finished;
 	}
 
+	public List<PlayersRecord> getPlayersRecord() {
+		return playersRecord;
+	}
+
+	public void setPlayersRecord(List<PlayersRecord> playersRecord) {
+		this.playersRecord = playersRecord;
+	}
+	
 }

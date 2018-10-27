@@ -2,6 +2,7 @@ spring:
   data:
     mongodb:
       uri: mongodb://localhost:27017/qipai_game
+      
   cloud:
     stream:
       kafka:
@@ -92,6 +93,17 @@ spring:
                   ms: 5
                 batch:
                   size: 16384
+          memberLoginRecord:
+            producer:
+              configuration:
+                request:
+                  timeout:
+                    ms: 30000
+                linger:
+                  ms: 5
+                batch:
+                  size: 16384
+                  
       bindings:
         notice:
           destination: notice
@@ -201,6 +213,18 @@ spring:
             concurrency: 1
             partitioned: false
           contentType: application/json
+        memberLoginRecord:
+          destination: memberLoginRecord
+          contentType: application/json
+          producer:
+            partitionCount: 1
+        memberLoginLimitRecord:
+          destination: memberLoginLimitRecord
+          group: qipai-game
+          consumer:
+            concurrency: 1
+            partitioned: false
+          contentType: application/json
 
   application:
     name: qipai-game
@@ -211,8 +235,8 @@ eureka:
     serviceUrl:
       defaultZone: http://127.0.0.1:8761/eureka/
 websocket:
-  url: ws://192.168.0.134:83/hall
+  url: ws://47.96.20.47:83/hall
 
 filepath:
-  snapshotFileBasePath: /usr/local/app/qipai_game/snapshot
-  jFileBasePath: /usr/local/app/qipai_game/journal
+  snapshotFileBasePath: /data/app/qipai_game/snapshot
+  jFileBasePath: /data/app/qipai_game/journal

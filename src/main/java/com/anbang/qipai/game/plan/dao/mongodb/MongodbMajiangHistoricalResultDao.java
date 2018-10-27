@@ -57,8 +57,10 @@ public class MongodbMajiangHistoricalResultDao implements MajiangHistoricalResul
 	public int countGameNumByGameAndTime(Game game, long startTime, long endTime) {
 		List<DBObject> pipeline = new ArrayList<>();
 		BasicDBObject match = new BasicDBObject();
-		match.put("finishTime", new BasicDBObject("$gt", startTime).put("$lt", endTime));
-		match.put("game", game);
+		BasicDBObject criteria = new BasicDBObject("$gt", startTime);
+		criteria.put("$lt", endTime);
+		match.put("finishTime", criteria);
+		match.put("game", game.name());
 		DBObject queryMatch = new BasicDBObject("$match", match);
 		pipeline.add(queryMatch);
 
@@ -67,12 +69,12 @@ public class MongodbMajiangHistoricalResultDao implements MajiangHistoricalResul
 		group.put("num", new BasicDBObject("$sum", "$lastPanNo"));
 		DBObject queryGroup = new BasicDBObject("$group", group);
 		pipeline.add(queryGroup);
-		Cursor cursor = mongoTemplate.getCollection("memberLoginRecord").aggregate(pipeline,
+		Cursor cursor = mongoTemplate.getCollection("majiangHistoricalResult").aggregate(pipeline,
 				AggregationOptions.builder().outputMode(AggregationOptions.OutputMode.CURSOR).build());
-		if (cursor == null) {
-			return 0;
-		} else {
+		try {
 			return (int) cursor.next().get("num");
+		} catch (Exception e) {
+			return 0;
 		}
 	}
 

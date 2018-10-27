@@ -42,7 +42,8 @@ public class MailController {
 	/**
 	 * 新发布的系统公告,并给所有用户发送邮件
 	 * 
-	 * @param mail 管理系统传过来的json字符串
+	 * @param mail
+	 *            管理系统传过来的json字符串
 	 * @return 接收成功
 	 **/
 	@RequestMapping("/addmail")
@@ -55,7 +56,8 @@ public class MailController {
 		mails.setFile(mail1.getFile());
 		mails.setIntegral(mail1.getIntegral());
 		mails.setNumber(mail1.getNumber());
-		mails.setVipcard(mail1.getVipcard());
+		mails.setVipCardId(mail1.getVipCardId());
+		mails.setCardName(mail1.getCardName());
 		mails.setCreatetime(System.currentTimeMillis());
 		mails.setStatus(mail1.getStatus());
 		SystemMail mail2 = mailService.addmail(mails);
@@ -68,8 +70,10 @@ public class MailController {
 	/**
 	 * 发布邮件,并给所选中的用户发送邮件
 	 * 
-	 * @param mail 管理系统传过来的json字符串
-	 * @param id   选中的用户id
+	 * @param mail
+	 *            管理系统传过来的json字符串
+	 * @param id
+	 *            选中的用户id
 	 * @return 接收成功
 	 **/
 	@RequestMapping("/addmailbyid")
@@ -81,7 +85,8 @@ public class MailController {
 		mails.setFile(mail1.getFile());
 		mails.setIntegral(mail1.getIntegral());
 		mails.setNumber(mail1.getNumber());
-		mails.setVipcard(mail1.getVipcard());
+		mails.setVipCardId(mail1.getVipCardId());
+		mails.setCardName(mail1.getCardName());
 		mails.setCreatetime(System.currentTimeMillis());
 		mails.setMailType(mail1.getMailType());
 		mails.setValidTime(mail1.getValidTime());
@@ -121,8 +126,10 @@ public class MailController {
 	/**
 	 * 用户点击单个邮件，查看邮件详情
 	 * 
-	 * @param memberid 会员id
-	 * @param mailid   邮件id
+	 * @param memberid
+	 *            会员id
+	 * @param mailid
+	 *            邮件id
 	 **/
 	@RequestMapping("/findonemail")
 	@ResponseBody
@@ -151,8 +158,10 @@ public class MailController {
 	/**
 	 * 领取奖利
 	 * 
-	 * @param memberid 会员id
-	 * @param mailid   邮件id
+	 * @param memberid
+	 *            会员id
+	 * @param mailid
+	 *            邮件id
 	 **/
 	@RequestMapping("/updatemailstate")
 	@ResponseBody
@@ -179,7 +188,7 @@ public class MailController {
 		Map data = new HashMap();
 		data.put("gold", mail.getNumber());
 		data.put("score", mail.getIntegral());
-		data.put("number", mail.getVipcard());
+		data.put("cardName", mail.getCardName());
 		vo.setMsg(count.toString());
 		vo.setData(data);
 		return vo;
@@ -188,7 +197,8 @@ public class MailController {
 	/**
 	 * 所有邮件设为已读
 	 * 
-	 * @param memberid 会员id
+	 * @param memberid
+	 *            会员id
 	 **/
 	@RequestMapping("/updateallmail")
 	@ResponseBody
@@ -208,7 +218,8 @@ public class MailController {
 	/**
 	 * 删除所有已读
 	 * 
-	 * @param memberid 会员id
+	 * @param memberid
+	 *            会员id
 	 * @throws ParseException
 	 **/
 	@RequestMapping("/deleteallmail")

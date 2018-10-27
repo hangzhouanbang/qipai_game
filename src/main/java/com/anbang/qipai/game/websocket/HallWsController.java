@@ -13,8 +13,11 @@ import org.springframework.web.socket.TextMessage;
 import org.springframework.web.socket.WebSocketSession;
 import org.springframework.web.socket.handler.TextWebSocketHandler;
 
+import com.anbang.qipai.game.msg.service.MemberLoginRecordMsgService;
+import com.anbang.qipai.game.plan.bean.members.MemberLoginRecord;
 import com.anbang.qipai.game.plan.bean.notice.Notices;
 import com.anbang.qipai.game.plan.service.MemberAuthService;
+import com.anbang.qipai.game.plan.service.MemberLoginRecordService;
 import com.anbang.qipai.game.plan.service.NoticeService;
 import com.google.gson.Gson;
 
@@ -29,6 +32,12 @@ public class HallWsController extends TextWebSocketHandler {
 
 	@Autowired
 	private NoticeService noticeService;
+
+	@Autowired
+	private MemberLoginRecordService memberLoginRecordService;
+
+	@Autowired
+	private MemberLoginRecordMsgService memberLoginRecordMsgService;
 
 	private ExecutorService executorService = Executors.newCachedThreadPool();
 
@@ -109,8 +118,28 @@ public class HallWsController extends TextWebSocketHandler {
 				mo.setData(moData);
 				sendMessage(session, gson.toJson(mo));
 			}
+			// 登录记录
+			MemberLoginRecord newRecord = new MemberLoginRecord();
+			newRecord.setMemberId(memberId);
+			long currentTime = System.currentTimeMillis();
+			newRecord.setLoginTime(currentTime);
+			newRecord.setOnlineTime(0);
+			newRecord.setLoginIp(session.getRemoteAddress().getHostString());
+			MemberLoginRecord lastRecord = memberLoginRecordService.findRecentRecordByMemberId(memberId);
+			if (lastRecord != null) {
+				newRecord.setLastLoginTime(lastRecord.getLoginTime());
+			} else {
+				newRecord.setLastLoginTime(currentTime);
+			}
+			memberLoginRecordService.save(newRecord);
+			memberLoginRecordMsgService.memberLoginRecord(newRecord);
 		} else {
 			wsNotifier.updateSession(session.getId());
+			// 更新在线时间
+			MemberLoginRecord lastRecord = memberLoginRecordService.findRecentRecordByMemberId(memberId);
+			lastRecord.setOnlineTime(System.currentTimeMillis() - lastRecord.getLoginTime());
+			memberLoginRecordService.updateOnlineTimeById(lastRecord.getId(), lastRecord.getOnlineTime());
+			memberLoginRecordMsgService.updateMemberOnlineRecord(lastRecord);
 		}
 	}
 

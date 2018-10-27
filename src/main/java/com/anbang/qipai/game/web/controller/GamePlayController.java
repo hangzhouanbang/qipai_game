@@ -29,15 +29,20 @@ import com.anbang.qipai.game.plan.bean.games.IllegalGameLawsException;
 import com.anbang.qipai.game.plan.bean.games.LawsMutexGroup;
 import com.anbang.qipai.game.plan.bean.games.MemberGameRoom;
 import com.anbang.qipai.game.plan.bean.games.NoServerAvailableForGameException;
+import com.anbang.qipai.game.plan.bean.games.PlayersRecord;
 import com.anbang.qipai.game.plan.bean.members.Member;
+import com.anbang.qipai.game.plan.bean.members.MemberGoldBalance;
+import com.anbang.qipai.game.plan.bean.members.MemberLoginLimitRecord;
 import com.anbang.qipai.game.plan.bean.members.MemberRights;
 import com.anbang.qipai.game.plan.bean.members.NotVIPMemberException;
 import com.anbang.qipai.game.plan.service.GameService;
 import com.anbang.qipai.game.plan.service.MemberAuthService;
+import com.anbang.qipai.game.plan.service.MemberGoldBalanceService;
+import com.anbang.qipai.game.plan.service.MemberLoginLimitRecordService;
 import com.anbang.qipai.game.plan.service.MemberService;
 import com.anbang.qipai.game.remote.service.QipaiMembersRemoteService;
 import com.anbang.qipai.game.remote.vo.CommonRemoteVO;
-import com.anbang.qipai.game.remote.vo.MemberRemoteVO;
+import com.anbang.qipai.game.util.NumConvertChineseUtil;
 import com.anbang.qipai.game.web.fb.FpmjLawsFB;
 import com.anbang.qipai.game.web.fb.RamjLawsFB;
 import com.anbang.qipai.game.web.fb.WzmjLawsFB;
@@ -66,6 +71,9 @@ public class GamePlayController {
 	private MemberService memberService;
 
 	@Autowired
+	private MemberGoldBalanceService memberGoldBalanceService;
+
+	@Autowired
 	private GameRoomCmdService gameRoomCmdService;
 
 	@Autowired
@@ -82,6 +90,9 @@ public class GamePlayController {
 
 	@Autowired
 	private WenzhouGameRoomMsgService wenzhouGameRoomMsgService;
+
+	@Autowired
+	private MemberLoginLimitRecordService memberLoginLimitRecordService;
 
 	@Autowired
 	private HttpClient httpClient;
@@ -104,6 +115,13 @@ public class GamePlayController {
 			vo.setMsg("invalid token");
 			return vo;
 		}
+		MemberLoginLimitRecord loginLimitRecord = memberLoginLimitRecordService.findByMemberId(memberId, true);
+		if (loginLimitRecord != null) {
+			vo.setSuccess(false);
+			vo.setMsg("login limited");
+			return vo;
+		}
+		Map data = new HashMap();
 		Member member = memberService.findMember(memberId);
 		MemberRights rights = member.getRights();
 
@@ -115,8 +133,12 @@ public class GamePlayController {
 			vo.setMsg("IllegalGameLawsException");
 			return vo;
 		} catch (NotVIPMemberException e) {
+			int todayCreateVipRoomsCount = gameService.countTodayCreateVipRoomsCount(memberId);
 			vo.setSuccess(false);
 			vo.setMsg("NotVIPMemberException");
+			data.put("todayCreateVipRoomsCount",
+					NumConvertChineseUtil.toChinese(String.valueOf(todayCreateVipRoomsCount)));
+			vo.setData(data);
 			return vo;
 		} catch (CanNotJoinMoreRoomsException e) {
 			vo.setSuccess(false);
@@ -128,9 +150,18 @@ public class GamePlayController {
 			return vo;
 		}
 
+		int gold = rights.getPlanMemberCreateRoomDailyGoldPrice();
+		// 房主玩家记录
+		List<PlayersRecord> playersRecord = new ArrayList<>();
+		gameRoom.setPlayersRecord(playersRecord);
+		PlayersRecord record = new PlayersRecord();
+		record.setPlayerId(member.getId());
+		record.setVip(member.isVip());
+		record.setPayGold(gold);
+		playersRecord.add(record);
+		gameService.saveGameRoom(gameRoom);
 		// 普通会员开vip房扣金币
 		if (!member.isVip() && gameRoom.isVip()) {
-			int gold = rights.getPlanMemberCreateRoomDailyGoldPrice();
 			CommonRemoteVO rvo = qipaiMembersRomoteService.gold_withdraw(memberId, gold, "pay for create room");
 			if (!rvo.isSuccess()) {
 				vo.setSuccess(false);
@@ -167,7 +198,6 @@ public class GamePlayController {
 
 		gameService.createGameRoom(gameRoom);
 
-		Map data = new HashMap();
 		data.put("httpUrl", gameRoom.getServerGame().getServer().getHttpUrl());
 		data.put("wsUrl", gameRoom.getServerGame().getServer().getWsUrl());
 		data.put("roomNo", gameRoom.getNo());
@@ -195,9 +225,16 @@ public class GamePlayController {
 			vo.setMsg("invalid token");
 			return vo;
 		}
+		MemberLoginLimitRecord loginLimitRecord = memberLoginLimitRecordService.findByMemberId(memberId, true);
+		if (loginLimitRecord != null) {
+			vo.setSuccess(false);
+			vo.setMsg("login limited");
+			return vo;
+		}
 		Member member = memberService.findMember(memberId);
 		MemberRights rights = member.getRights();
 
+		Map data = new HashMap();
 		GameRoom gameRoom;
 		try {
 			gameRoom = gameService.buildFpmjGameRoom(memberId, lawNames);
@@ -206,8 +243,12 @@ public class GamePlayController {
 			vo.setMsg("IllegalGameLawsException");
 			return vo;
 		} catch (NotVIPMemberException e) {
+			int todayCreateVipRoomsCount = gameService.countTodayCreateVipRoomsCount(memberId);
 			vo.setSuccess(false);
 			vo.setMsg("NotVIPMemberException");
+			data.put("todayCreateVipRoomsCount",
+					NumConvertChineseUtil.toChinese(String.valueOf(todayCreateVipRoomsCount)));
+			vo.setData(data);
 			return vo;
 		} catch (CanNotJoinMoreRoomsException e) {
 			vo.setSuccess(false);
@@ -219,9 +260,18 @@ public class GamePlayController {
 			return vo;
 		}
 
+		int gold = rights.getPlanMemberCreateRoomDailyGoldPrice();
+		// 房主玩家记录
+		List<PlayersRecord> playersRecord = new ArrayList<>();
+		gameRoom.setPlayersRecord(playersRecord);
+		PlayersRecord record = new PlayersRecord();
+		record.setPlayerId(member.getId());
+		record.setVip(member.isVip());
+		record.setPayGold(gold);
+		playersRecord.add(record);
+		gameService.saveGameRoom(gameRoom);
 		// 普通会员开vip房扣金币
 		if (!member.isVip() && gameRoom.isVip()) {
-			int gold = rights.getPlanMemberCreateRoomDailyGoldPrice();
 			CommonRemoteVO rvo = qipaiMembersRomoteService.gold_withdraw(memberId, gold, "pay for create room");
 			if (!rvo.isSuccess()) {
 				vo.setSuccess(false);
@@ -260,7 +310,6 @@ public class GamePlayController {
 
 		gameService.createGameRoom(gameRoom);
 
-		Map data = new HashMap();
 		data.put("httpUrl", gameRoom.getServerGame().getServer().getHttpUrl());
 		data.put("wsUrl", gameRoom.getServerGame().getServer().getWsUrl());
 		data.put("roomNo", gameRoom.getNo());
@@ -288,9 +337,15 @@ public class GamePlayController {
 			vo.setMsg("invalid token");
 			return vo;
 		}
+		MemberLoginLimitRecord loginLimitRecord = memberLoginLimitRecordService.findByMemberId(memberId, true);
+		if (loginLimitRecord != null) {
+			vo.setSuccess(false);
+			vo.setMsg("login limited");
+			return vo;
+		}
 		Member member = memberService.findMember(memberId);
 		MemberRights rights = member.getRights();
-
+		Map data = new HashMap();
 		GameRoom gameRoom;
 		try {
 			gameRoom = gameService.buildWzmjGameRoom(memberId, lawNames);
@@ -299,8 +354,12 @@ public class GamePlayController {
 			vo.setMsg("IllegalGameLawsException");
 			return vo;
 		} catch (NotVIPMemberException e) {
+			int todayCreateVipRoomsCount = gameService.countTodayCreateVipRoomsCount(memberId);
 			vo.setSuccess(false);
 			vo.setMsg("NotVIPMemberException");
+			data.put("todayCreateVipRoomsCount",
+					NumConvertChineseUtil.toChinese(String.valueOf(todayCreateVipRoomsCount)));
+			vo.setData(data);
 			return vo;
 		} catch (CanNotJoinMoreRoomsException e) {
 			vo.setSuccess(false);
@@ -312,9 +371,18 @@ public class GamePlayController {
 			return vo;
 		}
 
+		int gold = rights.getPlanMemberCreateRoomDailyGoldPrice();
+		// 房主玩家记录
+		List<PlayersRecord> playersRecord = new ArrayList<>();
+		gameRoom.setPlayersRecord(playersRecord);
+		PlayersRecord record = new PlayersRecord();
+		record.setPlayerId(member.getId());
+		record.setVip(member.isVip());
+		record.setPayGold(gold);
+		playersRecord.add(record);
+		gameService.saveGameRoom(gameRoom);
 		// 普通会员开vip房扣金币
 		if (!member.isVip() && gameRoom.isVip()) {
-			int gold = rights.getPlanMemberCreateRoomDailyGoldPrice();
 			CommonRemoteVO rvo = qipaiMembersRomoteService.gold_withdraw(memberId, gold, "pay for create room");
 			if (!rvo.isSuccess()) {
 				vo.setSuccess(false);
@@ -355,7 +423,6 @@ public class GamePlayController {
 
 		gameService.createGameRoom(gameRoom);
 
-		Map data = new HashMap();
 		data.put("httpUrl", gameRoom.getServerGame().getServer().getHttpUrl());
 		data.put("wsUrl", gameRoom.getServerGame().getServer().getWsUrl());
 		data.put("roomNo", gameRoom.getNo());
@@ -378,6 +445,12 @@ public class GamePlayController {
 		if (memberId == null) {
 			vo.setSuccess(false);
 			vo.setMsg("invalid token");
+			return vo;
+		}
+		MemberLoginLimitRecord loginLimitRecord = memberLoginLimitRecordService.findByMemberId(memberId, true);
+		if (loginLimitRecord != null) {
+			vo.setSuccess(false);
+			vo.setMsg("login limited");
 			return vo;
 		}
 		Member member = memberService.findMember(memberId);
@@ -436,14 +509,20 @@ public class GamePlayController {
 			return vo;
 		}
 
-		//判断普通会员个人账户的余额能否支付加入房间的费用
-		int balance = memberService.findMember(memberId).getBalanceAfter();
+		// 判断普通会员个人账户的余额能否支付加入房间的费用
+		MemberGoldBalance memberGoldBalance = memberGoldBalanceService.findByMemberId(memberId);
+		if (memberGoldBalance == null) {
+			vo.setSuccess(false);
+			vo.setMsg("InsufficientBalanceException");
+			return vo;
+		}
+		int balance = memberGoldBalance.getBalanceAfter();
 		if (gameRoom.isVip() && !member.isVip() && balance < rights.getPlanMemberJoinRoomGoldPrice()) {
 			vo.setSuccess(false);
 			vo.setMsg("InsufficientBalanceException");
 			return vo;
 		}
-		
+
 		// 游戏服务器rpc加入房间
 		GameServer gameServer = gameRoom.getServerGame().getServer();
 		Request req = httpClient.newRequest(gameServer.getHttpUrl() + "/game/joingame");
@@ -467,9 +546,17 @@ public class GamePlayController {
 			return vo;
 		}
 
+		int gold = rights.getPlanMemberJoinRoomGoldPrice();
+		// 加入房间玩家记录,列表从第一开始，第0个是房主
+		List<PlayersRecord> playersRecord = gameRoom.getPlayersRecord();
+		PlayersRecord record = new PlayersRecord();
+		record.setPlayerId(member.getId());
+		record.setVip(member.isVip());
+		record.setPayGold(gold);
+		playersRecord.add(record);
+		gameService.saveGameRoom(gameRoom);
 		// 普通会员加入vip房完成玉石扣除才能加入房间
 		if (gameRoom.isVip() && !member.isVip()) {
-			int gold = rights.getPlanMemberJoinRoomGoldPrice();
 			CommonRemoteVO rvo = qipaiMembersRomoteService.gold_withdraw(memberId, gold, "pay for join room");
 			if (!rvo.isSuccess()) {
 				vo.setSuccess(false);
@@ -477,7 +564,7 @@ public class GamePlayController {
 				return vo;
 			}
 		}
-		
+
 		gameService.joinGameRoom(gameRoom, memberId);
 
 		Map data = new HashMap();
@@ -553,6 +640,21 @@ public class GamePlayController {
 		CommonVO vo = new CommonVO();
 		gameService.removeGameLaw(lawId);
 		gameServerMsgService.removeGameLaw(lawId);
+		return vo;
+	}
+
+	/**
+	 * 编辑玩法
+	 * 
+	 * @param lawId
+	 * @return
+	 */
+	@RequestMapping(value = "/update_law")
+	@ResponseBody
+	public CommonVO updatelaw(@RequestBody GameLaw law) {
+		CommonVO vo = new CommonVO();
+		gameService.createGameLaw(law);
+		gameServerMsgService.updateGameLaw(law);
 		return vo;
 	}
 

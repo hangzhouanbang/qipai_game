@@ -21,18 +21,4 @@ public class NoticeMsgService {
 		noticeSource.notice().send(MessageBuilder.withPayload(mo).build());
 	}
 
-	public void memberLogoutNotice(String memberId) {
-		CommonMO mo = new CommonMO();
-		mo.setMsg("member logout");
-		mo.setData(memberId);
-		noticeSource.notice().send(MessageBuilder.withPayload(mo).build());
-	}
-
-	public void updateMemberOnlineNotice(String memberId) {
-		CommonMO mo = new CommonMO();
-		mo.setMsg("update member online");
-		mo.setData(memberId);
-		noticeSource.notice().send(MessageBuilder.withPayload(mo).build());
-	}
-
 }

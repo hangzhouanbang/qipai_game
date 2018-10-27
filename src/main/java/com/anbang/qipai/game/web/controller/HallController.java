@@ -9,7 +9,9 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.anbang.qipai.game.conf.WebsocketConfig;
+import com.anbang.qipai.game.plan.bean.members.MemberLoginLimitRecord;
 import com.anbang.qipai.game.plan.service.MemberAuthService;
+import com.anbang.qipai.game.plan.service.MemberLoginLimitRecordService;
 import com.anbang.qipai.game.remote.service.QipaiMembersRemoteService;
 import com.anbang.qipai.game.remote.vo.MemberRemoteVO;
 import com.anbang.qipai.game.web.vo.CommonVO;
@@ -33,6 +35,9 @@ public class HallController {
 	@Autowired
 	private QipaiMembersRemoteService qipaiMembersRomoteService;
 
+	@Autowired
+	private MemberLoginLimitRecordService memberLoginLimitRecordService;
+
 	/**
 	 * 大厅首页
 	 * 
@@ -52,6 +57,12 @@ public class HallController {
 			vo.setMsg("invalid token");
 			return vo;
 		}
+		MemberLoginLimitRecord record = memberLoginLimitRecordService.findByMemberId(memberId, true);
+		if (record != null) {
+			vo.setSuccess(false);
+			vo.setMsg("login limited");
+			return vo;
+		}
 		MemberRemoteVO memberRemoteVO = qipaiMembersRomoteService.member_info(memberId);
 		if (memberRemoteVO.isSuccess()) {
 			Map mm = new HashMap();
@@ -62,6 +73,7 @@ public class HallController {
 			mm.put("gold", memberRemoteVO.getGold());
 			mm.put("score", memberRemoteVO.getScore());
 			mm.put("verifyUser", memberRemoteVO.isVerifyUser());
+			mm.put("bindAgent", memberRemoteVO.isBindAgent());
 		}
 		return vo;
 	}

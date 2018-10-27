@@ -13,7 +13,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.socket.TextMessage;
 import org.springframework.web.socket.WebSocketSession;
 
-import com.anbang.qipai.game.msg.service.NoticeMsgService;
+import com.anbang.qipai.game.msg.service.MemberLoginRecordMsgService;
 import com.google.gson.Gson;
 
 @Component
@@ -29,10 +29,10 @@ public class HallWsNotifier {
 
 	private ExecutorService executorService = Executors.newCachedThreadPool();
 
-	@Autowired
-	private NoticeMsgService noticeMsgService;
-
 	private Gson gson = new Gson();
+
+	@Autowired
+	private MemberLoginRecordMsgService memberLoginRecordMsgService;
 
 	public WebSocketSession removeSession(String id) {
 		WebSocketSession removedSession = idSessionMap.remove(id);
@@ -40,9 +40,9 @@ public class HallWsNotifier {
 		if (removedSession != null) {
 			String removedMemberId = sessionIdMemberIdMap.remove(id);
 			if (removedMemberId != null) {
-				// 更新用户在线时间
-				noticeMsgService.memberLogoutNotice(removedMemberId);
 				memberIdSessionIdMap.remove(removedMemberId);
+				// 更新用户现在状态
+				memberLoginRecordMsgService.memberLogout(removedMemberId);
 			}
 		}
 		return removedSession;
@@ -78,15 +78,10 @@ public class HallWsNotifier {
 		sessionIdActivetimeMap.put(sessionId, System.currentTimeMillis());
 		sessionIdMemberIdMap.put(sessionId, memberId);
 		memberIdSessionIdMap.put(memberId, sessionId);
-		// 更新用户在线时间
-		noticeMsgService.updateMemberOnlineNotice(memberId);
 	}
 
 	public void updateSession(String id) {
 		sessionIdActivetimeMap.put(id, System.currentTimeMillis());
-		String memberId = sessionIdMemberIdMap.get(id);
-		// 更新用户在线时间
-		noticeMsgService.updateMemberOnlineNotice(memberId);
 	}
 
 	@Scheduled(cron = "0/10 * * * * ?")
