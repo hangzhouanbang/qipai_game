@@ -16,9 +16,9 @@ public class MemberRemoteVO {
 
 	private String headimgurl;
 
-	private int gold;
+	private String gold;
 
-	private int score;
+	private String score;
 
 	private boolean verifyUser;// 实名认证，true:通过认证,false:未通过认证
 
@@ -64,19 +64,19 @@ public class MemberRemoteVO {
 		this.headimgurl = headimgurl;
 	}
 
-	public int getGold() {
+	public String getGold() {
 		return gold;
 	}
 
-	public void setGold(int gold) {
+	public void setGold(String gold) {
 		this.gold = gold;
 	}
 
-	public int getScore() {
+	public String getScore() {
 		return score;
 	}
 
-	public void setScore(int score) {
+	public void setScore(String score) {
 		this.score = score;
 	}
 

@@ -2,6 +2,7 @@ package com.anbang.qipai.game.websocket;
 
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -15,10 +16,10 @@ import org.springframework.web.socket.handler.TextWebSocketHandler;
 
 import com.anbang.qipai.game.msg.service.MemberLoginRecordMsgService;
 import com.anbang.qipai.game.plan.bean.members.MemberLoginRecord;
-import com.anbang.qipai.game.plan.bean.notice.Notices;
+import com.anbang.qipai.game.plan.bean.notice.SystemNotice;
 import com.anbang.qipai.game.plan.service.MemberAuthService;
 import com.anbang.qipai.game.plan.service.MemberLoginRecordService;
-import com.anbang.qipai.game.plan.service.NoticeService;
+import com.anbang.qipai.game.plan.service.SystemNoticeService;
 import com.google.gson.Gson;
 
 @Component
@@ -31,7 +32,7 @@ public class HallWsController extends TextWebSocketHandler {
 	private MemberAuthService memberAuthService;
 
 	@Autowired
-	private NoticeService noticeService;
+	private SystemNoticeService systemNoticeService;
 
 	@Autowired
 	private MemberLoginRecordService memberLoginRecordService;
@@ -109,15 +110,16 @@ public class HallWsController extends TextWebSocketHandler {
 		if (wsNotifier.isRawSession(session.getId())) {// 第一条心跳
 			wsNotifier.updateSession(session.getId(), memberId);
 			// 发送系统公告
-			Notices notice = noticeService.findPublicNotice();
-			if (notice != null) {
+			List<SystemNotice> notices = systemNoticeService.findValidNotice();
+			notices.forEach((notice) -> {
 				CommonMO mo = new CommonMO();
 				mo.setMsg("sysNotice");
 				Map moData = new HashMap();
-				moData.put("content", notice.getNotice());
+				moData.put("content", notice.getContent());
 				mo.setData(moData);
 				sendMessage(session, gson.toJson(mo));
-			}
+			});
+
 			// 登录记录
 			MemberLoginRecord newRecord = new MemberLoginRecord();
 			newRecord.setMemberId(memberId);
