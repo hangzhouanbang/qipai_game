@@ -2,23 +2,25 @@ package com.anbang.qipai.game.msg.receiver;
 
 import java.util.List;
 import java.util.Map;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cloud.stream.annotation.EnableBinding;
 import org.springframework.cloud.stream.annotation.StreamListener;
+
 import com.anbang.qipai.game.cqrs.c.service.GameRoomCmdService;
 import com.anbang.qipai.game.msg.channel.sink.WenzhouMajiangGameSink;
 import com.anbang.qipai.game.msg.msjobj.CommonMO;
 import com.anbang.qipai.game.plan.bean.games.Game;
 import com.anbang.qipai.game.plan.bean.games.GameRoom;
 import com.anbang.qipai.game.plan.bean.games.PlayersRecord;
-import com.anbang.qipai.game.plan.bean.historicalresult.MajiangHistoricalResult;
 import com.anbang.qipai.game.plan.service.GameService;
 import com.anbang.qipai.game.plan.service.MemberService;
 import com.anbang.qipai.game.remote.service.QipaiMembersRemoteService;
 import com.google.gson.Gson;
+
 @EnableBinding(WenzhouMajiangGameSink.class)
 public class WenzhouMajiangGameMsgReceiver {
-	
+
 	@Autowired
 	private GameService gameService;
 
@@ -56,13 +58,12 @@ public class WenzhouMajiangGameMsgReceiver {
 			}
 			gameService.wenzhouMajiangPlayerQuitQame(gameId, playerId);
 		}
-		
+
 		if ("ju finished".equals(msg)) {// 一局游戏结束
 			Map data = (Map) mo.getData();
 			String gameId = (String) data.get("gameId");
 			GameRoom gameRoom = gameService.findRoomByGameAndServerGameGameId(Game.wenzhouMajiang, gameId);
 			gameRoomCmdService.removeRoom(gameRoom.getNo());
-			gameService.gameRoomFinished(Game.wenzhouMajiang, gameId);
 
 			List<PlayersRecord> playersRecord = gameRoom.getPlayersRecord();
 			// 一盘没有打完，返回玉石
@@ -74,6 +75,7 @@ public class WenzhouMajiangGameMsgReceiver {
 				}
 				gameService.saveGameRoom(gameRoom);
 			}
+			gameService.gameRoomFinished(Game.wenzhouMajiang, gameId);
 		}
 		if ("pan finished".equals(msg)) {// 一盘游戏结束
 			Map data = (Map) mo.getData();

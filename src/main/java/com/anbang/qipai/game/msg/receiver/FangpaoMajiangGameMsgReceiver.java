@@ -62,7 +62,6 @@ public class FangpaoMajiangGameMsgReceiver {
 			String gameId = (String) data.get("gameId");
 			GameRoom gameRoom = gameService.findRoomByGameAndServerGameGameId(Game.fangpaoMajiang, gameId);
 			gameRoomCmdService.removeRoom(gameRoom.getNo());
-			gameService.gameRoomFinished(Game.fangpaoMajiang, gameId);
 
 			List<PlayersRecord> playersRecord = gameRoom.getPlayersRecord();
 			// 一盘没有打完，返回玉石
@@ -74,6 +73,7 @@ public class FangpaoMajiangGameMsgReceiver {
 				}
 				gameService.saveGameRoom(gameRoom);
 			}
+			gameService.gameRoomFinished(Game.fangpaoMajiang, gameId);
 
 		}
 		if ("pan finished".equals(msg)) {// 一盘游戏结束

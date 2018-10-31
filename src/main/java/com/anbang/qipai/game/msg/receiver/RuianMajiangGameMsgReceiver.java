@@ -2,9 +2,11 @@ package com.anbang.qipai.game.msg.receiver;
 
 import java.util.List;
 import java.util.Map;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cloud.stream.annotation.EnableBinding;
 import org.springframework.cloud.stream.annotation.StreamListener;
+
 import com.anbang.qipai.game.cqrs.c.service.GameRoomCmdService;
 import com.anbang.qipai.game.msg.channel.sink.RuianMajiangGameSink;
 import com.anbang.qipai.game.msg.msjobj.CommonMO;
@@ -15,6 +17,7 @@ import com.anbang.qipai.game.plan.service.GameService;
 import com.anbang.qipai.game.plan.service.MemberService;
 import com.anbang.qipai.game.remote.service.QipaiMembersRemoteService;
 import com.google.gson.Gson;
+
 @EnableBinding(RuianMajiangGameSink.class)
 public class RuianMajiangGameMsgReceiver {
 
@@ -61,7 +64,6 @@ public class RuianMajiangGameMsgReceiver {
 			String gameId = (String) data.get("gameId");
 			GameRoom gameRoom = gameService.findRoomByGameAndServerGameGameId(Game.ruianMajiang, gameId);
 			gameRoomCmdService.removeRoom(gameRoom.getNo());
-			gameService.gameRoomFinished(Game.ruianMajiang, gameId);
 
 			List<PlayersRecord> playersRecord = gameRoom.getPlayersRecord();
 			// 一盘没有打完，返回玉石
@@ -73,6 +75,7 @@ public class RuianMajiangGameMsgReceiver {
 				}
 				gameService.saveGameRoom(gameRoom);
 			}
+			gameService.gameRoomFinished(Game.ruianMajiang, gameId);
 
 		}
 		if ("pan finished".equals(msg)) {// 一盘游戏结束
