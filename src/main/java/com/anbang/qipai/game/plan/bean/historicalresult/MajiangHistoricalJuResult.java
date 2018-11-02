@@ -4,7 +4,7 @@ import java.util.List;
 
 import com.anbang.qipai.game.plan.bean.games.Game;
 
-public class MajiangHistoricalResult {
+public class MajiangHistoricalJuResult {
 	private String id;
 	private String gameId;
 	private Game game;

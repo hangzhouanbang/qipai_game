@@ -70,6 +70,16 @@ public class GameService {
 		gameRoomDao.save(gameRoom);
 	}
 
+	public GameServer getRandomGameServer(Game game) throws NoServerAvailableForGameException {
+		List<GameServer> allServers = gameServerDao.findServersByState(game, GameService.GAME_SERVER_STATE_RUNNINT);
+		if (allServers == null || allServers.isEmpty()) {
+			throw new NoServerAvailableForGameException();
+		}
+		Random r = new Random();
+		GameServer gameServer = allServers.get(r.nextInt(allServers.size()));
+		return gameServer;
+	}
+
 	/**
 	 * 创建瑞安麻将房间
 	 */

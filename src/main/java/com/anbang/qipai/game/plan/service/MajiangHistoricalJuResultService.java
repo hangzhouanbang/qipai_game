@@ -6,29 +6,29 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.anbang.qipai.game.plan.bean.games.Game;
-import com.anbang.qipai.game.plan.bean.historicalresult.MajiangHistoricalResult;
-import com.anbang.qipai.game.plan.dao.MajiangHistoricalResultDao;
+import com.anbang.qipai.game.plan.bean.historicalresult.MajiangHistoricalJuResult;
+import com.anbang.qipai.game.plan.dao.MajiangHistoricalJuResultDao;
 import com.highto.framework.web.page.ListPage;
 
 @Service
-public class MajiangHistoricalResultService {
+public class MajiangHistoricalJuResultService {
 
 	@Autowired
-	private MajiangHistoricalResultDao majiangHistoricalResultDao;
+	private MajiangHistoricalJuResultDao majiangHistoricalResultDao;
 
-	public void addMajiangHistoricalResult(MajiangHistoricalResult result) {
+	public void addMajiangHistoricalResult(MajiangHistoricalJuResult result) {
 		majiangHistoricalResultDao.addMajiangHistoricalResult(result);
 	}
 
 	public ListPage findMajiangHistoricalResultByMemberId(int page, int size, String memberId) {
 		long amount = majiangHistoricalResultDao.getAmountByMemberId(memberId);
-		List<MajiangHistoricalResult> list = majiangHistoricalResultDao.findMajiangHistoricalResultByMemberId(page,
+		List<MajiangHistoricalJuResult> list = majiangHistoricalResultDao.findMajiangHistoricalResultByMemberId(page,
 				size, memberId);
 		ListPage listPage = new ListPage(list, page, size, (int) amount);
 		return listPage;
 	}
 
-	public MajiangHistoricalResult findMajiangHistoricalResultById(String id) {
+	public MajiangHistoricalJuResult findMajiangHistoricalResultById(String id) {
 		return majiangHistoricalResultDao.findMajiangHistoricalResultById(id);
 	}
 
