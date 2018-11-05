@@ -34,7 +34,7 @@ public class MongodbMajiangHistoricalPanResultDao implements MajiangHistoricalPa
 		query.addCriteria(Criteria.where("game").is(game));
 		query.limit(size);
 		query.skip((page - 1) * size);
-		query.with(new Sort(new Order(Direction.DESC, "no")));
+		query.with(new Sort(new Order(Direction.ASC, "no")));
 		return mongoTemplate.find(query, MajiangHistoricalPanResult.class);
 	}
 

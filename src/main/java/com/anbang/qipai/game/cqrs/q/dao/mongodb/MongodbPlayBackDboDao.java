@@ -7,6 +7,7 @@ import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Component;
 
 import com.anbang.qipai.game.cqrs.q.dao.PlayBackDboDao;
+import com.anbang.qipai.game.cqrs.q.dao.mongodb.repository.PlayBackDboRepository;
 import com.anbang.qipai.game.cqrs.q.dbo.PlayBackDbo;
 
 @Component
@@ -15,9 +16,12 @@ public class MongodbPlayBackDboDao implements PlayBackDboDao {
 	@Autowired
 	private MongoTemplate mongoTemplate;
 
+	@Autowired
+	private PlayBackDboRepository playBackDboRepository;
+
 	@Override
 	public void save(PlayBackDbo dbo) {
-		mongoTemplate.insert(dbo);
+		playBackDboRepository.save(dbo);
 	}
 
 	@Override

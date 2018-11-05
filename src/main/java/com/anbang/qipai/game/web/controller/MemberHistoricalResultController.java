@@ -9,8 +9,12 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.anbang.qipai.game.cqrs.c.service.PlayBackCodeCmdService;
+import com.anbang.qipai.game.cqrs.q.dbo.PlayBackDbo;
+import com.anbang.qipai.game.cqrs.q.service.PlayBackDboService;
 import com.anbang.qipai.game.msg.service.GameDataReportMsgService;
 import com.anbang.qipai.game.plan.bean.games.Game;
+import com.anbang.qipai.game.plan.bean.games.GameRoom;
 import com.anbang.qipai.game.plan.bean.games.GameServer;
 import com.anbang.qipai.game.plan.bean.games.NoServerAvailableForGameException;
 import com.anbang.qipai.game.plan.bean.historicalresult.MajiangHistoricalJuResult;
@@ -40,6 +44,12 @@ public class MemberHistoricalResultController {
 
 	@Autowired
 	private GameService gameService;
+
+	@Autowired
+	private PlayBackCodeCmdService playBackCodeCmdService;
+
+	@Autowired
+	private PlayBackDboService playBackDboService;
 
 	@RequestMapping(value = "/query_historicalresult")
 	public CommonVO queryHistoricalResult(@RequestParam(name = "page", defaultValue = "1") Integer page,
@@ -110,11 +120,66 @@ public class MemberHistoricalResultController {
 			vo.setMsg("NoServerAvailableForGameException");
 			return vo;
 		}
+		GameRoom room = gameService.findRoomByGameAndServerGameGameId(game, gameId);
 		Map data = new HashMap();
 		data.put("httpUrl", gameServer.getHttpUrl());
-		data.put("wsUrl", gameServer.getWsUrl());
 		data.put("gameId", gameId);
 		data.put("panNo", panNo);
+		data.put("roomNo", room.getNo());
+		vo.setSuccess(true);
+		vo.setMsg("playback");
+		vo.setData(data);
+		return vo;
+	}
+
+	@RequestMapping(value = "/shareplayback")
+	public CommonVO sharePlayback(String token, Game game, String gameId, int panNo) {
+		CommonVO vo = new CommonVO();
+		String memberId = memberAuthService.getMemberIdBySessionId(token);
+		if (memberId == null) {
+			vo.setSuccess(false);
+			vo.setMsg("invalid token");
+			return vo;
+		}
+		Integer code = playBackCodeCmdService.getPlayBackCode();
+		PlayBackDbo dbo = new PlayBackDbo();
+		dbo.setId(code.toString());
+		dbo.setGame(game);
+		dbo.setGameId(gameId);
+		dbo.setPanNo(panNo);
+		playBackDboService.save(dbo);
+		Map data = new HashMap();
+		data.put("code", code);
+		vo.setSuccess(true);
+		vo.setMsg("playbackcode");
+		vo.setData(data);
+		return vo;
+	}
+
+	@RequestMapping(value = "/playback_code")
+	public CommonVO playbackCode(String token, int code) {
+		CommonVO vo = new CommonVO();
+		String memberId = memberAuthService.getMemberIdBySessionId(token);
+		if (memberId == null) {
+			vo.setSuccess(false);
+			vo.setMsg("invalid token");
+			return vo;
+		}
+		PlayBackDbo dbo = playBackDboService.findById(Integer.toString(code));
+		GameServer gameServer;
+		try {
+			gameServer = gameService.getRandomGameServer(dbo.getGame());
+		} catch (NoServerAvailableForGameException e) {
+			vo.setSuccess(false);
+			vo.setMsg("NoServerAvailableForGameException");
+			return vo;
+		}
+		GameRoom room = gameService.findRoomByGameAndServerGameGameId(dbo.getGame(), dbo.getGameId());
+		Map data = new HashMap();
+		data.put("httpUrl", gameServer.getHttpUrl());
+		data.put("gameId", dbo.getGameId());
+		data.put("panNo", dbo.getPanNo());
+		data.put("roomNo", room.getNo());
 		vo.setSuccess(true);
 		vo.setMsg("playback");
 		vo.setData(data);

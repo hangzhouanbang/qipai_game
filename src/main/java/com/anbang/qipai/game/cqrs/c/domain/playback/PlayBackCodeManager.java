@@ -1,8 +1,10 @@
 package com.anbang.qipai.game.cqrs.c.domain.playback;
 
-import java.util.HashSet;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.Map;
 import java.util.Random;
-import java.util.Set;
 
 /**
  * 回放码管理
@@ -12,34 +14,28 @@ import java.util.Set;
  */
 public class PlayBackCodeManager {
 
-	private Set<String> noSet = new HashSet<>();
+	private Map<Integer, Integer> noCodeMap;
 
-	private static char[] charsForNo = new char[] { '0', '1', '2', '3', '5', '6', '7', '8', '9' };
+	private static int seed;
 
-	public String newNo(long seed) {
-		Random random = new Random(seed);
-		String newNo;
-		while (true) {
-			StringBuilder sb = new StringBuilder();
-			for (int i = 0; i < 6; i++) {
-				int charIdx = random.nextInt(charsForNo.length);
-				sb.append(charsForNo[charIdx]);
-			}
-			newNo = sb.toString();
-			if (noSet.contains(newNo)) {
-				continue;
-			} else {
-				break;
-			}
+	public PlayBackCodeManager() {
+		List<Integer> codeList = new ArrayList<>();
+		for (int i = 0; i < 1000000; i++) {
+			codeList.add(i);
 		}
-
-		noSet.add(newNo);
-		return newNo;
+		Collections.shuffle(codeList, new Random(System.currentTimeMillis()));
+		for (int i = 0; i < codeList.size(); i++) {
+			noCodeMap.put(i, codeList.get(i));
+		}
 	}
 
-	public String removeNo(String no) {
-		noSet.remove(no);
-		return no;
+	public int getPlayBackCode() {
+		if (seed > 999999) {
+			seed = 0;
+		}
+		int code = noCodeMap.get(seed);
+		seed++;
+		return code;
 	}
 
 }

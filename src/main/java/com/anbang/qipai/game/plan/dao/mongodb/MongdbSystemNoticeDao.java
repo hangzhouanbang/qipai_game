@@ -9,6 +9,7 @@ import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.data.mongodb.core.query.Update;
 import org.springframework.stereotype.Component;
 
+import com.anbang.qipai.game.conf.SystemNoticeState;
 import com.anbang.qipai.game.plan.bean.notice.SystemNotice;
 import com.anbang.qipai.game.plan.dao.SystemNoticeDao;
 
@@ -56,6 +57,7 @@ public class MongdbSystemNoticeDao implements SystemNoticeDao {
 	public List<SystemNotice> findByValid(boolean valid) {
 		Query query = new Query();
 		query.addCriteria(Criteria.where("valid").is(valid));
+		query.addCriteria(Criteria.where("state").is(SystemNoticeState.START));
 		return mongoTemplate.find(query, SystemNotice.class);
 	}
 
