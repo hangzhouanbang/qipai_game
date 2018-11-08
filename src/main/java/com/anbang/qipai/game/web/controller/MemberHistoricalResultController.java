@@ -126,6 +126,7 @@ public class MemberHistoricalResultController {
 		data.put("gameId", gameId);
 		data.put("panNo", panNo);
 		data.put("roomNo", room.getNo());
+		data.put("game", room.getGame());
 		vo.setSuccess(true);
 		vo.setMsg("playback");
 		vo.setData(data);
@@ -142,14 +143,22 @@ public class MemberHistoricalResultController {
 			return vo;
 		}
 		Integer code = playBackCodeCmdService.getPlayBackCode();
+		int size = code.toString().length();
+		String newCode = "";
+		int i = 6 - size;
+		while (i > 0) {
+			newCode += "0";
+			i--;
+		}
+		newCode += code.toString();
 		PlayBackDbo dbo = new PlayBackDbo();
-		dbo.setId(code.toString());
+		dbo.setId(newCode);
 		dbo.setGame(game);
 		dbo.setGameId(gameId);
 		dbo.setPanNo(panNo);
 		playBackDboService.save(dbo);
 		Map data = new HashMap();
-		data.put("code", code);
+		data.put("code", newCode);
 		vo.setSuccess(true);
 		vo.setMsg("playbackcode");
 		vo.setData(data);
@@ -157,7 +166,7 @@ public class MemberHistoricalResultController {
 	}
 
 	@RequestMapping(value = "/playback_code")
-	public CommonVO playbackCode(String token, int code) {
+	public CommonVO playbackCode(String token, String code) {
 		CommonVO vo = new CommonVO();
 		String memberId = memberAuthService.getMemberIdBySessionId(token);
 		if (memberId == null) {
@@ -165,7 +174,12 @@ public class MemberHistoricalResultController {
 			vo.setMsg("invalid token");
 			return vo;
 		}
-		PlayBackDbo dbo = playBackDboService.findById(Integer.toString(code));
+		PlayBackDbo dbo = playBackDboService.findById(code);
+		if (dbo == null) {
+			vo.setSuccess(false);
+			vo.setMsg("invalid code");
+			return vo;
+		}
 		GameServer gameServer;
 		try {
 			gameServer = gameService.getRandomGameServer(dbo.getGame());
@@ -180,6 +194,7 @@ public class MemberHistoricalResultController {
 		data.put("gameId", dbo.getGameId());
 		data.put("panNo", dbo.getPanNo());
 		data.put("roomNo", room.getNo());
+		data.put("game", room.getGame());
 		vo.setSuccess(true);
 		vo.setMsg("playback");
 		vo.setData(data);
