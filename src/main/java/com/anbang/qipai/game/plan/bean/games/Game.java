@@ -8,8 +8,10 @@ package com.anbang.qipai.game.plan.bean.games;
  */
 public enum Game {
 	ruianMajiang,
-	
+
 	wenzhouMajiang,
-	
-	fangpaoMajiang
+
+	fangpaoMajiang,
+
+	dianpaoMajiang
 }

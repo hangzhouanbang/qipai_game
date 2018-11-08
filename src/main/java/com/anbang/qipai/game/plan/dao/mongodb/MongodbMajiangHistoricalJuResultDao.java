@@ -69,7 +69,7 @@ public class MongodbMajiangHistoricalJuResultDao implements MajiangHistoricalJuR
 		group.put("num", new BasicDBObject("$sum", "$lastPanNo"));
 		DBObject queryGroup = new BasicDBObject("$group", group);
 		pipeline.add(queryGroup);
-		Cursor cursor = mongoTemplate.getCollection("majiangHistoricalResult").aggregate(pipeline,
+		Cursor cursor = mongoTemplate.getCollection("majiangHistoricalJuResult").aggregate(pipeline,
 				AggregationOptions.builder().outputMode(AggregationOptions.OutputMode.CURSOR).build());
 		try {
 			return (int) cursor.next().get("num");

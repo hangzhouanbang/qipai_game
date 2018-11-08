@@ -2,6 +2,7 @@ package com.anbang.qipai.game.cqrs.c.domain.playback;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
@@ -14,7 +15,7 @@ import java.util.Random;
  */
 public class PlayBackCodeManager {
 
-	private Map<Integer, Integer> noCodeMap;
+	private Map<Integer, Integer> noCodeMap = new HashMap<>();
 
 	private static int seed;
 
