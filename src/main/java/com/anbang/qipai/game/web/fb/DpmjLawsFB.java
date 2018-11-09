@@ -15,6 +15,7 @@ public class DpmjLawsFB {
 	private String dapao = "false";
 	private String quzhongfabai = "false";
 	private String zhuaniao = "false";
+	private String qingyise = "false";
 	private String niaoshu = "4";
 
 	public DpmjLawsFB(List<String> lawNames) {
@@ -45,6 +46,9 @@ public class DpmjLawsFB {
 			if (lawName.equals("zn")) {// 抓鸟
 				zhuaniao = "true";
 			}
+			if (lawName.equals("qingyise")) {// 清一色
+				qingyise = "true";
+			}
 			if (lawName.equals("szn")) {// 四只鸟
 				niaoshu = "4";
 			} else if (lawName.equals("lzn")) {// 六只鸟
@@ -53,6 +57,14 @@ public class DpmjLawsFB {
 
 			}
 		});
+	}
+
+	public String getQingyise() {
+		return qingyise;
+	}
+
+	public void setQingyise(String qingyise) {
+		this.qingyise = qingyise;
 	}
 
 	public String getPanshu() {

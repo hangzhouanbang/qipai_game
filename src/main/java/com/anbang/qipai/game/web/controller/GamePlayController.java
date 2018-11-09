@@ -518,6 +518,7 @@ public class GamePlayController {
 		req.param("quzhongfabai", fb.getQuzhongfabai());
 		req.param("zhuaniao", fb.getZhuaniao());
 		req.param("niaoshu", fb.getNiaoshu());
+		req.param("qingyise", fb.getQingyise());
 		Map resData;
 		try {
 			ContentResponse res = req.send();
