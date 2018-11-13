@@ -1,7 +1,7 @@
 spring:
   data:
     mongodb:
-      uri: mongodb://localhost:27017/qipai_game
+      #uri: mongodb://localhost:27017/qipai_game
       
   cloud:
     stream:
@@ -93,6 +93,16 @@ spring:
                   ms: 5
                 batch:
                   size: 16384
+          dianpaoGameRoom:
+            producer:
+              configuration:
+                request:
+                  timeout:
+                    ms: 30000
+                linger:
+                  ms: 5
+                batch:
+                  size: 16384
           memberLoginRecord:
             producer:
               configuration:
@@ -130,13 +140,18 @@ spring:
           contentType: application/json
           producer:
             partitionCount: 1
+        dianpaoGameRoom:
+          destination: dianpaoGameRoom
+          contentType: application/json
+          producer:
+            partitionCount: 1
         memberGolds:
           destination: memberGolds
           group: qipai-game
           consumer:
             concurrency: 1
             partitioned: false
-          contentType: application/json
+          contentType: application/json    
         members:
           destination: members
           group: qipai-game
@@ -201,6 +216,20 @@ spring:
             concurrency: 1
             partitioned: false
           contentType: application/json
+        dianpaoMajiangGame:
+          destination: dianpaoMajiangGame
+          group: qipai-game
+          consumer:
+            concurrency: 1
+            partitioned: false
+          contentType: application/json
+        dianpaoMajiangResult:
+          destination: dianpaoMajiangResult
+          group: qipai-game
+          consumer:
+            concurrency: 1
+            partitioned: false
+          contentType: application/json
         gameServerManager:
           destination: gameServer
           consumer:
@@ -234,9 +263,12 @@ eureka:
   client:
     serviceUrl:
       defaultZone: http://127.0.0.1:8761/eureka/
+  instance:
+    prefer-ip-address: true
+    instance-id: http://172.16.21.51:83
 websocket:
   url: ws://47.96.20.47:83/hall
-
+  #url: ws://192.168.0.134:83/hall
 filepath:
   snapshotFileBasePath: /data/app/qipai_game/snapshot
   jFileBasePath: /data/app/qipai_game/journal

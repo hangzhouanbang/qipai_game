@@ -41,7 +41,7 @@ public class DianpaoMajiangResultMsgReceiver {
 		String msg = mo.getMsg();
 		String json = gson.toJson(mo.getData());
 		Map map = gson.fromJson(json, Map.class);
-		if ("fangpaomajiang ju result".equals(msg)) {
+		if ("dianpaomajiang ju result".equals(msg)) {
 			String gameId = (String) map.get("gameId");
 			MajiangHistoricalJuResult majiangHistoricalResult = new MajiangHistoricalJuResult();
 			majiangHistoricalResult.setGameId(gameId);
@@ -62,7 +62,7 @@ public class DianpaoMajiangResultMsgReceiver {
 
 			majiangHistoricalResultService.addMajiangHistoricalResult(majiangHistoricalResult);
 		}
-		if ("fangpaomajiang pan result".equals(msg)) {
+		if ("dianpaomajiang pan result".equals(msg)) {
 			String gameId = (String) map.get("gameId");
 			MajiangHistoricalPanResult majiangHistoricalResult = new MajiangHistoricalPanResult();
 			majiangHistoricalResult.setGameId(gameId);
