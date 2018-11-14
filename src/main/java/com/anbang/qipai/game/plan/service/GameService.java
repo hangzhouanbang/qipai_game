@@ -293,40 +293,51 @@ public class GameService {
 			NotVIPMemberException, NoServerAvailableForGameException, CanNotJoinMoreRoomsException {
 		Member member = memberDao.findById(memberId);
 		MemberRights rights = member.getRights();
-
+        //memberId->该用户已开房间数量
 		int memberRoomsCount = memberGameRoomDao.count(memberId);
+		//校验能否继续开房
 		if (rights.getRoomsCount() <= memberRoomsCount) {
 			throw new CanNotJoinMoreRoomsException();
 		}
-
+		//校验是否有当前游戏服务器
 		List<GameServer> allServers = gameServerDao.findByGame(Game.dianpaoMajiang);
 		if (allServers == null || allServers.isEmpty()) {
 			throw new NoServerAvailableForGameException();
 		}
 		Random r = new Random();
+		//随机选一个服务器
 		GameServer gameServer = allServers.get(r.nextInt(allServers.size()));
 		ServerGame serverGame = new ServerGame();
+		//将gameServer包装成GameServer,加上gameId
 		serverGame.setServer(gameServer);
 		GameRoom gameRoom = new GameRoom();
+		//将serverGame放入gameRoom
 		gameRoom.setServerGame(serverGame);
 
 		List<GameLaw> laws = new ArrayList<>();
+		//构建list laws
 		lawNames.forEach((name) -> laws.add(gameLawDao.findByGameAndName(Game.dianpaoMajiang, name)));
 		gameRoom.setLaws(laws);
+		//校验规则是否重复
 		if (!gameRoom.validateLaws()) {
 			throw new IllegalGameLawsException();
 		}
+		//查询是否包含vip规则->gameRoom的vip字段
 		gameRoom.calculateVip();
 		if (gameRoom.isVip() && !member.isVip()) {
+		    //得到一天的开始时间和结束时间
 			Date d = new Date();
 			long startTime = TimeUtil.getDayStartTime(d);
 			long endTime = TimeUtil.getDayEndTime(d);
+			//得到今天创建房间的数量
 			int todayCreateVipRoomsCount = gameRoomDao.count(startTime, endTime, memberId, true);
+			//校验今天创建的房间是否超过规定值
 			if (rights.getPlanMemberMaxCreateRoomDaily() <= todayCreateVipRoomsCount) {
 				throw new NotVIPMemberException();
 			}
 		}
 		gameRoom.setCurrentPanNum(0);
+		//设置房间销毁时间
 		gameRoom.setDeadlineTime(System.currentTimeMillis() + (rights.getRoomsAliveHours() * 60 * 60 * 1000));
 		gameRoom.setGame(Game.dianpaoMajiang);
 		if (lawNames.contains("sj")) {

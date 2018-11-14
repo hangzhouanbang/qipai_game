@@ -32,6 +32,7 @@ public class MongodbGameRoomDao implements GameRoomDao {
 	public int count(long startTimeForCreate, long endTimeForCreate, String createMemberId, boolean vip) {
 		Query query = new Query();
 		Criteria criteria = new Criteria();
+		//gt:大于 lt:小于
 		criteria.andOperator(Criteria.where("createTime").gt(startTimeForCreate),
 				Criteria.where("createTime").lt(endTimeForCreate), Criteria.where("createMemberId").is(createMemberId),
 				Criteria.where("vip").is(vip));

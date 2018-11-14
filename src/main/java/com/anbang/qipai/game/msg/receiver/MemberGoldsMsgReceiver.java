@@ -21,7 +21,7 @@ public class MemberGoldsMsgReceiver {
 	private Gson gson = new Gson();
 
 	@StreamListener(MemberGoldsSink.MEMBERGOLDS)
-	public void recordMemberGoldRecordDbo(CommonMO mo) {
+    public void recordMemberGoldRecordDbo(CommonMO mo) {
 		String msg = mo.getMsg();
 		String json = gson.toJson(mo.getData());
 		Map map = gson.fromJson(json, Map.class);

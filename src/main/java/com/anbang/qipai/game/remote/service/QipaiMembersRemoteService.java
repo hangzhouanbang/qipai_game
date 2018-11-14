@@ -34,5 +34,4 @@ public interface QipaiMembersRemoteService {
 	public CommonRemoteVO game_mail_reward(@RequestParam("memberId") String memberId,
 			@RequestParam("number") Integer number, @RequestParam("integral") Integer integral,
 			@RequestParam("vipCardId") String vipCardId);
-
 }

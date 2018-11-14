@@ -446,19 +446,23 @@ public class GamePlayController {
 	@ResponseBody
 	public CommonVO createDpmjRoom(String token, @RequestBody List<String> lawNames) {
 		CommonVO vo = new CommonVO();
+		//根据token从UserSessionsManager的Map<String, UserSession> idSessionMap拿到memberId(memberDbo表)
 		String memberId = memberAuthService.getMemberIdBySessionId(token);
 		if (memberId == null) {
 			vo.setSuccess(false);
 			vo.setMsg("invalid token");
 			return vo;
 		}
+		//根据memberId查询是否被限制
 		MemberLoginLimitRecord loginLimitRecord = memberLoginLimitRecordService.findByMemberId(memberId, true);
 		if (loginLimitRecord != null) {
 			vo.setSuccess(false);
 			vo.setMsg("login limited");
 			return vo;
 		}
+		//根据memberId查询到member
 		Member member = memberService.findMember(memberId);
+		//得到member中的会员权益
 		MemberRights rights = member.getRights();
 		Map data = new HashMap();
 		GameRoom gameRoom;
@@ -486,17 +490,20 @@ public class GamePlayController {
 			return vo;
 		}
 
+		//普通会员每日开房（vip房）金币价格
 		int gold = rights.getPlanMemberCreateRoomDailyGoldPrice();
 		// 房主玩家记录
 		List<PlayersRecord> playersRecord = new ArrayList<>();
+		//玩家记录存入gameRoom
 		gameRoom.setPlayersRecord(playersRecord);
 		PlayersRecord record = new PlayersRecord();
 		record.setPlayerId(member.getId());
 		record.setVip(member.isVip());
 		record.setPayGold(gold);
 		playersRecord.add(record);
+
 		gameService.saveGameRoom(gameRoom);
-		// 普通会员开vip房扣金币
+		// 普通会员开vip房扣金币,调用member系统中的方法
 		if (!member.isVip() && gameRoom.isVip()) {
 			CommonRemoteVO rvo = qipaiMembersRomoteService.gold_withdraw(memberId, gold, "pay for create room");
 			if (!rvo.isSuccess()) {
@@ -509,6 +516,7 @@ public class GamePlayController {
 		GameServer gameServer = gameRoom.getServerGame().getServer();
 		// 游戏服务器rpc，需要手动httpclientrpc
 		DpmjLawsFB fb = new DpmjLawsFB(lawNames);
+		//远程调用游戏服务器的newgame
 		Request req = httpClient.newRequest(gameServer.getHttpUrl() + "/game/newgame");
 		req.param("playerId", memberId);
 		req.param("panshu", fb.getPanshu());
@@ -524,6 +532,7 @@ public class GamePlayController {
 			ContentResponse res = req.send();
 			String resJson = new String(res.getContent());
 			CommonVO resVo = gson.fromJson(resJson, CommonVO.class);
+			//游戏服务器回传的参数带有gameId和token
 			resData = (Map) resVo.getData();
 			gameRoom.getServerGame().setGameId((String) resData.get("gameId"));
 		} catch (Exception e) {
@@ -531,16 +540,18 @@ public class GamePlayController {
 			vo.setMsg("SysException");
 			return vo;
 		}
-
+        //创建游戏房间的编号
 		String roomNo = gameRoomCmdService.createRoom(memberId, System.currentTimeMillis());
 		gameRoom.setNo(roomNo);
 
+		//将带roomNo的gameRoom写入数据库
 		gameService.createGameRoom(gameRoom);
 
 		data.put("httpUrl", gameRoom.getServerGame().getServer().getHttpUrl());
 		data.put("wsUrl", gameRoom.getServerGame().getServer().getWsUrl());
 		data.put("roomNo", gameRoom.getNo());
 		data.put("gameId", gameRoom.getServerGame().getGameId());
+		//存入了游戏服务器传回的token
 		data.put("token", resData.get("token"));
 		data.put("game", gameRoom.getGame());
 		vo.setData(data);

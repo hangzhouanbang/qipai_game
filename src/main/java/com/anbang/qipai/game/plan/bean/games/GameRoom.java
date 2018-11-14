@@ -43,6 +43,7 @@ public class GameRoom {
 			for (GameLaw law : laws) {
 				String groupId = law.getMutexGroupId();
 				if (groupId != null) {
+				    //contain this element,return false
 					if (!groupIdSet.add(groupId)) {
 						return false;
 					}
