@@ -166,14 +166,9 @@ public class GamePlayController {
 		playersRecord.add(record);
 		gameService.saveGameRoom(gameRoom);
 		// 普通会员开vip房扣金币
-		if (!member.isVip() && gameRoom.isVip()) {
-			CommonRemoteVO rvo = qipaiMembersRomoteService.gold_withdraw(memberId, gold, "pay for create room");
-			if (!rvo.isSuccess()) {
-				vo.setSuccess(false);
-				vo.setMsg(rvo.getMsg());
-				return vo;
-			}
-		}
+
+
+
 
 		GameServer gameServer = gameRoom.getServerGame().getServer();
 		// 游戏服务器rpc，需要手动httpclientrpc
@@ -198,6 +193,18 @@ public class GamePlayController {
 			return vo;
 		}
 
+        // 普通会员开vip房扣金币
+        if (!member.isVip() && gameRoom.isVip()) {
+            CommonRemoteVO rvo = qipaiMembersRomoteService.gold_withdraw(memberId, gold, "pay for create room");
+            if (!rvo.isSuccess()) {
+                vo.setSuccess(false);
+                vo.setMsg(rvo.getMsg());
+                return vo;
+            }
+        }
+
+
+
 		String roomNo = gameRoomCmdService.createRoom(memberId, System.currentTimeMillis());
 		gameRoom.setNo(roomNo);
 
@@ -213,6 +220,7 @@ public class GamePlayController {
 		return vo;
 
 	}
+
 
 	/**
 	 * 创建放炮麻将房间
@@ -275,15 +283,7 @@ public class GamePlayController {
 		record.setPayGold(gold);
 		playersRecord.add(record);
 		gameService.saveGameRoom(gameRoom);
-		// 普通会员开vip房扣金币
-		if (!member.isVip() && gameRoom.isVip()) {
-			CommonRemoteVO rvo = qipaiMembersRomoteService.gold_withdraw(memberId, gold, "pay for create room");
-			if (!rvo.isSuccess()) {
-				vo.setSuccess(false);
-				vo.setMsg(rvo.getMsg());
-				return vo;
-			}
-		}
+
 
 		GameServer gameServer = gameRoom.getServerGame().getServer();
 		// 游戏服务器rpc，需要手动httpclientrpc
@@ -309,6 +309,16 @@ public class GamePlayController {
 			vo.setMsg("SysException");
 			return vo;
 		}
+
+        // 普通会员开vip房扣金币
+        if (!member.isVip() && gameRoom.isVip()) {
+            CommonRemoteVO rvo = qipaiMembersRomoteService.gold_withdraw(memberId, gold, "pay for create room");
+            if (!rvo.isSuccess()) {
+                vo.setSuccess(false);
+                vo.setMsg(rvo.getMsg());
+                return vo;
+            }
+        }
 
 		String roomNo = gameRoomCmdService.createRoom(memberId, System.currentTimeMillis());
 		gameRoom.setNo(roomNo);
@@ -386,15 +396,7 @@ public class GamePlayController {
 		record.setPayGold(gold);
 		playersRecord.add(record);
 		gameService.saveGameRoom(gameRoom);
-		// 普通会员开vip房扣金币
-		if (!member.isVip() && gameRoom.isVip()) {
-			CommonRemoteVO rvo = qipaiMembersRomoteService.gold_withdraw(memberId, gold, "pay for create room");
-			if (!rvo.isSuccess()) {
-				vo.setSuccess(false);
-				vo.setMsg(rvo.getMsg());
-				return vo;
-			}
-		}
+
 
 		GameServer gameServer = gameRoom.getServerGame().getServer();
 		// 游戏服务器rpc，需要手动httpclientrpc
@@ -422,6 +424,17 @@ public class GamePlayController {
 			vo.setMsg("SysException");
 			return vo;
 		}
+
+        // 普通会员开vip房扣金币
+        if (!member.isVip() && gameRoom.isVip()) {
+            CommonRemoteVO rvo = qipaiMembersRomoteService.gold_withdraw(memberId, gold, "pay for create room");
+            if (!rvo.isSuccess()) {
+                vo.setSuccess(false);
+                vo.setMsg(rvo.getMsg());
+                return vo;
+            }
+        }
+
 
 		String roomNo = gameRoomCmdService.createRoom(memberId, System.currentTimeMillis());
 		gameRoom.setNo(roomNo);
@@ -503,15 +516,7 @@ public class GamePlayController {
 		playersRecord.add(record);
 
 		gameService.saveGameRoom(gameRoom);
-		// 普通会员开vip房扣金币,调用member系统中的方法
-		if (!member.isVip() && gameRoom.isVip()) {
-			CommonRemoteVO rvo = qipaiMembersRomoteService.gold_withdraw(memberId, gold, "pay for create room");
-			if (!rvo.isSuccess()) {
-				vo.setSuccess(false);
-				vo.setMsg(rvo.getMsg());
-				return vo;
-			}
-		}
+
 
 		GameServer gameServer = gameRoom.getServerGame().getServer();
 		// 游戏服务器rpc，需要手动httpclientrpc
@@ -540,6 +545,16 @@ public class GamePlayController {
 			vo.setMsg("SysException");
 			return vo;
 		}
+
+        // 普通会员开vip房扣金币,调用member系统中的方法
+        if (!member.isVip() && gameRoom.isVip()) {
+            CommonRemoteVO rvo = qipaiMembersRomoteService.gold_withdraw(memberId, gold, "pay for create room");
+            if (!rvo.isSuccess()) {
+                vo.setSuccess(false);
+                vo.setMsg(rvo.getMsg());
+                return vo;
+            }
+        }
         //创建游戏房间的编号
 		String roomNo = gameRoomCmdService.createRoom(memberId, System.currentTimeMillis());
 		gameRoom.setNo(roomNo);
