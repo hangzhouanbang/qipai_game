@@ -164,7 +164,8 @@ public class GameService {
 			throw new CanNotJoinMoreRoomsException();
 		}
 
-		List<GameServer> allServers = gameServerDao.findByGame(Game.fangpaoMajiang);
+		List<GameServer> allServers = gameServerDao.findServersByState(Game.fangpaoMajiang,
+                GameService.GAME_SERVER_STATE_RUNNINT);
 		if (allServers == null || allServers.isEmpty()) {
 			throw new NoServerAvailableForGameException();
 		}
@@ -233,7 +234,8 @@ public class GameService {
 			throw new CanNotJoinMoreRoomsException();
 		}
 
-		List<GameServer> allServers = gameServerDao.findByGame(Game.wenzhouMajiang);
+		List<GameServer> allServers = gameServerDao.findServersByState(Game.wenzhouMajiang,
+                GameService.GAME_SERVER_STATE_RUNNINT);
 		if (allServers == null || allServers.isEmpty()) {
 			throw new NoServerAvailableForGameException();
 		}
@@ -300,7 +302,8 @@ public class GameService {
 			throw new CanNotJoinMoreRoomsException();
 		}
 		//校验是否有当前游戏服务器
-		List<GameServer> allServers = gameServerDao.findByGame(Game.dianpaoMajiang);
+		List<GameServer> allServers = gameServerDao.findServersByState(Game.dianpaoMajiang,
+                GameService.GAME_SERVER_STATE_RUNNINT);
 		if (allServers == null || allServers.isEmpty()) {
 			throw new NoServerAvailableForGameException();
 		}
