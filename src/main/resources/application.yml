@@ -2,7 +2,7 @@ spring:
   data:
     mongodb:
       #uri: mongodb://localhost:27017/qipai_game
-      
+
   cloud:
     stream:
       kafka:
@@ -263,9 +263,9 @@ eureka:
   client:
     serviceUrl:
       defaultZone: http://127.0.0.1:8761/eureka/
-  instance:
-    prefer-ip-address: true
-    instance-id: http://172.16.21.51:83
+  #instance:
+    #prefer-ip-address: true
+    #instance-id: http://172.16.21.51:83
 websocket:
   url: ws://47.96.20.47:83/hall
   #url: ws://192.168.0.134:83/hall
