@@ -12,30 +12,30 @@ import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Component;
 
 import com.anbang.qipai.game.plan.bean.games.Game;
-import com.anbang.qipai.game.plan.bean.historicalresult.MajiangHistoricalPanResult;
-import com.anbang.qipai.game.plan.dao.MajiangHistoricalPanResultDao;
+import com.anbang.qipai.game.plan.bean.historicalresult.GameHistoricalPanResult;
+import com.anbang.qipai.game.plan.dao.GameHistoricalPanResultDao;
 
 @Component
-public class MongodbMajiangHistoricalPanResultDao implements MajiangHistoricalPanResultDao {
+public class MongodbGameHistoricalPanResultDao implements GameHistoricalPanResultDao {
 
 	@Autowired
 	private MongoTemplate mongoTemplate;
 
 	@Override
-	public void addMajiangHistoricalResult(MajiangHistoricalPanResult result) {
+	public void addGameHistoricalResult(GameHistoricalPanResult result) {
 		mongoTemplate.insert(result);
 	}
 
 	@Override
-	public List<MajiangHistoricalPanResult> findMajiangHistoricalResultByGameIdAndGame(int page, int size,
-			String gameId, Game game) {
+	public List<GameHistoricalPanResult> findGameHistoricalResultByGameIdAndGame(int page, int size, String gameId,
+			Game game) {
 		Query query = new Query();
 		query.addCriteria(Criteria.where("gameId").is(gameId));
 		query.addCriteria(Criteria.where("game").is(game));
 		query.limit(size);
 		query.skip((page - 1) * size);
 		query.with(new Sort(new Order(Direction.ASC, "no")));
-		return mongoTemplate.find(query, MajiangHistoricalPanResult.class);
+		return mongoTemplate.find(query, GameHistoricalPanResult.class);
 	}
 
 	@Override
@@ -43,7 +43,7 @@ public class MongodbMajiangHistoricalPanResultDao implements MajiangHistoricalPa
 		Query query = new Query();
 		query.addCriteria(Criteria.where("gameId").is(gameId));
 		query.addCriteria(Criteria.where("game").is(game));
-		return mongoTemplate.count(query, MajiangHistoricalPanResult.class);
+		return mongoTemplate.count(query, GameHistoricalPanResult.class);
 	}
 
 }

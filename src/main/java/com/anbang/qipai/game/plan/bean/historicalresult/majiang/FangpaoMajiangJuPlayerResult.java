@@ -1,8 +1,11 @@
-package com.anbang.qipai.game.plan.bean.historicalresult;
+package com.anbang.qipai.game.plan.bean.historicalresult.majiang;
 
 import java.util.Map;
 
-public class DianpaoMajiangJuPlayerResult implements MajiangJuPlayerResult {
+import com.anbang.qipai.game.plan.bean.historicalresult.GameJuPlayerResult;
+
+public class FangpaoMajiangJuPlayerResult implements GameJuPlayerResult {
+
 	private String playerId;
 	private String nickname;
 	private String headimgurl;
@@ -12,7 +15,7 @@ public class DianpaoMajiangJuPlayerResult implements MajiangJuPlayerResult {
 	private int fangPaoCount;
 	private int totalScore;
 
-	public DianpaoMajiangJuPlayerResult(Map juPlayerResult) {
+	public FangpaoMajiangJuPlayerResult(Map juPlayerResult) {
 		this.playerId = (String) juPlayerResult.get("playerId");
 		this.nickname = (String) juPlayerResult.get("nickname");
 		this.headimgurl = (String) juPlayerResult.get("headimgurl");
@@ -23,7 +26,7 @@ public class DianpaoMajiangJuPlayerResult implements MajiangJuPlayerResult {
 		this.totalScore = ((Double) juPlayerResult.get("totalScore")).intValue();
 	}
 
-	public DianpaoMajiangJuPlayerResult() {
+	public FangpaoMajiangJuPlayerResult() {
 
 	}
 

@@ -1,17 +1,19 @@
-package com.anbang.qipai.game.plan.bean.historicalresult;
+package com.anbang.qipai.game.plan.bean.historicalresult.majiang;
 
 import java.util.Map;
 
-public class WenzhouMajiangPanPlayerResult implements MajiangPanPlayerResult {
+import com.anbang.qipai.game.plan.bean.historicalresult.GamePanPlayerResult;
+
+public class FangpaoMajiangPanPlayerResult implements GamePanPlayerResult {
 	private String playerId;// 玩家id
 	private String nickname;// 玩家昵称
 	private int score;// 一盘总分
 
-	public WenzhouMajiangPanPlayerResult() {
+	public FangpaoMajiangPanPlayerResult() {
 
 	}
 
-	public WenzhouMajiangPanPlayerResult(Map panPlayerResult) {
+	public FangpaoMajiangPanPlayerResult(Map panPlayerResult) {
 		this.playerId = (String) panPlayerResult.get("playerId");
 		this.nickname = (String) panPlayerResult.get("nickname");
 		this.score = ((Double) panPlayerResult.get("score")).intValue();

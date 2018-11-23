@@ -1,8 +1,10 @@
-package com.anbang.qipai.game.plan.bean.historicalresult;
+package com.anbang.qipai.game.plan.bean.historicalresult.majiang;
 
 import java.util.Map;
 
-public class RuianMajiangPanPlayerResult implements MajiangPanPlayerResult {
+import com.anbang.qipai.game.plan.bean.historicalresult.GamePanPlayerResult;
+
+public class RuianMajiangPanPlayerResult implements GamePanPlayerResult {
 	private String playerId;// 玩家id
 	private String nickname;// 玩家昵称
 	private int score;// 一盘总分

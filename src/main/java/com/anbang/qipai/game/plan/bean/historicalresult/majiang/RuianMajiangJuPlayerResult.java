@@ -1,8 +1,10 @@
-package com.anbang.qipai.game.plan.bean.historicalresult;
+package com.anbang.qipai.game.plan.bean.historicalresult.majiang;
 
 import java.util.Map;
 
-public class RuianMajiangJuPlayerResult implements MajiangJuPlayerResult {
+import com.anbang.qipai.game.plan.bean.historicalresult.GameJuPlayerResult;
+
+public class RuianMajiangJuPlayerResult implements GameJuPlayerResult {
 	private String playerId;
 	private String nickname;
 	private String headimgurl;

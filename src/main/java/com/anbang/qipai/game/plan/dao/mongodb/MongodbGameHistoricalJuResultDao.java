@@ -13,44 +13,44 @@ import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Component;
 
 import com.anbang.qipai.game.plan.bean.games.Game;
-import com.anbang.qipai.game.plan.bean.historicalresult.MajiangHistoricalJuResult;
-import com.anbang.qipai.game.plan.dao.MajiangHistoricalJuResultDao;
+import com.anbang.qipai.game.plan.bean.historicalresult.GameHistoricalJuResult;
+import com.anbang.qipai.game.plan.dao.GameHistoricalJuResultDao;
 import com.mongodb.AggregationOptions;
 import com.mongodb.BasicDBObject;
 import com.mongodb.Cursor;
 import com.mongodb.DBObject;
 
 @Component
-public class MongodbMajiangHistoricalJuResultDao implements MajiangHistoricalJuResultDao {
+public class MongodbGameHistoricalJuResultDao implements GameHistoricalJuResultDao {
 
 	@Autowired
 	private MongoTemplate mongoTemplate;
 
 	@Override
-	public void addMajiangHistoricalResult(MajiangHistoricalJuResult result) {
+	public void addGameHistoricalResult(GameHistoricalJuResult result) {
 		mongoTemplate.insert(result);
 	}
 
 	@Override
-	public List<MajiangHistoricalJuResult> findMajiangHistoricalResultByMemberId(int page, int size, String memberId) {
+	public List<GameHistoricalJuResult> findGameHistoricalResultByMemberId(int page, int size, String memberId) {
 		Query query = new Query(Criteria.where("playerResultList").elemMatch(Criteria.where("playerId").is(memberId)));
 		Sort sort = new Sort(new Order(Direction.DESC, "id"));
 		query.with(sort);
 		query.skip((page - 1) * size);
 		query.limit(size);
-		return mongoTemplate.find(query, MajiangHistoricalJuResult.class);
+		return mongoTemplate.find(query, GameHistoricalJuResult.class);
 	}
 
 	@Override
 	public long getAmountByMemberId(String memberId) {
 		Query query = new Query(Criteria.where("playerResultList").elemMatch(Criteria.where("playerId").is(memberId)));
-		return mongoTemplate.count(query, MajiangHistoricalJuResult.class);
+		return mongoTemplate.count(query, GameHistoricalJuResult.class);
 	}
 
 	@Override
-	public MajiangHistoricalJuResult findMajiangHistoricalResultById(String id) {
+	public GameHistoricalJuResult findGameHistoricalResultById(String id) {
 		Query query = new Query(Criteria.where("id").is(id));
-		return mongoTemplate.findOne(query, MajiangHistoricalJuResult.class);
+		return mongoTemplate.findOne(query, GameHistoricalJuResult.class);
 	}
 
 	@Override

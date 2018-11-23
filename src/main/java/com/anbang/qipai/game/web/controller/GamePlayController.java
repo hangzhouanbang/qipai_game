@@ -21,6 +21,7 @@ import com.anbang.qipai.game.msg.service.FangpaoGameRoomMsgService;
 import com.anbang.qipai.game.msg.service.GameServerMsgService;
 import com.anbang.qipai.game.msg.service.RuianGameRoomMsgService;
 import com.anbang.qipai.game.msg.service.WenzhouGameRoomMsgService;
+import com.anbang.qipai.game.msg.service.WenzhouShuangkouGameRoomMsgService;
 import com.anbang.qipai.game.plan.bean.games.CanNotJoinMoreRoomsException;
 import com.anbang.qipai.game.plan.bean.games.Game;
 import com.anbang.qipai.game.plan.bean.games.GameLaw;
@@ -48,6 +49,7 @@ import com.anbang.qipai.game.web.fb.DpmjLawsFB;
 import com.anbang.qipai.game.web.fb.FpmjLawsFB;
 import com.anbang.qipai.game.web.fb.RamjLawsFB;
 import com.anbang.qipai.game.web.fb.WzmjLawsFB;
+import com.anbang.qipai.game.web.fb.WzskLawsFB;
 import com.anbang.qipai.game.web.vo.CommonVO;
 import com.anbang.qipai.game.web.vo.MemberGameRoomVO;
 import com.anbang.qipai.game.web.vo.MemberPlayingRoomVO;
@@ -95,6 +97,9 @@ public class GamePlayController {
 
 	@Autowired
 	private DianpaoGameRoomMsgService dianpaoGameRoomMsgService;
+
+	@Autowired
+	private WenzhouShuangkouGameRoomMsgService wenzhouShuangkouGameRoomMsgService;
 
 	@Autowired
 	private MemberLoginLimitRecordService memberLoginLimitRecordService;
@@ -167,9 +172,6 @@ public class GamePlayController {
 		gameService.saveGameRoom(gameRoom);
 		// 普通会员开vip房扣金币
 
-
-
-
 		GameServer gameServer = gameRoom.getServerGame().getServer();
 		// 游戏服务器rpc，需要手动httpclientrpc
 		RamjLawsFB fb = new RamjLawsFB(lawNames);
@@ -193,17 +195,15 @@ public class GamePlayController {
 			return vo;
 		}
 
-        // 普通会员开vip房扣金币
-        if (!member.isVip() && gameRoom.isVip()) {
-            CommonRemoteVO rvo = qipaiMembersRomoteService.gold_withdraw(memberId, gold, "pay for create room");
-            if (!rvo.isSuccess()) {
-                vo.setSuccess(false);
-                vo.setMsg(rvo.getMsg());
-                return vo;
-            }
-        }
-
-
+		// 普通会员开vip房扣金币
+		if (!member.isVip() && gameRoom.isVip()) {
+			CommonRemoteVO rvo = qipaiMembersRomoteService.gold_withdraw(memberId, gold, "pay for create room");
+			if (!rvo.isSuccess()) {
+				vo.setSuccess(false);
+				vo.setMsg(rvo.getMsg());
+				return vo;
+			}
+		}
 
 		String roomNo = gameRoomCmdService.createRoom(memberId, System.currentTimeMillis());
 		gameRoom.setNo(roomNo);
@@ -220,7 +220,6 @@ public class GamePlayController {
 		return vo;
 
 	}
-
 
 	/**
 	 * 创建放炮麻将房间
@@ -284,7 +283,6 @@ public class GamePlayController {
 		playersRecord.add(record);
 		gameService.saveGameRoom(gameRoom);
 
-
 		GameServer gameServer = gameRoom.getServerGame().getServer();
 		// 游戏服务器rpc，需要手动httpclientrpc
 		FpmjLawsFB fb = new FpmjLawsFB(lawNames);
@@ -310,15 +308,15 @@ public class GamePlayController {
 			return vo;
 		}
 
-        // 普通会员开vip房扣金币
-        if (!member.isVip() && gameRoom.isVip()) {
-            CommonRemoteVO rvo = qipaiMembersRomoteService.gold_withdraw(memberId, gold, "pay for create room");
-            if (!rvo.isSuccess()) {
-                vo.setSuccess(false);
-                vo.setMsg(rvo.getMsg());
-                return vo;
-            }
-        }
+		// 普通会员开vip房扣金币
+		if (!member.isVip() && gameRoom.isVip()) {
+			CommonRemoteVO rvo = qipaiMembersRomoteService.gold_withdraw(memberId, gold, "pay for create room");
+			if (!rvo.isSuccess()) {
+				vo.setSuccess(false);
+				vo.setMsg(rvo.getMsg());
+				return vo;
+			}
+		}
 
 		String roomNo = gameRoomCmdService.createRoom(memberId, System.currentTimeMillis());
 		gameRoom.setNo(roomNo);
@@ -397,7 +395,6 @@ public class GamePlayController {
 		playersRecord.add(record);
 		gameService.saveGameRoom(gameRoom);
 
-
 		GameServer gameServer = gameRoom.getServerGame().getServer();
 		// 游戏服务器rpc，需要手动httpclientrpc
 		WzmjLawsFB fb = new WzmjLawsFB(lawNames);
@@ -425,16 +422,15 @@ public class GamePlayController {
 			return vo;
 		}
 
-        // 普通会员开vip房扣金币
-        if (!member.isVip() && gameRoom.isVip()) {
-            CommonRemoteVO rvo = qipaiMembersRomoteService.gold_withdraw(memberId, gold, "pay for create room");
-            if (!rvo.isSuccess()) {
-                vo.setSuccess(false);
-                vo.setMsg(rvo.getMsg());
-                return vo;
-            }
-        }
-
+		// 普通会员开vip房扣金币
+		if (!member.isVip() && gameRoom.isVip()) {
+			CommonRemoteVO rvo = qipaiMembersRomoteService.gold_withdraw(memberId, gold, "pay for create room");
+			if (!rvo.isSuccess()) {
+				vo.setSuccess(false);
+				vo.setMsg(rvo.getMsg());
+				return vo;
+			}
+		}
 
 		String roomNo = gameRoomCmdService.createRoom(memberId, System.currentTimeMillis());
 		gameRoom.setNo(roomNo);
@@ -459,23 +455,24 @@ public class GamePlayController {
 	@ResponseBody
 	public CommonVO createDpmjRoom(String token, @RequestBody List<String> lawNames) {
 		CommonVO vo = new CommonVO();
-		//根据token从UserSessionsManager的Map<String, UserSession> idSessionMap拿到memberId(memberDbo表)
+		// 根据token从UserSessionsManager的Map<String, UserSession>
+		// idSessionMap拿到memberId(memberDbo表)
 		String memberId = memberAuthService.getMemberIdBySessionId(token);
 		if (memberId == null) {
 			vo.setSuccess(false);
 			vo.setMsg("invalid token");
 			return vo;
 		}
-		//根据memberId查询是否被限制
+		// 根据memberId查询是否被限制
 		MemberLoginLimitRecord loginLimitRecord = memberLoginLimitRecordService.findByMemberId(memberId, true);
 		if (loginLimitRecord != null) {
 			vo.setSuccess(false);
 			vo.setMsg("login limited");
 			return vo;
 		}
-		//根据memberId查询到member
+		// 根据memberId查询到member
 		Member member = memberService.findMember(memberId);
-		//得到member中的会员权益
+		// 得到member中的会员权益
 		MemberRights rights = member.getRights();
 		Map data = new HashMap();
 		GameRoom gameRoom;
@@ -503,11 +500,11 @@ public class GamePlayController {
 			return vo;
 		}
 
-		//普通会员每日开房（vip房）金币价格
+		// 普通会员每日开房（vip房）金币价格
 		int gold = rights.getPlanMemberCreateRoomDailyGoldPrice();
 		// 房主玩家记录
 		List<PlayersRecord> playersRecord = new ArrayList<>();
-		//玩家记录存入gameRoom
+		// 玩家记录存入gameRoom
 		gameRoom.setPlayersRecord(playersRecord);
 		PlayersRecord record = new PlayersRecord();
 		record.setPlayerId(member.getId());
@@ -517,11 +514,10 @@ public class GamePlayController {
 
 		gameService.saveGameRoom(gameRoom);
 
-
 		GameServer gameServer = gameRoom.getServerGame().getServer();
 		// 游戏服务器rpc，需要手动httpclientrpc
 		DpmjLawsFB fb = new DpmjLawsFB(lawNames);
-		//远程调用游戏服务器的newgame
+		// 远程调用游戏服务器的newgame
 		Request req = httpClient.newRequest(gameServer.getHttpUrl() + "/game/newgame");
 		req.param("playerId", memberId);
 		req.param("panshu", fb.getPanshu());
@@ -537,7 +533,7 @@ public class GamePlayController {
 			ContentResponse res = req.send();
 			String resJson = new String(res.getContent());
 			CommonVO resVo = gson.fromJson(resJson, CommonVO.class);
-			//游戏服务器回传的参数带有gameId和token
+			// 游戏服务器回传的参数带有gameId和token
 			resData = (Map) resVo.getData();
 			gameRoom.getServerGame().setGameId((String) resData.get("gameId"));
 		} catch (Exception e) {
@@ -546,27 +542,149 @@ public class GamePlayController {
 			return vo;
 		}
 
-        // 普通会员开vip房扣金币,调用member系统中的方法
-        if (!member.isVip() && gameRoom.isVip()) {
-            CommonRemoteVO rvo = qipaiMembersRomoteService.gold_withdraw(memberId, gold, "pay for create room");
-            if (!rvo.isSuccess()) {
-                vo.setSuccess(false);
-                vo.setMsg(rvo.getMsg());
-                return vo;
-            }
-        }
-        //创建游戏房间的编号
+		// 普通会员开vip房扣金币,调用member系统中的方法
+		if (!member.isVip() && gameRoom.isVip()) {
+			CommonRemoteVO rvo = qipaiMembersRomoteService.gold_withdraw(memberId, gold, "pay for create room");
+			if (!rvo.isSuccess()) {
+				vo.setSuccess(false);
+				vo.setMsg(rvo.getMsg());
+				return vo;
+			}
+		}
+		// 创建游戏房间的编号
 		String roomNo = gameRoomCmdService.createRoom(memberId, System.currentTimeMillis());
 		gameRoom.setNo(roomNo);
 
-		//将带roomNo的gameRoom写入数据库
+		// 将带roomNo的gameRoom写入数据库
 		gameService.createGameRoom(gameRoom);
 
 		data.put("httpUrl", gameRoom.getServerGame().getServer().getHttpUrl());
 		data.put("wsUrl", gameRoom.getServerGame().getServer().getWsUrl());
 		data.put("roomNo", gameRoom.getNo());
 		data.put("gameId", gameRoom.getServerGame().getGameId());
-		//存入了游戏服务器传回的token
+		// 存入了游戏服务器传回的token
+		data.put("token", resData.get("token"));
+		data.put("game", gameRoom.getGame());
+		vo.setData(data);
+		return vo;
+
+	}
+
+	/**
+	 * 创建温州双扣房间
+	 */
+	@RequestMapping(value = "/create_wzsk_room")
+	@ResponseBody
+	public CommonVO createWzskRoom(String token, @RequestBody List<String> lawNames) {
+		CommonVO vo = new CommonVO();
+		// 根据token从UserSessionsManager的Map<String, UserSession>
+		// idSessionMap拿到memberId(memberDbo表)
+		String memberId = memberAuthService.getMemberIdBySessionId(token);
+		if (memberId == null) {
+			vo.setSuccess(false);
+			vo.setMsg("invalid token");
+			return vo;
+		}
+		// 根据memberId查询是否被限制
+		MemberLoginLimitRecord loginLimitRecord = memberLoginLimitRecordService.findByMemberId(memberId, true);
+		if (loginLimitRecord != null) {
+			vo.setSuccess(false);
+			vo.setMsg("login limited");
+			return vo;
+		}
+		// 根据memberId查询到member
+		Member member = memberService.findMember(memberId);
+		// 得到member中的会员权益
+		MemberRights rights = member.getRights();
+		Map data = new HashMap();
+		GameRoom gameRoom;
+		try {
+			gameRoom = gameService.buildWzskGameRoom(memberId, lawNames);
+		} catch (IllegalGameLawsException e) {
+			vo.setSuccess(false);
+			vo.setMsg("IllegalGameLawsException");
+			return vo;
+		} catch (NotVIPMemberException e) {
+			int todayCreateVipRoomsCount = gameService.countTodayCreateVipRoomsCount(memberId);
+			vo.setSuccess(false);
+			vo.setMsg("NotVIPMemberException");
+			data.put("todayCreateVipRoomsCount",
+					NumConvertChineseUtil.toChinese(String.valueOf(todayCreateVipRoomsCount)));
+			vo.setData(data);
+			return vo;
+		} catch (CanNotJoinMoreRoomsException e) {
+			vo.setSuccess(false);
+			vo.setMsg("CanNotJoinMoreRoomsException");
+			return vo;
+		} catch (NoServerAvailableForGameException e) {
+			vo.setSuccess(false);
+			vo.setMsg("NoServerAvailableForGameException");
+			return vo;
+		}
+
+		// 普通会员每日开房（vip房）金币价格
+		int gold = rights.getPlanMemberCreateRoomDailyGoldPrice();
+		// 房主玩家记录
+		List<PlayersRecord> playersRecord = new ArrayList<>();
+		// 玩家记录存入gameRoom
+		gameRoom.setPlayersRecord(playersRecord);
+		PlayersRecord record = new PlayersRecord();
+		record.setPlayerId(member.getId());
+		record.setVip(member.isVip());
+		record.setPayGold(gold);
+		playersRecord.add(record);
+
+		gameService.saveGameRoom(gameRoom);
+
+		GameServer gameServer = gameRoom.getServerGame().getServer();
+		// 游戏服务器rpc，需要手动httpclientrpc
+		WzskLawsFB fb = new WzskLawsFB(lawNames);
+		// 远程调用游戏服务器的newgame
+		Request req = httpClient.newRequest(gameServer.getHttpUrl() + "/game/newgame");
+		req.param("playerId", memberId);
+		req.param("panshu", fb.getPanshu());
+		req.param("renshu", fb.getRenshu());
+		req.param("bx", fb.getBx());
+		req.param("chapai", fb.getChapai());
+		req.param("fapai", fb.getFapai());
+		req.param("chaodi", fb.getChaodi());
+		req.param("shuangming", fb.getShuangming());
+		req.param("fengding", fb.getFengding());
+		Map resData;
+		try {
+			ContentResponse res = req.send();
+			String resJson = new String(res.getContent());
+			CommonVO resVo = gson.fromJson(resJson, CommonVO.class);
+			// 游戏服务器回传的参数带有gameId和token
+			resData = (Map) resVo.getData();
+			gameRoom.getServerGame().setGameId((String) resData.get("gameId"));
+		} catch (Exception e) {
+			vo.setSuccess(false);
+			vo.setMsg("SysException");
+			return vo;
+		}
+
+		// 普通会员开vip房扣金币,调用member系统中的方法
+		if (!member.isVip() && gameRoom.isVip()) {
+			CommonRemoteVO rvo = qipaiMembersRomoteService.gold_withdraw(memberId, gold, "pay for create room");
+			if (!rvo.isSuccess()) {
+				vo.setSuccess(false);
+				vo.setMsg(rvo.getMsg());
+				return vo;
+			}
+		}
+		// 创建游戏房间的编号
+		String roomNo = gameRoomCmdService.createRoom(memberId, System.currentTimeMillis());
+		gameRoom.setNo(roomNo);
+
+		// 将带roomNo的gameRoom写入数据库
+		gameService.createGameRoom(gameRoom);
+
+		data.put("httpUrl", gameRoom.getServerGame().getServer().getHttpUrl());
+		data.put("wsUrl", gameRoom.getServerGame().getServer().getWsUrl());
+		data.put("roomNo", gameRoom.getNo());
+		data.put("gameId", gameRoom.getServerGame().getGameId());
+		// 存入了游戏服务器传回的token
 		data.put("token", resData.get("token"));
 		data.put("game", gameRoom.getGame());
 		vo.setData(data);
@@ -892,10 +1010,12 @@ public class GamePlayController {
 		List<String> fangpaoGameIds = new ArrayList<>();
 		List<String> wenzhouGameIds = new ArrayList<>();
 		List<String> dianpaoGameIds = new ArrayList<>();
+		List<String> wenzhouSKGameIds = new ArrayList<>();
 		gameIdMap.put(Game.ruianMajiang, ruianGameIds);
 		gameIdMap.put(Game.fangpaoMajiang, fangpaoGameIds);
 		gameIdMap.put(Game.wenzhouMajiang, wenzhouGameIds);
 		gameIdMap.put(Game.dianpaoMajiang, dianpaoGameIds);
+		gameIdMap.put(Game.wenzhouShuangkou, wenzhouSKGameIds);
 		for (GameRoom room : roomList) {
 			String id = room.getId();
 			roomIds.add(id);
@@ -911,5 +1031,6 @@ public class GamePlayController {
 		fangpaoGameRoomMsgService.removeGameRoom(fangpaoGameIds);
 		wenzhouGameRoomMsgService.removeGameRoom(fangpaoGameIds);
 		dianpaoGameRoomMsgService.removeGameRoom(dianpaoGameIds);
+		wenzhouShuangkouGameRoomMsgService.removeGameRoom(wenzhouSKGameIds);
 	}
 }

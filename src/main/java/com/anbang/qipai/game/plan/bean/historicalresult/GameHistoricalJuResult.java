@@ -4,14 +4,14 @@ import java.util.List;
 
 import com.anbang.qipai.game.plan.bean.games.Game;
 
-public class MajiangHistoricalJuResult {
+public class GameHistoricalJuResult {
 	private String id;
 	private String gameId;
 	private Game game;
 	private String roomNo;
 	private String dayingjiaId;
 	private String datuhaoId;
-	private List<MajiangJuPlayerResult> playerResultList;
+	private List<GameJuPlayerResult> playerResultList;
 	private int lastPanNo;
 	private int panshu;
 	private long finishTime;
@@ -32,11 +32,11 @@ public class MajiangHistoricalJuResult {
 		this.datuhaoId = datuhaoId;
 	}
 
-	public List<MajiangJuPlayerResult> getPlayerResultList() {
+	public List<GameJuPlayerResult> getPlayerResultList() {
 		return playerResultList;
 	}
 
-	public void setPlayerResultList(List<MajiangJuPlayerResult> playerResultList) {
+	public void setPlayerResultList(List<GameJuPlayerResult> playerResultList) {
 		this.playerResultList = playerResultList;
 	}
 

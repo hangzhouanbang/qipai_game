@@ -12,24 +12,24 @@ import com.anbang.qipai.game.msg.channel.sink.FangpaoMajiangResultSink;
 import com.anbang.qipai.game.msg.msjobj.CommonMO;
 import com.anbang.qipai.game.plan.bean.games.Game;
 import com.anbang.qipai.game.plan.bean.games.GameRoom;
-import com.anbang.qipai.game.plan.bean.historicalresult.FangpaoMajiangJuPlayerResult;
-import com.anbang.qipai.game.plan.bean.historicalresult.FangpaoMajiangPanPlayerResult;
-import com.anbang.qipai.game.plan.bean.historicalresult.MajiangHistoricalJuResult;
-import com.anbang.qipai.game.plan.bean.historicalresult.MajiangHistoricalPanResult;
-import com.anbang.qipai.game.plan.bean.historicalresult.MajiangJuPlayerResult;
-import com.anbang.qipai.game.plan.bean.historicalresult.MajiangPanPlayerResult;
+import com.anbang.qipai.game.plan.bean.historicalresult.GameHistoricalJuResult;
+import com.anbang.qipai.game.plan.bean.historicalresult.GameHistoricalPanResult;
+import com.anbang.qipai.game.plan.bean.historicalresult.GameJuPlayerResult;
+import com.anbang.qipai.game.plan.bean.historicalresult.GamePanPlayerResult;
+import com.anbang.qipai.game.plan.bean.historicalresult.majiang.FangpaoMajiangJuPlayerResult;
+import com.anbang.qipai.game.plan.bean.historicalresult.majiang.FangpaoMajiangPanPlayerResult;
 import com.anbang.qipai.game.plan.service.GameService;
-import com.anbang.qipai.game.plan.service.MajiangHistoricalJuResultService;
-import com.anbang.qipai.game.plan.service.MajiangHistoricalPanResultService;
+import com.anbang.qipai.game.plan.service.GameHistoricalJuResultService;
+import com.anbang.qipai.game.plan.service.GameHistoricalPanResultService;
 import com.google.gson.Gson;
 
 @EnableBinding(FangpaoMajiangResultSink.class)
 public class FangpaoMajiangResultMsgReceiver {
 	@Autowired
-	private MajiangHistoricalJuResultService majiangHistoricalResultService;
+	private GameHistoricalJuResultService majiangHistoricalResultService;
 
 	@Autowired
-	private MajiangHistoricalPanResultService majiangHistoricalPanResultService;
+	private GameHistoricalPanResultService majiangHistoricalPanResultService;
 
 	@Autowired
 	private GameService gameService;
@@ -43,7 +43,7 @@ public class FangpaoMajiangResultMsgReceiver {
 		Map map = gson.fromJson(json, Map.class);
 		if ("fangpaomajiang ju result".equals(msg)) {
 			String gameId = (String) map.get("gameId");
-			MajiangHistoricalJuResult majiangHistoricalResult = new MajiangHistoricalJuResult();
+			GameHistoricalJuResult majiangHistoricalResult = new GameHistoricalJuResult();
 			majiangHistoricalResult.setGameId(gameId);
 			GameRoom room = gameService.findRoomByGameAndServerGameGameId(Game.fangpaoMajiang, gameId);
 			majiangHistoricalResult.setRoomNo(room.getNo());
@@ -51,7 +51,7 @@ public class FangpaoMajiangResultMsgReceiver {
 			majiangHistoricalResult.setDayingjiaId((String) map.get("dayingjiaId"));
 			majiangHistoricalResult.setDatuhaoId((String) map.get("datuhaoId"));
 
-			List<MajiangJuPlayerResult> juPlayerResultList = new ArrayList<>();
+			List<GameJuPlayerResult> juPlayerResultList = new ArrayList<>();
 			((List) map.get("playerResultList")).forEach(
 					(juPlayerResult) -> juPlayerResultList.add(new FangpaoMajiangJuPlayerResult((Map) juPlayerResult)));
 			majiangHistoricalResult.setPlayerResultList(juPlayerResultList);
@@ -60,15 +60,15 @@ public class FangpaoMajiangResultMsgReceiver {
 			majiangHistoricalResult.setLastPanNo(((Double) map.get("lastPanNo")).intValue());
 			majiangHistoricalResult.setFinishTime(((Double) map.get("finishTime")).longValue());
 
-			majiangHistoricalResultService.addMajiangHistoricalResult(majiangHistoricalResult);
+			majiangHistoricalResultService.addGameHistoricalResult(majiangHistoricalResult);
 		}
 		if ("fangpaomajiang pan result".equals(msg)) {
 			String gameId = (String) map.get("gameId");
-			MajiangHistoricalPanResult majiangHistoricalResult = new MajiangHistoricalPanResult();
+			GameHistoricalPanResult majiangHistoricalResult = new GameHistoricalPanResult();
 			majiangHistoricalResult.setGameId(gameId);
 			majiangHistoricalResult.setGame(Game.fangpaoMajiang);
 
-			List<MajiangPanPlayerResult> panPlayerResultList = new ArrayList<>();
+			List<GamePanPlayerResult> panPlayerResultList = new ArrayList<>();
 			((List) map.get("playerResultList")).forEach((panPlayerResult) -> panPlayerResultList
 					.add(new FangpaoMajiangPanPlayerResult((Map) panPlayerResult)));
 			majiangHistoricalResult.setPlayerResultList(panPlayerResultList);
@@ -76,7 +76,7 @@ public class FangpaoMajiangResultMsgReceiver {
 			majiangHistoricalResult.setNo(((Double) map.get("no")).intValue());
 			majiangHistoricalResult.setFinishTime(((Double) map.get("finishTime")).longValue());
 
-			majiangHistoricalPanResultService.addMajiangHistoricalResult(majiangHistoricalResult);
+			majiangHistoricalPanResultService.addGameHistoricalResult(majiangHistoricalResult);
 		}
 	}
 }

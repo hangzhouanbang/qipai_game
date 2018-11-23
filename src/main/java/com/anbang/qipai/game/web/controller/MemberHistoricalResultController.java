@@ -17,10 +17,10 @@ import com.anbang.qipai.game.plan.bean.games.Game;
 import com.anbang.qipai.game.plan.bean.games.GameRoom;
 import com.anbang.qipai.game.plan.bean.games.GameServer;
 import com.anbang.qipai.game.plan.bean.games.NoServerAvailableForGameException;
-import com.anbang.qipai.game.plan.bean.historicalresult.MajiangHistoricalJuResult;
+import com.anbang.qipai.game.plan.bean.historicalresult.GameHistoricalJuResult;
 import com.anbang.qipai.game.plan.service.GameService;
-import com.anbang.qipai.game.plan.service.MajiangHistoricalJuResultService;
-import com.anbang.qipai.game.plan.service.MajiangHistoricalPanResultService;
+import com.anbang.qipai.game.plan.service.GameHistoricalJuResultService;
+import com.anbang.qipai.game.plan.service.GameHistoricalPanResultService;
 import com.anbang.qipai.game.plan.service.MemberAuthService;
 import com.anbang.qipai.game.web.vo.CommonVO;
 import com.anbang.qipai.game.web.vo.GameDataReportVO;
@@ -34,10 +34,10 @@ public class MemberHistoricalResultController {
 	private MemberAuthService memberAuthService;
 
 	@Autowired
-	private MajiangHistoricalJuResultService majiangHistoricalResultService;
+	private GameHistoricalJuResultService majiangHistoricalResultService;
 
 	@Autowired
-	private MajiangHistoricalPanResultService majiangHistoricalPanResultService;
+	private GameHistoricalPanResultService majiangHistoricalPanResultService;
 
 	@Autowired
 	private GameDataReportMsgService gameDataReportMsgService;
@@ -61,7 +61,7 @@ public class MemberHistoricalResultController {
 			vo.setMsg("invalid token");
 			return vo;
 		}
-		ListPage listPage = majiangHistoricalResultService.findMajiangHistoricalResultByMemberId(page, size, memberId);
+		ListPage listPage = majiangHistoricalResultService.findGameHistoricalResultByMemberId(page, size, memberId);
 		vo.setSuccess(true);
 		vo.setMsg("majiang historical result");
 		vo.setData(listPage);
@@ -77,8 +77,8 @@ public class MemberHistoricalResultController {
 			vo.setMsg("invalid token");
 			return vo;
 		}
-		MajiangHistoricalJuResult majiangHistoricalResult = majiangHistoricalResultService
-				.findMajiangHistoricalResultById(id);
+		GameHistoricalJuResult majiangHistoricalResult = majiangHistoricalResultService
+				.findGameHistoricalResultById(id);
 		vo.setSuccess(true);
 		vo.setMsg("majiang historical result detail");
 		vo.setData(majiangHistoricalResult);
@@ -95,7 +95,7 @@ public class MemberHistoricalResultController {
 			vo.setMsg("invalid token");
 			return vo;
 		}
-		ListPage listPage = majiangHistoricalPanResultService.findMajiangHistoricalResultByMemberId(page, size, gameId,
+		ListPage listPage = majiangHistoricalPanResultService.findGameHistoricalResultByMemberId(page, size, gameId,
 				game);
 		vo.setSuccess(true);
 		vo.setMsg("majiang historical result");
