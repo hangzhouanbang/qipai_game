@@ -11,6 +11,7 @@ public class RuianMajiangJuPlayerResult implements GameJuPlayerResult {
 	private int huCount;
 	private int caishenCount;
 	private int dapaoCount;
+	private int maxTaishu;
 	private int maxHushu;
 	private int totalScore;
 
@@ -21,6 +22,7 @@ public class RuianMajiangJuPlayerResult implements GameJuPlayerResult {
 		this.huCount = ((Double) juPlayerResult.get("huCount")).intValue();
 		this.caishenCount = ((Double) juPlayerResult.get("caishenCount")).intValue();
 		this.dapaoCount = ((Double) juPlayerResult.get("dapaoCount")).intValue();
+		this.maxTaishu = ((Double) juPlayerResult.get("maxTaishu")).intValue();
 		this.maxHushu = ((Double) juPlayerResult.get("maxHushu")).intValue();
 		this.totalScore = ((Double) juPlayerResult.get("totalScore")).intValue();
 	}
@@ -75,6 +77,14 @@ public class RuianMajiangJuPlayerResult implements GameJuPlayerResult {
 
 	public void setDapaoCount(int dapaoCount) {
 		this.dapaoCount = dapaoCount;
+	}
+
+	public int getMaxTaishu() {
+		return maxTaishu;
+	}
+
+	public void setMaxTaishu(int maxTaishu) {
+		this.maxTaishu = maxTaishu;
 	}
 
 	public int getMaxHushu() {
