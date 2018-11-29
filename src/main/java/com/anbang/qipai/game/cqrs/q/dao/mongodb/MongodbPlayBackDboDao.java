@@ -9,6 +9,7 @@ import org.springframework.stereotype.Component;
 import com.anbang.qipai.game.cqrs.q.dao.PlayBackDboDao;
 import com.anbang.qipai.game.cqrs.q.dao.mongodb.repository.PlayBackDboRepository;
 import com.anbang.qipai.game.cqrs.q.dbo.PlayBackDbo;
+import com.anbang.qipai.game.plan.bean.games.Game;
 
 @Component
 public class MongodbPlayBackDboDao implements PlayBackDboDao {
@@ -27,6 +28,15 @@ public class MongodbPlayBackDboDao implements PlayBackDboDao {
 	@Override
 	public PlayBackDbo findById(String id) {
 		Query query = new Query(Criteria.where("id").is(id));
+		return mongoTemplate.findOne(query, PlayBackDbo.class);
+	}
+
+	@Override
+	public PlayBackDbo findByGameAndGameIdAndPanNo(Game game, String gameId, int panNo) {
+		Query query = new Query();
+		query.addCriteria(Criteria.where("game").is(game));
+		query.addCriteria(Criteria.where("gameId").is(gameId));
+		query.addCriteria(Criteria.where("panNo").is(panNo));
 		return mongoTemplate.findOne(query, PlayBackDbo.class);
 	}
 

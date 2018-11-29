@@ -33,8 +33,8 @@ public class MongodbGameHistoricalJuResultDao implements GameHistoricalJuResultD
 
 	@Override
 	public List<GameHistoricalJuResult> findGameHistoricalResultByMemberId(int page, int size, String memberId) {
-		Query query = new Query(Criteria.where("playerResultList").elemMatch(Criteria.where("playerId").is(memberId)));
-		Sort sort = new Sort(new Order(Direction.DESC, "id"));
+		Query query = new Query(Criteria.where("playerResultList.playerId").is(memberId));
+		Sort sort = new Sort(new Order(Direction.DESC, "finishTime"));
 		query.with(sort);
 		query.skip((page - 1) * size);
 		query.limit(size);
@@ -43,7 +43,7 @@ public class MongodbGameHistoricalJuResultDao implements GameHistoricalJuResultD
 
 	@Override
 	public long getAmountByMemberId(String memberId) {
-		Query query = new Query(Criteria.where("playerResultList").elemMatch(Criteria.where("playerId").is(memberId)));
+		Query query = new Query(Criteria.where("playerResultList.playerId").is(memberId));
 		return mongoTemplate.count(query, GameHistoricalJuResult.class);
 	}
 

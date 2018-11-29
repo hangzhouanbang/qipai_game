@@ -18,9 +18,9 @@ import com.anbang.qipai.game.plan.bean.games.GameRoom;
 import com.anbang.qipai.game.plan.bean.games.GameServer;
 import com.anbang.qipai.game.plan.bean.games.NoServerAvailableForGameException;
 import com.anbang.qipai.game.plan.bean.historicalresult.GameHistoricalJuResult;
-import com.anbang.qipai.game.plan.service.GameService;
 import com.anbang.qipai.game.plan.service.GameHistoricalJuResultService;
 import com.anbang.qipai.game.plan.service.GameHistoricalPanResultService;
+import com.anbang.qipai.game.plan.service.GameService;
 import com.anbang.qipai.game.plan.service.MemberAuthService;
 import com.anbang.qipai.game.web.vo.CommonVO;
 import com.anbang.qipai.game.web.vo.GameDataReportVO;
@@ -63,7 +63,7 @@ public class MemberHistoricalResultController {
 		}
 		ListPage listPage = majiangHistoricalResultService.findGameHistoricalResultByMemberId(page, size, memberId);
 		vo.setSuccess(true);
-		vo.setMsg("majiang historical result");
+		vo.setMsg("historical result");
 		vo.setData(listPage);
 		return vo;
 	}
@@ -80,7 +80,7 @@ public class MemberHistoricalResultController {
 		GameHistoricalJuResult majiangHistoricalResult = majiangHistoricalResultService
 				.findGameHistoricalResultById(id);
 		vo.setSuccess(true);
-		vo.setMsg("majiang historical result detail");
+		vo.setMsg("historical result detail");
 		vo.setData(majiangHistoricalResult);
 		return vo;
 	}
@@ -98,7 +98,7 @@ public class MemberHistoricalResultController {
 		ListPage listPage = majiangHistoricalPanResultService.findGameHistoricalResultByMemberId(page, size, gameId,
 				game);
 		vo.setSuccess(true);
-		vo.setMsg("majiang historical result");
+		vo.setMsg("historical result");
 		vo.setData(listPage);
 		return vo;
 	}
@@ -140,6 +140,15 @@ public class MemberHistoricalResultController {
 		if (memberId == null) {
 			vo.setSuccess(false);
 			vo.setMsg("invalid token");
+			return vo;
+		}
+		PlayBackDbo playBackDbo = playBackDboService.findByGameAndGameIdAndPanNo(game, gameId, panNo);
+		if (playBackDbo != null) {
+			Map data = new HashMap();
+			data.put("code", playBackDbo.getId());
+			vo.setSuccess(true);
+			vo.setMsg("playbackcode");
+			vo.setData(data);
 			return vo;
 		}
 		Integer code = playBackCodeCmdService.getPlayBackCode();
