@@ -23,7 +23,7 @@ public class WzskLawsFB {
 			if (lawName.equals("bj")) {// 八局
 				panshu = "8";
 			} else if (lawName.equals("ssj")) {// 三十局
-				panshu = "12";
+				panshu = "30";
 			} else if (lawName.equals("sj")) {// 四局
 				panshu = "4";
 			} else if (lawName.equals("slj")) {// 十六局
