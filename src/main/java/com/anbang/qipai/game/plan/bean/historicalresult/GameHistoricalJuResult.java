@@ -8,13 +8,13 @@ public class GameHistoricalJuResult {
 	private String id;
 	private String gameId;
 	private Game game;
-	private String roomNo;
-	private String dayingjiaId;
-	private String datuhaoId;
-	private List<GameJuPlayerResult> playerResultList;
-	private int lastPanNo;
-	private int panshu;
-	private long finishTime;
+    private String roomNo;
+    private String dayingjiaId;
+    private String datuhaoId;
+    private List<GameJuPlayerResult> playerResultList;
+    private int lastPanNo;
+    private int panshu;
+    private long finishTime;
 
 	public String getDayingjiaId() {
 		return dayingjiaId;

@@ -22,4 +22,11 @@ public class CommonMO {
 		this.data = data;
 	}
 
+    public CommonMO() {
+    }
+
+    public CommonMO(String msg, Object data) {
+        this.msg = msg;
+        this.data = data;
+    }
 }
