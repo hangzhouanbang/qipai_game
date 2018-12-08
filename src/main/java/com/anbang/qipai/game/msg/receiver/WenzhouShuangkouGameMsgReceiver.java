@@ -55,7 +55,7 @@ public class WenzhouShuangkouGameMsgReceiver {
 				}
 				gameService.saveGameRoom(room);
 			}
-			gameService.wenzhouMajiangPlayerQuitQame(gameId, playerId);
+			gameService.wenzhouShuangkouPlayerQuitQame(gameId, playerId);
 		}
 
 		if ("ju finished".equals(msg)) {// 一局游戏结束

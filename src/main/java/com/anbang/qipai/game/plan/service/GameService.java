@@ -526,6 +526,10 @@ public class GameService {
 		memberGameRoomDao.remove(Game.wenzhouMajiang, serverGameId, playerId);
 	}
 
+	public void wenzhouShuangkouPlayerQuitQame(String serverGameId, String playerId) {
+		memberGameRoomDao.remove(Game.wenzhouShuangkou, serverGameId, playerId);
+	}
+
 	public void expireMemberGameRoom(Game game, String serverGameId) {
 		memberGameRoomDao.removeExpireRoom(game, serverGameId);
 	}
