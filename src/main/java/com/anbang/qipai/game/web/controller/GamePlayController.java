@@ -595,7 +595,6 @@ public class GamePlayController {
 		// 根据memberId查询到member
 		Member member = memberService.findMember(memberId);
 		// 得到member中的会员权益
-		MemberRights rights = member.getRights();
 		Map data = new HashMap();
 		GameRoom gameRoom;
 		try {
@@ -622,8 +621,9 @@ public class GamePlayController {
 			return vo;
 		}
 
+		WzskLawsFB fb = new WzskLawsFB(lawNames);
 		// 普通会员每日开房（vip房）金币价格
-		int gold = rights.getPlanMemberCreateRoomDailyGoldPrice();
+		int gold = fb.payForCreateRoom();
 		// 房主玩家记录
 		List<PlayersRecord> playersRecord = new ArrayList<>();
 		// 玩家记录存入gameRoom
@@ -638,7 +638,6 @@ public class GamePlayController {
 
 		GameServer gameServer = gameRoom.getServerGame().getServer();
 		// 游戏服务器rpc，需要手动httpclientrpc
-		WzskLawsFB fb = new WzskLawsFB(lawNames);
 		// 远程调用游戏服务器的newgame
 		Request req = httpClient.newRequest(gameServer.getHttpUrl() + "/game/newgame");
 		req.param("playerId", memberId);
@@ -774,8 +773,13 @@ public class GamePlayController {
 			vo.setMsg("InsufficientBalanceException");
 			return vo;
 		}
+		List<String> lawNames = new ArrayList<>();
+		List<GameLaw> laws = gameRoom.getLaws();
+		// 构建list laws
+		laws.forEach((law) -> lawNames.add(law.getName()));
+		WzskLawsFB fb = new WzskLawsFB(lawNames);
 		int balance = memberGoldBalance.getBalanceAfter();
-		if (gameRoom.isVip() && !member.isVip() && balance < rights.getPlanMemberJoinRoomGoldPrice()) {
+		if (gameRoom.isVip() && !member.isVip() && balance < fb.payForJoinRoom()) {
 			vo.setSuccess(false);
 			vo.setMsg("InsufficientBalanceException");
 			return vo;
@@ -804,7 +808,7 @@ public class GamePlayController {
 			return vo;
 		}
 
-		int gold = rights.getPlanMemberJoinRoomGoldPrice();
+		int gold = fb.payForJoinRoom();
 		// 加入房间玩家记录,列表从第一开始，第0个是房主
 		List<PlayersRecord> playersRecord = gameRoom.getPlayersRecord();
 		PlayersRecord record = new PlayersRecord();
