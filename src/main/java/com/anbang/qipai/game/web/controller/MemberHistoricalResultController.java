@@ -230,4 +230,18 @@ public class MemberHistoricalResultController {
 			gameDataReportMsgService.recordGameDataReport(report);
 		}
 	}
+
+	/**
+	 * 后台查询最近20条历史战绩
+	 */
+	@RequestMapping(value = "/query_historicalrecord")
+	public CommonVO queryHistoricalRecord(@RequestParam(name = "page", defaultValue = "1") Integer page,
+										  @RequestParam(name = "size", defaultValue = "20") Integer size, String memberId) {
+		CommonVO vo = new CommonVO();
+		ListPage listPage = majiangHistoricalResultService.findGameHistoricalResultByMemberId(page, size, memberId);
+		vo.setSuccess(true);
+		vo.setMsg("historical result");
+		vo.setData(listPage);
+		return vo;
+	}
 }
