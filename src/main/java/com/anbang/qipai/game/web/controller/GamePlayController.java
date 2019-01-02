@@ -711,7 +711,6 @@ public class GamePlayController {
 			return vo;
 		}
 		Member member = memberService.findMember(memberId);
-		MemberRights rights = member.getRights();
 
 		GameRoom gameRoom = gameService.findRoomOpen(roomNo);
 		if (gameRoom == null) {
