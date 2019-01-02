@@ -18,6 +18,14 @@ public class WzskLawsFB {
 	private String shuangming = "false";
 	private String fengding = "false";
 
+	public WzskLawsFB() {
+		panshu = " ";
+		renshu = " ";
+		bx = " ";
+		chapai = " ";
+		fapai = " ";
+	}
+
 	public WzskLawsFB(List<String> lawNames) {
 		lawNames.forEach((lawName) -> {
 			if (lawName.equals("bj")) {// 八局

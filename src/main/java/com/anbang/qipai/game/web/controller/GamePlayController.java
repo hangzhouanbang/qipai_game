@@ -773,11 +773,14 @@ public class GamePlayController {
 			vo.setMsg("InsufficientBalanceException");
 			return vo;
 		}
-		List<String> lawNames = new ArrayList<>();
-		List<GameLaw> laws = gameRoom.getLaws();
-		// 构建list laws
-		laws.forEach((law) -> lawNames.add(law.getName()));
-		WzskLawsFB fb = new WzskLawsFB(lawNames);
+		WzskLawsFB fb = new WzskLawsFB();
+		if (gameRoom.getGame().equals(Game.wenzhouShuangkou)) {
+			List<String> lawNames = new ArrayList<>();
+			List<GameLaw> laws = gameRoom.getLaws();
+			// 构建list laws
+			laws.forEach((law) -> lawNames.add(law.getName()));
+			fb = new WzskLawsFB(lawNames);
+		}
 		int balance = memberGoldBalance.getBalanceAfter();
 		if (gameRoom.isVip() && !member.isVip() && balance < fb.payForJoinRoom()) {
 			vo.setSuccess(false);
