@@ -49,7 +49,7 @@ public class RuianMajiangGameMsgReceiver {
 					if (playersRecord.get(i).getPlayerId().equals(playerId)) {
 						// 退出玩家花费的玉石
 						int amount = playersRecord.get(i).getPayGold();
-						qipaiMembersRomoteService.gold_givegoldtomember(playerId, amount, "back gold to leave home");
+						qipaiMembersRomoteService.gold_givegoldtomember(playerId, amount, "back gold to leave game");
 						// 删除玩家记录
 						playersRecord.remove(i);
 					}
