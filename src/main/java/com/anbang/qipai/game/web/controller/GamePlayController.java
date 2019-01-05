@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.anbang.qipai.game.msg.service.*;
 import org.eclipse.jetty.client.HttpClient;
 import org.eclipse.jetty.client.api.ContentResponse;
 import org.eclipse.jetty.client.api.Request;
@@ -16,12 +17,6 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.anbang.qipai.game.cqrs.c.service.GameRoomCmdService;
-import com.anbang.qipai.game.msg.service.DianpaoGameRoomMsgService;
-import com.anbang.qipai.game.msg.service.FangpaoGameRoomMsgService;
-import com.anbang.qipai.game.msg.service.GameServerMsgService;
-import com.anbang.qipai.game.msg.service.RuianGameRoomMsgService;
-import com.anbang.qipai.game.msg.service.WenzhouGameRoomMsgService;
-import com.anbang.qipai.game.msg.service.WenzhouShuangkouGameRoomMsgService;
 import com.anbang.qipai.game.plan.bean.games.CanNotJoinMoreRoomsException;
 import com.anbang.qipai.game.plan.bean.games.Game;
 import com.anbang.qipai.game.plan.bean.games.GameLaw;
@@ -103,6 +98,9 @@ public class GamePlayController {
 
 	@Autowired
 	private MemberLoginLimitRecordService memberLoginLimitRecordService;
+
+	@Autowired
+	private RoomManageMsgService roomManageMsgService;
 
 	@Autowired
 	private HttpClient httpClient;
@@ -209,6 +207,8 @@ public class GamePlayController {
 		gameRoom.setNo(roomNo);
 
 		gameService.createGameRoom(gameRoom);
+		//发送房间创建消息
+		roomManageMsgService.creatRoom(gameRoom);
 
 		data.put("httpUrl", gameRoom.getServerGame().getServer().getHttpUrl());
 		data.put("wsUrl", gameRoom.getServerGame().getServer().getWsUrl());
@@ -322,6 +322,8 @@ public class GamePlayController {
 		gameRoom.setNo(roomNo);
 
 		gameService.createGameRoom(gameRoom);
+		//发送房间创建消息
+		roomManageMsgService.creatRoom(gameRoom);
 
 		data.put("httpUrl", gameRoom.getServerGame().getServer().getHttpUrl());
 		data.put("wsUrl", gameRoom.getServerGame().getServer().getWsUrl());
@@ -436,6 +438,8 @@ public class GamePlayController {
 		gameRoom.setNo(roomNo);
 
 		gameService.createGameRoom(gameRoom);
+		//发送房间创建消息
+		roomManageMsgService.creatRoom(gameRoom);
 
 		data.put("httpUrl", gameRoom.getServerGame().getServer().getHttpUrl());
 		data.put("wsUrl", gameRoom.getServerGame().getServer().getWsUrl());
@@ -557,6 +561,8 @@ public class GamePlayController {
 
 		// 将带roomNo的gameRoom写入数据库
 		gameService.createGameRoom(gameRoom);
+		//发送房间创建消息
+		roomManageMsgService.creatRoom(gameRoom);
 
 		data.put("httpUrl", gameRoom.getServerGame().getServer().getHttpUrl());
 		data.put("wsUrl", gameRoom.getServerGame().getServer().getWsUrl());
@@ -678,6 +684,8 @@ public class GamePlayController {
 
 		// 将带roomNo的gameRoom写入数据库
 		gameService.createGameRoom(gameRoom);
+		//发送房间创建消息
+		roomManageMsgService.creatRoom(gameRoom);
 
 		data.put("httpUrl", gameRoom.getServerGame().getServer().getHttpUrl());
 		data.put("wsUrl", gameRoom.getServerGame().getServer().getWsUrl());
@@ -830,6 +838,8 @@ public class GamePlayController {
 		}
 
 		gameService.joinGameRoom(gameRoom, memberId);
+		//发送房间更新消息
+		roomManageMsgService.updatePlayer(gameRoom);
 
 		Map data = new HashMap();
 		data.put("httpUrl", gameRoom.getServerGame().getServer().getHttpUrl());
