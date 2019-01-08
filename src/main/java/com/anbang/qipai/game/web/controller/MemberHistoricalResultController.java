@@ -3,6 +3,8 @@ package com.anbang.qipai.game.web.controller;
 import java.util.HashMap;
 import java.util.Map;
 
+import com.anbang.qipai.game.remote.vo.CommonRemoteVO;
+import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -243,5 +245,66 @@ public class MemberHistoricalResultController {
 		vo.setMsg("historical result");
 		vo.setData(listPage);
 		return vo;
+	}
+
+	/**
+	 *  返回码查询 - rpc
+	 * @param game
+	 * @param gameId
+	 * @param panNo
+	 * @return
+	 */
+	@RequestMapping(value = "/query_backcode")
+	public CommonRemoteVO queryBackcode (Game game, String gameId, Integer panNo) {
+		CommonRemoteVO remoteVO = new CommonRemoteVO();
+		PlayBackDbo playBackDbo = playBackDboService.findByGameAndGameIdAndPanNo(game, gameId, panNo);
+		remoteVO.setSuccess(true);
+		if (playBackDbo != null) {
+			remoteVO.setMsg("existing");
+			remoteVO.setData(playBackDbo.getId());
+			return remoteVO;
+		}
+		remoteVO.setMsg("null");
+		remoteVO.setData(null);
+		return remoteVO;
+	}
+
+	/**
+	 * 返回码获取 - rpc
+	 * @param game
+	 * @param gameId
+	 * @param panNo
+	 * @return
+	 */
+	@RequestMapping(value = "/get_backcode")
+	public CommonRemoteVO getBackcode (Game game, String gameId, int panNo) {
+		CommonRemoteVO remoteVO = new CommonRemoteVO();
+		PlayBackDbo playBackDbo = playBackDboService.findByGameAndGameIdAndPanNo(game, gameId, panNo);
+		if (playBackDbo != null) {
+			remoteVO.setSuccess(true);
+			remoteVO.setMsg("existing");
+			remoteVO.setData(playBackDbo.getId());
+			return remoteVO;
+		}
+		Integer code = playBackCodeCmdService.getPlayBackCode();
+		int size = code.toString().length();
+		String newCode = "";
+		int i = 6 - size;
+		while (i > 0) {
+			newCode += "0";
+			i--;
+		}
+		newCode += code.toString();
+		PlayBackDbo dbo = new PlayBackDbo();
+		dbo.setId(newCode);
+		dbo.setGame(game);
+		dbo.setGameId(gameId);
+		dbo.setPanNo(panNo);
+		playBackDboService.save(dbo);
+
+		remoteVO.setSuccess(true);
+		remoteVO.setMsg("newCode");
+		remoteVO.setData(newCode);
+		return remoteVO;
 	}
 }
