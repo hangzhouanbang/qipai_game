@@ -2,6 +2,7 @@ package com.anbang.qipai.game.plan.dao.mongodb;
 
 import java.util.List;
 
+import com.anbang.qipai.game.plan.bean.games.MemberGameRoom;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
@@ -89,4 +90,9 @@ public class MongodbGameRoomDao implements GameRoomDao {
 		return mongoTemplate.findOne(query, GameRoom.class);
 	}
 
+	@Override
+	public List<GameRoom> robotTest() {
+		Query query = new Query(Criteria.where("finished").is(false));
+		return mongoTemplate.find(query,GameRoom.class);
+	}
 }

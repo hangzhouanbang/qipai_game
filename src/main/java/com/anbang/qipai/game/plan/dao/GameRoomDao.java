@@ -22,4 +22,6 @@ public interface GameRoomDao {
 	void updateFinishGameRoom(Game game, String serverGameId, boolean finished);
 
 	void updateGameRoomCurrentPanNum(Game game, String serverGameId, int no);
+
+	List<GameRoom> robotTest();
 }

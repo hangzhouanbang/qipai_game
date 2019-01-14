@@ -3,6 +3,11 @@ package com.anbang.qipai.game.web.controller;
 import java.util.HashMap;
 import java.util.Map;
 
+import com.anbang.qipai.game.plan.bean.games.GameServer;
+import com.anbang.qipai.game.plan.bean.games.MemberGameRoom;
+import com.anbang.qipai.game.plan.dao.GameRoomDao;
+import com.anbang.qipai.game.plan.dao.MemberGameRoomDao;
+import com.anbang.qipai.game.plan.service.GameService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -38,9 +43,12 @@ public class HallController {
 	@Autowired
 	private MemberLoginLimitRecordService memberLoginLimitRecordService;
 
+	@Autowired
+	private GameService gameService;
+
 	/**
 	 * 大厅首页
-	 * 
+	 * last
 	 * @param token
 	 * @return
 	 */
@@ -75,6 +83,14 @@ public class HallController {
 			mm.put("verifyUser", memberRemoteVO.isVerifyUser());
 			mm.put("bindAgent", memberRemoteVO.isBindAgent());
 		}
+		return vo;
+	}
+
+	@RequestMapping(value = "/findroom")
+	@ResponseBody
+	public CommonVO findRoom(){
+		CommonVO vo = new CommonVO();
+		vo.setData(gameService.robotTest());
 		return vo;
 	}
 

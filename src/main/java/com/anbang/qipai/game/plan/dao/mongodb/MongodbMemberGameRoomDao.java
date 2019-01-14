@@ -21,64 +21,65 @@ import com.anbang.qipai.game.plan.dao.mongodb.repository.MemberGameRoomRepositor
 @Component
 public class MongodbMemberGameRoomDao implements MemberGameRoomDao {
 
-	@Autowired
-	private MemberGameRoomRepository repository;
+    @Autowired
+    private MemberGameRoomRepository repository;
 
-	@Autowired
-	private MongoTemplate mongoTemplate;
+    @Autowired
+    private MongoTemplate mongoTemplate;
 
-	@Override
-	public void save(MemberGameRoom memberGameRoom) {
-		repository.save(memberGameRoom);
-	}
+    @Override
+    public void save(MemberGameRoom memberGameRoom) {
+        repository.save(memberGameRoom);
+    }
 
-	@Override
-	public int count(String memberId) {
-		Query query = new Query();
-		Criteria criteria = new Criteria();
-		criteria.andOperator(Criteria.where("memberId").is(memberId));
-		query.addCriteria(criteria);
-		return (int) mongoTemplate.count(query, MemberGameRoom.class);
-	}
+    @Override
+    public int count(String memberId) {
+        Query query = new Query();
+        Criteria criteria = new Criteria();
+        criteria.andOperator(Criteria.where("memberId").is(memberId));
+        query.addCriteria(criteria);
+        return (int) mongoTemplate.count(query, MemberGameRoom.class);
+    }
 
-	@Override
-	public MemberGameRoom findByMemberIdAndGameRoomId(String memberId, String gameRoomId) {
-		Query query = new Query();
-		Criteria criteria = new Criteria();
-		criteria.andOperator(Criteria.where("memberId").is(memberId),
-				Criteria.where("gameRoom.id").is(new ObjectId(gameRoomId)));
-		query.addCriteria(criteria);
-		return mongoTemplate.findOne(query, MemberGameRoom.class);
-	}
+    @Override
+    public MemberGameRoom findByMemberIdAndGameRoomId(String memberId, String gameRoomId) {
+        Query query = new Query();
+        Criteria criteria = new Criteria();
+        criteria.andOperator(Criteria.where("memberId").is(memberId),
+                Criteria.where("gameRoom.id").is(new ObjectId(gameRoomId)));
+        query.addCriteria(criteria);
+        return mongoTemplate.findOne(query, MemberGameRoom.class);
+    }
 
-	@Override
-	public void remove(Game game, String serverGameId, String memberId) {
-		repository.deleteByMemberIdAndGameRoomGameAndGameRoomServerGameGameId(memberId, game, serverGameId);
-	}
+    @Override
+    public void remove(Game game, String serverGameId, String memberId) {
+        repository.deleteByMemberIdAndGameRoomGameAndGameRoomServerGameGameId(memberId, game, serverGameId);
+    }
 
-	@Override
-	public List<MemberGameRoom> findMemberGameRoomByMemberId(String memberId) {
-		Query query = new Query(Criteria.where("memberId").is(memberId));
-		query.with(new Sort(new Order(Direction.DESC, "gameRoom.createTime")));
-		return mongoTemplate.find(query, MemberGameRoom.class);
-	}
+    @Override
+    public List<MemberGameRoom> findMemberGameRoomByMemberId(String memberId) {
+        Query query = new Query(Criteria.where("memberId").is(memberId));
+        query.with(new Sort(new Order(Direction.DESC, "gameRoom.createTime")));
+        return mongoTemplate.find(query, MemberGameRoom.class);
+    }
 
-	@Override
-	public void removeExpireRoom(Game game, String serverGameId) {
-		Query query = new Query();
-		query.addCriteria(Criteria.where("gameRoom.game").is(game));
-		query.addCriteria(Criteria.where("gameRoom.serverGame.gameId").is(serverGameId));
-		mongoTemplate.remove(query, MemberGameRoom.class);
-	}
+    @Override
+    public void removeExpireRoom(Game game, String serverGameId) {
+        Query query = new Query();
+        query.addCriteria(Criteria.where("gameRoom.game").is(game));
+        query.addCriteria(Criteria.where("gameRoom.serverGame.gameId").is(serverGameId));
+        mongoTemplate.remove(query, MemberGameRoom.class);
+    }
 
-	@Override
-	public void updateMemberGameRoomCurrentPanNum(Game game, String serverGameId, List<String> playerIds, int no) {
-		Query query = new Query(Criteria.where("memberId").in(playerIds));
-		query.addCriteria(Criteria.where("gameRoom.game").is(game)
-				.andOperator(Criteria.where("gameRoom.serverGame.gameId").is(serverGameId)));
-		Update update = new Update();
-		update.set("gameRoom.currentPanNum", no);
-		mongoTemplate.updateMulti(query, update, MemberGameRoom.class);
-	}
+    @Override
+    public void updateMemberGameRoomCurrentPanNum(Game game, String serverGameId, List<String> playerIds, int no) {
+        Query query = new Query(Criteria.where("memberId").in(playerIds));
+        query.addCriteria(Criteria.where("gameRoom.game").is(game)
+                .andOperator(Criteria.where("gameRoom.serverGame.gameId").is(serverGameId)));
+        Update update = new Update();
+        update.set("gameRoom.currentPanNum", no);
+        mongoTemplate.updateMulti(query, update, MemberGameRoom.class);
+    }
+
 
 }
