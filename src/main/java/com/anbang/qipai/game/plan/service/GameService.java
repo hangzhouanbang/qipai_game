@@ -5,6 +5,9 @@ import java.util.Date;
 import java.util.List;
 import java.util.Random;
 
+import com.anbang.qipai.game.web.vo.MemberGameRoomVO;
+import com.anbang.qipai.game.web.vo.RobotRoomVO;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cloud.stream.annotation.EnableBinding;
 import org.springframework.messaging.support.MessageBuilder;
@@ -582,8 +585,22 @@ public class GameService {
         }
     }
 
-    public List<GameRoom> robotTest() {
-        return gameRoomDao.robotTest();
+    public List<RobotRoomVO> robotTest() {
+        List<GameRoom> gameRooms = gameRoomDao.robotTest();
+        if (gameRooms == null) {
+            return null;
+        }
+        List<RobotRoomVO> gameRoomVOList = new ArrayList<>();
+        for (GameRoom gameRoom : gameRooms) {
+            int number = gameRoom.getPlayersRecord().size();
+            int count = gameRoom.getPlayersCount();
+            if (number < count) {
+                RobotRoomVO robotRoomVO = new RobotRoomVO();
+                BeanUtils.copyProperties(gameRoom, robotRoomVO);
+                gameRoomVOList.add(robotRoomVO);
+            }
+        }
+        return gameRoomVOList;
     }
 
 
