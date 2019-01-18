@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.anbang.qipai.game.constant.GameConstant;
 import com.anbang.qipai.game.msg.service.*;
 import org.eclipse.jetty.client.HttpClient;
 import org.eclipse.jetty.client.api.ContentResponse;
@@ -704,7 +705,7 @@ public class GamePlayController {
 	 */
 	@RequestMapping(value = "/join_room")
 	@ResponseBody
-	public CommonVO joinRoom(String token, String roomNo) {
+	public CommonVO joinRoom(String token, String roomNo, String joinType) {
 		CommonVO vo = new CommonVO();
 		String memberId = memberAuthService.getMemberIdBySessionId(token);
 		if (memberId == null) {
@@ -727,6 +728,45 @@ public class GamePlayController {
 			return vo;
 		}
 		String serverGameId = gameRoom.getServerGame().getGameId();
+
+		//判断是否进入观战模式
+		if (GameConstant.JOIN_TYPE.equals(joinType)) {
+			GameServer gameServer = gameRoom.getServerGame().getServer();
+			Request req = httpClient.newRequest(gameServer.getHttpUrl() + "/game/joinwatch");
+			req.param("playerId", memberId);
+			req.param("gameId", serverGameId);
+			Map resData;
+			try {
+				ContentResponse res = req.send();
+				String resJson = new String(res.getContent());
+				CommonVO resVo = gson.fromJson(resJson, CommonVO.class);
+				if (resVo.isSuccess()) {
+					resData = (Map) resVo.getData();
+				} else {
+					vo.setSuccess(false);
+					vo.setMsg(resVo.getMsg());
+					return vo;
+				}
+			} catch (Exception e) {
+				vo.setSuccess(false);
+				vo.setMsg("SysException");
+				return vo;
+			}
+			Map data = new HashMap();
+			data.put("httpUrl", gameRoom.getServerGame().getServer().getHttpUrl());
+			data.put("wsUrl", gameRoom.getServerGame().getServer().getWsUrl());
+			data.put("roomNo", gameRoom.getNo());
+			data.put("token", resData.get("token"));
+			data.put("gameId", serverGameId);
+			data.put("game", gameRoom.getGame());
+			vo.setData(data);
+			return vo;
+		} else if (gameRoom.getPlayersRecord().size() == gameRoom.getPlayersCount() &&
+				gameRoom.getPlayersRecord().stream().noneMatch(p -> p.getPlayerId().equals(memberId))) {
+			vo.setSuccess(false);
+			vo.setMsg("room is full");
+			return vo;
+		}
 
 		// 处理如果是自己暂时离开的房间
 		MemberGameRoom memberGameRoom = gameService.findMemberGameRoom(memberId, gameRoom.getId());
