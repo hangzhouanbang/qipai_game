@@ -51,7 +51,11 @@ public class HallWsController extends TextWebSocketHandler {
 			CommonMO mo = gson.fromJson(message.getPayload(), CommonMO.class);
 			String msg = mo.getMsg();
 			if ("heartbeat".equals(msg)) {// 心跳
-				processHeartbeat(session, mo.getData());
+				synchronized (session) {
+					if (session.isOpen()) {
+						processHeartbeat(session, mo.getData());
+					}
+				}
 			} else {
 			}
 		});
@@ -65,7 +69,9 @@ public class HallWsController extends TextWebSocketHandler {
 
 	@Override
 	public void afterConnectionClosed(WebSocketSession session, CloseStatus status) throws Exception {
-		wsNotifier.removeSession(session.getId());
+		synchronized (session) {
+			wsNotifier.removeSession(session.getId());
+		}
 	}
 
 	@Override
