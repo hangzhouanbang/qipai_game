@@ -730,7 +730,7 @@ public class GamePlayController {
 		String serverGameId = gameRoom.getServerGame().getGameId();
 
 		//判断是否进入观战模式
-		if (GameConstant.JOIN_TYPE.equals(joinType)) {
+		if (GameConstant.JoinType.WATCH.equals(joinType)) {
 			GameServer gameServer = gameRoom.getServerGame().getServer();
 			Request req = httpClient.newRequest(gameServer.getHttpUrl() + "/game/joinwatch");
 			req.param("playerId", memberId);
@@ -761,12 +761,14 @@ public class GamePlayController {
 			data.put("game", gameRoom.getGame());
 			vo.setData(data);
 			return vo;
-		} else if (gameRoom.getPlayersRecord().size() == gameRoom.getPlayersCount() &&
-				gameRoom.getPlayersRecord().stream().noneMatch(p -> p.getPlayerId().equals(memberId))) {
-			vo.setSuccess(false);
-			vo.setMsg("room is full");
-			return vo;
 		}
+		//todo
+//		else if (gameRoom.getPlayersRecord().size() == gameRoom.getPlayersCount() &&
+//				gameRoom.getPlayersRecord().stream().noneMatch(p -> p.getPlayerId().equals(memberId))) {
+//			vo.setSuccess(false);
+//			vo.setMsg("room is full");
+//			return vo;
+//		}
 
 		// 处理如果是自己暂时离开的房间
 		MemberGameRoom memberGameRoom = gameService.findMemberGameRoom(memberId, gameRoom.getId());
