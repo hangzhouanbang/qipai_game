@@ -85,13 +85,6 @@ public class HallController {
 		}
 		return vo;
 	}
-
-	@RequestMapping(value = "/findroom")
-	@ResponseBody
-	public CommonVO findRoom(){
-		CommonVO vo = new CommonVO();
-		vo.setData(gameService.robotTest());
-		return vo;
-	}
+	
 
 }
