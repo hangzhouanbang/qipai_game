@@ -6,5 +6,8 @@ package com.anbang.qipai.game.constant;
 public class GameConstant {
 
     // 加入房间的操作码判断
-    public static final String JOIN_TYPE = "watch";
+    public static final class JoinType {
+        public static final String WATCH = "watch";
+    }
+
 }
