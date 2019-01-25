@@ -762,13 +762,6 @@ public class GamePlayController {
 			vo.setData(data);
 			return vo;
 		}
-		//todo
-//		else if (gameRoom.getPlayersRecord().size() == gameRoom.getPlayersCount() &&
-//				gameRoom.getPlayersRecord().stream().noneMatch(p -> p.getPlayerId().equals(memberId))) {
-//			vo.setSuccess(false);
-//			vo.setMsg("room is full");
-//			return vo;
-//		}
 
 		// 处理如果是自己暂时离开的房间
 		MemberGameRoom memberGameRoom = gameService.findMemberGameRoom(memberId, gameRoom.getId());
