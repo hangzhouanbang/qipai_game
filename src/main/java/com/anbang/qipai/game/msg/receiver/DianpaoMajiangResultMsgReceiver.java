@@ -47,26 +47,28 @@ public class DianpaoMajiangResultMsgReceiver {
 			Object dthId = map.get("datuhaoId");
 			if (gid != null && dyjId != null && dthId != null) {
 				String gameId = (String) gid;
-				GameHistoricalJuResult majiangHistoricalResult = new GameHistoricalJuResult();
-				majiangHistoricalResult.setGameId(gameId);
 				GameRoom room = gameService.findRoomByGameAndServerGameGameId(Game.dianpaoMajiang, gameId);
-				majiangHistoricalResult.setRoomNo(room.getNo());
-				majiangHistoricalResult.setGame(Game.dianpaoMajiang);
-				majiangHistoricalResult.setDayingjiaId((String) dyjId);
-				majiangHistoricalResult.setDatuhaoId((String) dthId);
+				if (room != null) {
+					GameHistoricalJuResult majiangHistoricalResult = new GameHistoricalJuResult();
+					majiangHistoricalResult.setGameId(gameId);
+					majiangHistoricalResult.setRoomNo(room.getNo());
+					majiangHistoricalResult.setGame(Game.dianpaoMajiang);
+					majiangHistoricalResult.setDayingjiaId((String) dyjId);
+					majiangHistoricalResult.setDatuhaoId((String) dthId);
 
-				Object playerList = map.get("playerResultList");
-				if (playerList != null) {
-					List<GameJuPlayerResult> juPlayerResultList = new ArrayList<>();
-					((List) playerList).forEach((juPlayerResult) -> juPlayerResultList
-							.add(new DianpaoMajiangJuPlayerResult((Map) juPlayerResult)));
-					majiangHistoricalResult.setPlayerResultList(juPlayerResultList);
+					Object playerList = map.get("playerResultList");
+					if (playerList != null) {
+						List<GameJuPlayerResult> juPlayerResultList = new ArrayList<>();
+						((List) playerList).forEach((juPlayerResult) -> juPlayerResultList
+								.add(new DianpaoMajiangJuPlayerResult((Map) juPlayerResult)));
+						majiangHistoricalResult.setPlayerResultList(juPlayerResultList);
 
-					majiangHistoricalResult.setPanshu(((Double) map.get("panshu")).intValue());
-					majiangHistoricalResult.setLastPanNo(((Double) map.get("lastPanNo")).intValue());
-					majiangHistoricalResult.setFinishTime(((Double) map.get("finishTime")).longValue());
+						majiangHistoricalResult.setPanshu(((Double) map.get("panshu")).intValue());
+						majiangHistoricalResult.setLastPanNo(((Double) map.get("lastPanNo")).intValue());
+						majiangHistoricalResult.setFinishTime(((Double) map.get("finishTime")).longValue());
 
-					majiangHistoricalResultService.addGameHistoricalResult(majiangHistoricalResult);
+						majiangHistoricalResultService.addGameHistoricalResult(majiangHistoricalResult);
+					}
 				}
 			}
 		}
@@ -74,21 +76,24 @@ public class DianpaoMajiangResultMsgReceiver {
 			Object gid = map.get("gameId");
 			if (gid != null) {
 				String gameId = (String) gid;
-				GameHistoricalPanResult majiangHistoricalResult = new GameHistoricalPanResult();
-				majiangHistoricalResult.setGameId(gameId);
-				majiangHistoricalResult.setGame(Game.dianpaoMajiang);
+				GameRoom room = gameService.findRoomByGameAndServerGameGameId(Game.dianpaoMajiang, gameId);
+				if (room != null) {
+					GameHistoricalPanResult majiangHistoricalResult = new GameHistoricalPanResult();
+					majiangHistoricalResult.setGameId(gameId);
+					majiangHistoricalResult.setGame(Game.dianpaoMajiang);
 
-				Object playerList = map.get("playerResultList");
-				if (playerList != null) {
-					List<GamePanPlayerResult> panPlayerResultList = new ArrayList<>();
-					((List) map.get("playerResultList")).forEach((panPlayerResult) -> panPlayerResultList
-							.add(new DianpaoMajiangPanPlayerResult((Map) panPlayerResult)));
-					majiangHistoricalResult.setPlayerResultList(panPlayerResultList);
+					Object playerList = map.get("playerResultList");
+					if (playerList != null) {
+						List<GamePanPlayerResult> panPlayerResultList = new ArrayList<>();
+						((List) map.get("playerResultList")).forEach((panPlayerResult) -> panPlayerResultList
+								.add(new DianpaoMajiangPanPlayerResult((Map) panPlayerResult)));
+						majiangHistoricalResult.setPlayerResultList(panPlayerResultList);
 
-					majiangHistoricalResult.setNo(((Double) map.get("no")).intValue());
-					majiangHistoricalResult.setFinishTime(((Double) map.get("finishTime")).longValue());
+						majiangHistoricalResult.setNo(((Double) map.get("no")).intValue());
+						majiangHistoricalResult.setFinishTime(((Double) map.get("finishTime")).longValue());
 
-					majiangHistoricalPanResultService.addGameHistoricalResult(majiangHistoricalResult);
+						majiangHistoricalPanResultService.addGameHistoricalResult(majiangHistoricalResult);
+					}
 				}
 			}
 		}

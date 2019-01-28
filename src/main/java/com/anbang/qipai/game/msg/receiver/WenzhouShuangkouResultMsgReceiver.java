@@ -47,26 +47,28 @@ public class WenzhouShuangkouResultMsgReceiver {
 			Object dthId = map.get("datuhaoId");
 			if (gid != null && dyjId != null && dthId != null) {
 				String gameId = (String) gid;
-				GameHistoricalJuResult pukeHistoricalResult = new GameHistoricalJuResult();
-				pukeHistoricalResult.setGameId(gameId);
 				GameRoom room = gameService.findRoomByGameAndServerGameGameId(Game.wenzhouShuangkou, gameId);
-				pukeHistoricalResult.setRoomNo(room.getNo());
-				pukeHistoricalResult.setGame(Game.wenzhouShuangkou);
-				pukeHistoricalResult.setDayingjiaId((String) dyjId);
-				pukeHistoricalResult.setDatuhaoId((String) dthId);
+				if (room != null) {
+					GameHistoricalJuResult pukeHistoricalResult = new GameHistoricalJuResult();
+					pukeHistoricalResult.setGameId(gameId);
+					pukeHistoricalResult.setRoomNo(room.getNo());
+					pukeHistoricalResult.setGame(Game.wenzhouShuangkou);
+					pukeHistoricalResult.setDayingjiaId((String) dyjId);
+					pukeHistoricalResult.setDatuhaoId((String) dthId);
 
-				Object playerList = map.get("playerResultList");
-				if (playerList != null) {
-					List<GameJuPlayerResult> juPlayerResultList = new ArrayList<>();
-					((List) playerList).forEach((juPlayerResult) -> juPlayerResultList
-							.add(new WenzhouShuangkouJuPlayerResult((Map) juPlayerResult)));
-					pukeHistoricalResult.setPlayerResultList(juPlayerResultList);
+					Object playerList = map.get("playerResultList");
+					if (playerList != null) {
+						List<GameJuPlayerResult> juPlayerResultList = new ArrayList<>();
+						((List) playerList).forEach((juPlayerResult) -> juPlayerResultList
+								.add(new WenzhouShuangkouJuPlayerResult((Map) juPlayerResult)));
+						pukeHistoricalResult.setPlayerResultList(juPlayerResultList);
 
-					pukeHistoricalResult.setPanshu(((Double) map.get("panshu")).intValue());
-					pukeHistoricalResult.setLastPanNo(((Double) map.get("lastPanNo")).intValue());
-					pukeHistoricalResult.setFinishTime(((Double) map.get("finishTime")).longValue());
+						pukeHistoricalResult.setPanshu(((Double) map.get("panshu")).intValue());
+						pukeHistoricalResult.setLastPanNo(((Double) map.get("lastPanNo")).intValue());
+						pukeHistoricalResult.setFinishTime(((Double) map.get("finishTime")).longValue());
 
-					gameHistoricalResultService.addGameHistoricalResult(pukeHistoricalResult);
+						gameHistoricalResultService.addGameHistoricalResult(pukeHistoricalResult);
+					}
 				}
 			}
 		}
@@ -74,21 +76,24 @@ public class WenzhouShuangkouResultMsgReceiver {
 			Object gid = map.get("gameId");
 			if (gid != null) {
 				String gameId = (String) gid;
-				GameHistoricalPanResult pukeHistoricalResult = new GameHistoricalPanResult();
-				pukeHistoricalResult.setGameId(gameId);
-				pukeHistoricalResult.setGame(Game.wenzhouShuangkou);
+				GameRoom room = gameService.findRoomByGameAndServerGameGameId(Game.wenzhouShuangkou, gameId);
+				if (room != null) {
+					GameHistoricalPanResult pukeHistoricalResult = new GameHistoricalPanResult();
+					pukeHistoricalResult.setGameId(gameId);
+					pukeHistoricalResult.setGame(Game.wenzhouShuangkou);
 
-				Object playerList = map.get("playerResultList");
-				if (playerList != null) {
-					List<GamePanPlayerResult> panPlayerResultList = new ArrayList<>();
-					((List) playerList).forEach((panPlayerResult) -> panPlayerResultList
-							.add(new WenzhouShuangkouPanPlayerResult((Map) panPlayerResult)));
-					pukeHistoricalResult.setPlayerResultList(panPlayerResultList);
+					Object playerList = map.get("playerResultList");
+					if (playerList != null) {
+						List<GamePanPlayerResult> panPlayerResultList = new ArrayList<>();
+						((List) playerList).forEach((panPlayerResult) -> panPlayerResultList
+								.add(new WenzhouShuangkouPanPlayerResult((Map) panPlayerResult)));
+						pukeHistoricalResult.setPlayerResultList(panPlayerResultList);
 
-					pukeHistoricalResult.setNo(((Double) map.get("no")).intValue());
-					pukeHistoricalResult.setFinishTime(((Double) map.get("finishTime")).longValue());
+						pukeHistoricalResult.setNo(((Double) map.get("no")).intValue());
+						pukeHistoricalResult.setFinishTime(((Double) map.get("finishTime")).longValue());
 
-					gameHistoricalPanResultService.addGameHistoricalResult(pukeHistoricalResult);
+						gameHistoricalPanResultService.addGameHistoricalResult(pukeHistoricalResult);
+					}
 				}
 			}
 		}
