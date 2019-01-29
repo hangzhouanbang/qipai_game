@@ -58,7 +58,24 @@ public class WenzhouMajiangGameMsgReceiver {
 			}
 			gameService.wenzhouMajiangPlayerQuitQame(gameId, playerId);
 		}
+		if ("ju canceled".equals(msg)) {// 取消游戏
+			Map data = (Map) mo.getData();
+			String gameId = (String) data.get("gameId");
+			GameRoom gameRoom = gameService.findRoomByGameAndServerGameGameId(Game.wenzhouMajiang, gameId);
+			gameRoomCmdService.removeRoom(gameRoom.getNo());
 
+			List<PlayersRecord> playersRecord = gameRoom.getPlayersRecord();
+			// 一盘没有打完，返回玉石
+			for (int i = 0; i < playersRecord.size(); i++) {
+				if (gameRoom.getCurrentPanNum() == 0 && gameRoom.isVip() && !playersRecord.get(i).isVip()) {
+					int amount = playersRecord.get(i).getPayGold();
+					qipaiMembersRomoteService.gold_givegoldtomember(playersRecord.get(i).getPlayerId(), amount,
+							"back gold to leave game");
+				}
+				gameService.saveGameRoom(gameRoom);
+			}
+			gameService.gameRoomFinished(Game.wenzhouMajiang, gameId);
+		}
 		if ("ju finished".equals(msg)) {// 一局游戏结束
 			Map data = (Map) mo.getData();
 			String gameId = (String) data.get("gameId");
