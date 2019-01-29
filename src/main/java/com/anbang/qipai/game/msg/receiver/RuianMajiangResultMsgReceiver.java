@@ -10,6 +10,7 @@ import org.springframework.cloud.stream.annotation.StreamListener;
 
 import com.anbang.qipai.game.msg.channel.sink.RuianMajiangResultSink;
 import com.anbang.qipai.game.msg.msjobj.CommonMO;
+import com.anbang.qipai.game.msg.service.RuianmjResultMsgService;
 import com.anbang.qipai.game.plan.bean.games.Game;
 import com.anbang.qipai.game.plan.bean.games.GameRoom;
 import com.anbang.qipai.game.plan.bean.historicalresult.GameHistoricalJuResult;
@@ -30,6 +31,9 @@ public class RuianMajiangResultMsgReceiver {
 
 	@Autowired
 	private GameHistoricalPanResultService majiangHistoricalPanResultService;
+
+	@Autowired
+	private RuianmjResultMsgService ruianmjResultMsgService;
 
 	@Autowired
 	private GameService gameService;
@@ -68,6 +72,7 @@ public class RuianMajiangResultMsgReceiver {
 						majiangHistoricalResult.setFinishTime(((Double) map.get("finishTime")).longValue());
 
 						majiangHistoricalResultService.addGameHistoricalResult(majiangHistoricalResult);
+						ruianmjResultMsgService.newJuResult(majiangHistoricalResult);
 					}
 				}
 			}
@@ -93,6 +98,7 @@ public class RuianMajiangResultMsgReceiver {
 						majiangHistoricalResult.setFinishTime(((Double) map.get("finishTime")).longValue());
 
 						majiangHistoricalPanResultService.addGameHistoricalResult(majiangHistoricalResult);
+						ruianmjResultMsgService.newPanResult(majiangHistoricalResult);
 					}
 				}
 			}

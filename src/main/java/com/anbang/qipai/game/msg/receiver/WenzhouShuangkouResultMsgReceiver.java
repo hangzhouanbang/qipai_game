@@ -10,6 +10,7 @@ import org.springframework.cloud.stream.annotation.StreamListener;
 
 import com.anbang.qipai.game.msg.channel.sink.WenzhouShuangkouResultSink;
 import com.anbang.qipai.game.msg.msjobj.CommonMO;
+import com.anbang.qipai.game.msg.service.WenzhouskResultMsgService;
 import com.anbang.qipai.game.plan.bean.games.Game;
 import com.anbang.qipai.game.plan.bean.games.GameRoom;
 import com.anbang.qipai.game.plan.bean.historicalresult.GameHistoricalJuResult;
@@ -30,6 +31,9 @@ public class WenzhouShuangkouResultMsgReceiver {
 
 	@Autowired
 	private GameHistoricalPanResultService gameHistoricalPanResultService;
+
+	@Autowired
+	private WenzhouskResultMsgService wenzhouskResultMsgService;
 
 	@Autowired
 	private GameService gameService;
@@ -68,6 +72,7 @@ public class WenzhouShuangkouResultMsgReceiver {
 						pukeHistoricalResult.setFinishTime(((Double) map.get("finishTime")).longValue());
 
 						gameHistoricalResultService.addGameHistoricalResult(pukeHistoricalResult);
+						wenzhouskResultMsgService.newJuResult(pukeHistoricalResult);
 					}
 				}
 			}
@@ -93,6 +98,7 @@ public class WenzhouShuangkouResultMsgReceiver {
 						pukeHistoricalResult.setFinishTime(((Double) map.get("finishTime")).longValue());
 
 						gameHistoricalPanResultService.addGameHistoricalResult(pukeHistoricalResult);
+						wenzhouskResultMsgService.newPanResult(pukeHistoricalResult);
 					}
 				}
 			}

@@ -134,6 +134,56 @@ spring:
                   ms: 5
                 batch:
                   size: 16384
+          gameDianpaomjResult:
+            producer:
+              configuration:
+                request:
+                  timeout:
+                    ms: 30000
+                linger:
+                  ms: 5
+                batch:
+                  size: 16384
+          gameFangpaomjResult:
+            producer:
+              configuration:
+                request:
+                  timeout:
+                    ms: 30000
+                linger:
+                  ms: 5
+                batch:
+                  size: 16384
+          gameRuianmjResult:
+            producer:
+              configuration:
+                request:
+                  timeout:
+                    ms: 30000
+                linger:
+                  ms: 5
+                batch:
+                  size: 16384
+          gameWenzhoumjResult:
+            producer:
+              configuration:
+                request:
+                  timeout:
+                    ms: 30000
+                linger:
+                  ms: 5
+                batch:
+                  size: 16384
+          gameWenzhouskResult:
+            producer:
+              configuration:
+                request:
+                  timeout:
+                    ms: 30000
+                linger:
+                  ms: 5
+                batch:
+                  size: 16384
                   
       bindings:
         notice:
@@ -299,6 +349,31 @@ spring:
           contentType: application/json
           producer:
             partitionCount: 1
+        gameDianpaomjResult:
+          destination: gameDianpaomjResult
+          contentType: application/json
+          producer:
+            partitionCount: 1
+        gameFangpaomjResult:
+          destination: gameFangpaomjResult
+          contentType: application/json
+          producer:
+            partitionCount: 1
+        gameRuianmjResult:
+          destination: gameRuianmjResult
+          contentType: application/json
+          producer:
+            partitionCount: 1
+        gameWenzhoumjResult:
+          destination: gameWenzhoumjResult
+          contentType: application/json
+          producer:
+            partitionCount: 1
+        gameWenzhouskResult:
+          destination: gameWenzhouskResult
+          contentType: application/json
+          producer:
+            partitionCount: 1
 
   application:
     name: qipai-game
@@ -312,8 +387,8 @@ eureka:
     #prefer-ip-address: true
     #instance-id: http://172.16.21.51:83
 websocket:
-  url: ws://47.96.20.47:83/hall
-  #url: ws://192.168.0.134:83/hall
+  #url: ws://47.96.20.47:83/hall
+  url: ws://192.168.1.127:83/hall
 filepath:
   snapshotFileBasePath: /data/app/qipai_game/snapshot
   jFileBasePath: /data/app/qipai_game/journal
