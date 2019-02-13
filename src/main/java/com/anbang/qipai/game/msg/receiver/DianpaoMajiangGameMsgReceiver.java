@@ -42,57 +42,63 @@ public class DianpaoMajiangGameMsgReceiver {
 			String gameId = (String) data.get("gameId");
 			String playerId = (String) data.get("playerId");
 			GameRoom room = gameService.findRoomByGameAndServerGameGameId(Game.dianpaoMajiang, gameId);
-			List<PlayersRecord> playersRecord = room.getPlayersRecord();
-			if (room.isVip() && !memberService.findMember(playerId).isVip()) {
-				for (int i = 0; i < playersRecord.size(); i++) {
-					if (playersRecord.get(i).getPlayerId().equals(playerId)) {
-						// 退出玩家花费的玉石
-						int amount = playersRecord.get(i).getPayGold();
-						qipaiMembersRomoteService.gold_givegoldtomember(playerId, amount, "back gold to leave game");
-						// 删除玩家记录
-						playersRecord.remove(i);
+			if (room != null) {
+				List<PlayersRecord> playersRecord = room.getPlayersRecord();
+				if (room.isVip() && !memberService.findMember(playerId).isVip()) {
+					for (int i = 0; i < playersRecord.size(); i++) {
+						if (playersRecord.get(i).getPlayerId().equals(playerId)) {
+							// 退出玩家花费的玉石
+							int amount = playersRecord.get(i).getPayGold();
+							qipaiMembersRomoteService.gold_givegoldtomember(playerId, amount,
+									"back gold to leave game");
+							// 删除玩家记录
+							playersRecord.remove(i);
+						}
 					}
+					gameService.saveGameRoom(room);
 				}
-				gameService.saveGameRoom(room);
+				gameService.dianpaoMajiangPlayerQuitQame(gameId, playerId);
 			}
-			gameService.dianpaoMajiangPlayerQuitQame(gameId, playerId);
 		}
 		if ("ju canceled".equals(msg)) {// 取消游戏
 			Map data = (Map) mo.getData();
 			String gameId = (String) data.get("gameId");
 			GameRoom gameRoom = gameService.findRoomByGameAndServerGameGameId(Game.dianpaoMajiang, gameId);
-			gameRoomCmdService.removeRoom(gameRoom.getNo());
+			if (gameRoom != null) {
+				gameRoomCmdService.removeRoom(gameRoom.getNo());
 
-			List<PlayersRecord> playersRecord = gameRoom.getPlayersRecord();
-			// 一盘没有打完，返回玉石
-			for (int i = 0; i < playersRecord.size(); i++) {
-				if (gameRoom.getCurrentPanNum() == 0 && gameRoom.isVip() && !playersRecord.get(i).isVip()) {
-					int amount = playersRecord.get(i).getPayGold();
-					qipaiMembersRomoteService.gold_givegoldtomember(playersRecord.get(i).getPlayerId(), amount,
-							"back gold to leave game");
+				List<PlayersRecord> playersRecord = gameRoom.getPlayersRecord();
+				// 一盘没有打完，返回玉石
+				for (int i = 0; i < playersRecord.size(); i++) {
+					if (gameRoom.getCurrentPanNum() == 0 && gameRoom.isVip() && !playersRecord.get(i).isVip()) {
+						int amount = playersRecord.get(i).getPayGold();
+						qipaiMembersRomoteService.gold_givegoldtomember(playersRecord.get(i).getPlayerId(), amount,
+								"back gold to leave game");
+					}
+					gameService.saveGameRoom(gameRoom);
 				}
-				gameService.saveGameRoom(gameRoom);
+				gameService.gameRoomFinished(Game.dianpaoMajiang, gameId);
 			}
-			gameService.gameRoomFinished(Game.dianpaoMajiang, gameId);
 		}
 		if ("ju finished".equals(msg)) {// 一局游戏结束
 			Map data = (Map) mo.getData();
 			String gameId = (String) data.get("gameId");
 			GameRoom gameRoom = gameService.findRoomByGameAndServerGameGameId(Game.dianpaoMajiang, gameId);
-			gameRoomCmdService.removeRoom(gameRoom.getNo());
+			if (gameRoom != null) {
+				gameRoomCmdService.removeRoom(gameRoom.getNo());
 
-			List<PlayersRecord> playersRecord = gameRoom.getPlayersRecord();
-			// 一盘没有打完，返回玉石
-			for (int i = 0; i < playersRecord.size(); i++) {
-				if (gameRoom.getCurrentPanNum() == 0 && gameRoom.isVip() && !playersRecord.get(i).isVip()) {
-					int amount = playersRecord.get(i).getPayGold();
-					qipaiMembersRomoteService.gold_givegoldtomember(playersRecord.get(i).getPlayerId(), amount,
-							"back gold to leave game");
+				List<PlayersRecord> playersRecord = gameRoom.getPlayersRecord();
+				// 一盘没有打完，返回玉石
+				for (int i = 0; i < playersRecord.size(); i++) {
+					if (gameRoom.getCurrentPanNum() == 0 && gameRoom.isVip() && !playersRecord.get(i).isVip()) {
+						int amount = playersRecord.get(i).getPayGold();
+						qipaiMembersRomoteService.gold_givegoldtomember(playersRecord.get(i).getPlayerId(), amount,
+								"back gold to leave game");
+					}
+					gameService.saveGameRoom(gameRoom);
 				}
-				gameService.saveGameRoom(gameRoom);
+				gameService.gameRoomFinished(Game.dianpaoMajiang, gameId);
 			}
-			gameService.gameRoomFinished(Game.dianpaoMajiang, gameId);
-
 		}
 		if ("pan finished".equals(msg)) {// 一盘游戏结束
 			Map data = (Map) mo.getData();
