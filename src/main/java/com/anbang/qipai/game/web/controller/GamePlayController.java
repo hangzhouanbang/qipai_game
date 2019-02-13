@@ -871,8 +871,7 @@ public class GamePlayController {
 
 	/**
 	 * 游戏服务器下线
-	 * 
-	 * @param gameServer
+	 *
 	 * @return
 	 */
 	@RequestMapping(value = "/game_server_offline")
@@ -886,12 +885,7 @@ public class GamePlayController {
 
 	/**
 	 * 添加玩法
-	 * 
-	 * @param game
-	 * @param name
-	 * @param desc
-	 * @param mutexGroupId
-	 * @param vip
+	 *
 	 * @return
 	 */
 	@RequestMapping(value = "/add_law")
@@ -920,8 +914,7 @@ public class GamePlayController {
 
 	/**
 	 * 编辑玩法
-	 * 
-	 * @param lawId
+	 *
 	 * @return
 	 */
 	@RequestMapping(value = "/update_law")
@@ -935,10 +928,7 @@ public class GamePlayController {
 
 	/**
 	 * 添加玩法互斥组
-	 * 
-	 * @param game
-	 * @param name
-	 * @param desc
+	 *
 	 * @return
 	 */
 	@RequestMapping(value = "/add_mutexgroup")
@@ -952,8 +942,7 @@ public class GamePlayController {
 
 	/**
 	 * 删除玩法互斥组
-	 * 
-	 * @param lawId
+	 *
 	 * @return
 	 */
 	@RequestMapping(value = "/remove_mutexgroup")
