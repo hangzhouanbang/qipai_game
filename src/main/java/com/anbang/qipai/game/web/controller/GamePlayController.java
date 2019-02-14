@@ -705,7 +705,7 @@ public class GamePlayController {
 	 */
 	@RequestMapping(value = "/join_room")
 	@ResponseBody
-	public CommonVO joinRoom(String token, String roomNo, String joinType) {
+	public CommonVO joinRoom(String token, String roomNo) {
 		CommonVO vo = new CommonVO();
 		String memberId = memberAuthService.getMemberIdBySessionId(token);
 		if (memberId == null) {
@@ -728,40 +728,6 @@ public class GamePlayController {
 			return vo;
 		}
 		String serverGameId = gameRoom.getServerGame().getGameId();
-
-		//判断是否进入观战模式
-		if (GameConstant.JoinType.WATCH.equals(joinType)) {
-			GameServer gameServer = gameRoom.getServerGame().getServer();
-			Request req = httpClient.newRequest(gameServer.getHttpUrl() + "/game/joinwatch");
-			req.param("playerId", memberId);
-			req.param("gameId", serverGameId);
-			Map resData;
-			try {
-				ContentResponse res = req.send();
-				String resJson = new String(res.getContent());
-				CommonVO resVo = gson.fromJson(resJson, CommonVO.class);
-				if (resVo.isSuccess()) {
-					resData = (Map) resVo.getData();
-				} else {
-					vo.setSuccess(false);
-					vo.setMsg(resVo.getMsg());
-					return vo;
-				}
-			} catch (Exception e) {
-				vo.setSuccess(false);
-				vo.setMsg("SysException");
-				return vo;
-			}
-			Map data = new HashMap();
-			data.put("httpUrl", gameRoom.getServerGame().getServer().getHttpUrl());
-			data.put("wsUrl", gameRoom.getServerGame().getServer().getWsUrl());
-			data.put("roomNo", gameRoom.getNo());
-			data.put("token", resData.get("token"));
-			data.put("gameId", serverGameId);
-			data.put("game", gameRoom.getGame());
-			vo.setData(data);
-			return vo;
-		}
 
 		// 处理如果是自己暂时离开的房间
 		MemberGameRoom memberGameRoom = gameService.findMemberGameRoom(memberId, gameRoom.getId());
@@ -905,8 +871,7 @@ public class GamePlayController {
 
 	/**
 	 * 游戏服务器下线
-	 * 
-	 * @param gameServer
+	 *
 	 * @return
 	 */
 	@RequestMapping(value = "/game_server_offline")
@@ -920,12 +885,7 @@ public class GamePlayController {
 
 	/**
 	 * 添加玩法
-	 * 
-	 * @param game
-	 * @param name
-	 * @param desc
-	 * @param mutexGroupId
-	 * @param vip
+	 *
 	 * @return
 	 */
 	@RequestMapping(value = "/add_law")
@@ -954,8 +914,7 @@ public class GamePlayController {
 
 	/**
 	 * 编辑玩法
-	 * 
-	 * @param lawId
+	 *
 	 * @return
 	 */
 	@RequestMapping(value = "/update_law")
@@ -969,10 +928,7 @@ public class GamePlayController {
 
 	/**
 	 * 添加玩法互斥组
-	 * 
-	 * @param game
-	 * @param name
-	 * @param desc
+	 *
 	 * @return
 	 */
 	@RequestMapping(value = "/add_mutexgroup")
@@ -986,8 +942,7 @@ public class GamePlayController {
 
 	/**
 	 * 删除玩法互斥组
-	 * 
-	 * @param lawId
+	 *
 	 * @return
 	 */
 	@RequestMapping(value = "/remove_mutexgroup")
@@ -1083,5 +1038,65 @@ public class GamePlayController {
 		wenzhouGameRoomMsgService.removeGameRoom(fangpaoGameIds);
 		dianpaoGameRoomMsgService.removeGameRoom(dianpaoGameIds);
 		wenzhouShuangkouGameRoomMsgService.removeGameRoom(wenzhouSKGameIds);
+	}
+
+	/**
+	 * 加入观战
+	 */
+	@RequestMapping(value = "/joinWatch")
+	@ResponseBody
+	public CommonVO joinWatch(String token, String roomNo) {
+		CommonVO vo = new CommonVO();
+		String memberId = memberAuthService.getMemberIdBySessionId(token);
+		if (memberId == null) {
+			vo.setSuccess(false);
+			vo.setMsg("invalid token");
+			return vo;
+		}
+		MemberLoginLimitRecord loginLimitRecord = memberLoginLimitRecordService.findByMemberId(memberId, true);
+		if (loginLimitRecord != null) {
+			vo.setSuccess(false);
+			vo.setMsg("login limited");
+			return vo;
+		}
+
+		GameRoom gameRoom = gameService.findRoomOpen(roomNo);
+		if (gameRoom == null) {
+			vo.setSuccess(false);
+			vo.setMsg("invalid room number");
+			return vo;
+		}
+		String serverGameId = gameRoom.getServerGame().getGameId();
+		GameServer gameServer = gameRoom.getServerGame().getServer();
+
+		Request req = httpClient.newRequest(gameServer.getHttpUrl() + "/game/joinwatch");
+		req.param("playerId", memberId);
+		req.param("gameId", serverGameId);
+		Map resData;
+		try {
+			ContentResponse res = req.send();
+			String resJson = new String(res.getContent());
+			CommonVO resVo = gson.fromJson(resJson, CommonVO.class);
+			if (resVo.isSuccess()) {
+				resData = (Map) resVo.getData();
+			} else {
+				vo.setSuccess(false);
+				vo.setMsg(resVo.getMsg());
+				return vo;
+			}
+		} catch (Exception e) {
+			vo.setSuccess(false);
+			vo.setMsg("SysException");
+			return vo;
+		}
+		Map data = new HashMap();
+		data.put("httpUrl", gameRoom.getServerGame().getServer().getHttpUrl());
+		data.put("wsUrl", gameRoom.getServerGame().getServer().getWsUrl());
+		data.put("roomNo", gameRoom.getNo());
+		data.put("token", resData.get("token"));
+		data.put("gameId", serverGameId);
+		data.put("game", gameRoom.getGame());
+		vo.setData(data);
+		return vo;
 	}
 }
