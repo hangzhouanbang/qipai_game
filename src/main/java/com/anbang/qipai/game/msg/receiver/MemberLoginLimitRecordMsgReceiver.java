@@ -13,12 +13,10 @@ import com.google.gson.Gson;
 
 @EnableBinding(MemberLoginLimitRecordSink.class)
 public class MemberLoginLimitRecordMsgReceiver {
+
 	@Autowired
 	private MemberLoginLimitRecordService memberLoginLimitRecordService;
 
-	/**
-	 * 是否单例?
-	 */
 	@Autowired
 	private MemberAuthService memberAuthService;
 
