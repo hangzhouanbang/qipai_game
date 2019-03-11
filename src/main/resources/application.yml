@@ -1,7 +1,7 @@
 spring:
   data:
     mongodb:
-      uri: mongodb://localhost:27017/qipai_game
+      #uri: mongodb://localhost:27017/qipai_game
 
 
   cloud:
@@ -114,6 +114,16 @@ spring:
                   ms: 5
                 batch:
                   size: 16384
+          doudizhuGameRoom:
+            producer:
+              configuration:
+                request:
+                  timeout:
+                    ms: 30000
+                linger:
+                  ms: 5
+                batch:
+                  size: 16384
           memberLoginRecord:
             producer:
               configuration:
@@ -184,6 +194,16 @@ spring:
                   ms: 5
                 batch:
                   size: 16384
+          gameDoudizhuResult:
+            producer:
+              configuration:
+                request:
+                  timeout:
+                    ms: 30000
+                linger:
+                  ms: 5
+                batch:
+                  size: 16384
                   
       bindings:
         notice:
@@ -218,6 +238,11 @@ spring:
             partitionCount: 1
         wenzhouShuangkouGameRoom:
           destination: wenzhouShuangkouGameRoom
+          contentType: application/json
+          producer:
+            partitionCount: 1
+        doudizhuGameRoom:
+          destination: doudizhuGameRoom
           contentType: application/json
           producer:
             partitionCount: 1
@@ -320,6 +345,20 @@ spring:
             concurrency: 1
             partitioned: false
           contentType: application/json
+        doudizhuGame:
+          destination: doudizhuGame
+          group: qipai-game
+          consumer:
+            concurrency: 1
+            partitioned: false
+          contentType: application/json
+        doudizhuResult:
+          destination: doudizhuResult
+          group: qipai-game
+          consumer:
+            concurrency: 1
+            partitioned: false
+          contentType: application/json
         gameServerManager:
           destination: gameServer
           consumer:
@@ -374,6 +413,11 @@ spring:
           contentType: application/json
           producer:
             partitionCount: 1
+        gameDoudizhuResult:
+          destination: gameDoudizhuResult
+          contentType: application/json
+          producer:
+            partitionCount: 1
 
   application:
     name: qipai-game
@@ -387,8 +431,8 @@ eureka:
     #prefer-ip-address: true
     #instance-id: http://172.16.21.51:83
 websocket:
-  #url: ws://47.96.20.47:83/hall
-  url: ws://192.168.1.127:83/hall
+  url: ws://47.96.20.47:83/hall
+  #url: ws://192.168.0.156:83/hall
 filepath:
   snapshotFileBasePath: /data/app/qipai_game/snapshot
   jFileBasePath: /data/app/qipai_game/journal
