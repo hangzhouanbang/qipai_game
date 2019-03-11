@@ -467,7 +467,6 @@ public class GameService {
 		// 随机选一个服务器
 		GameServer gameServer = allServers.get(r.nextInt(allServers.size()));
 		ServerGame serverGame = new ServerGame();
-		// 将gameServer包装成GameServer,加上gameId
 		serverGame.setServer(gameServer);
 		GameRoom gameRoom = new GameRoom();
 		// 将serverGame放入gameRoom

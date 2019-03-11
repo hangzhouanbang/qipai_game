@@ -716,8 +716,6 @@ public class GamePlayController {
 	@ResponseBody
 	public CommonVO createDdzRoom(String token, @RequestBody List<String> lawNames) {
 		CommonVO vo = new CommonVO();
-		// 根据token从UserSessionsManager的Map<String, UserSession>
-		// idSessionMap拿到memberId(memberDbo表)
 		String memberId = memberAuthService.getMemberIdBySessionId(token);
 		if (memberId == null) {
 			vo.setSuccess(false);
