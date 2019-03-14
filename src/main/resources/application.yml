@@ -1,7 +1,7 @@
 spring:
   data:
     mongodb:
-      #uri: mongodb://localhost:27017/qipai_game
+      uri: mongodb://localhost:27017/qipai_game
 
 
   cloud:
@@ -124,6 +124,16 @@ spring:
                   ms: 5
                 batch:
                   size: 16384
+          paodekuaiGameRoom:
+            producer:
+              configuration:
+                request:
+                  timeout:
+                    ms: 30000
+                linger:
+                  ms: 5
+                batch:
+                  size: 16384
           memberLoginRecord:
             producer:
               configuration:
@@ -204,6 +214,16 @@ spring:
                   ms: 5
                 batch:
                   size: 16384
+          gamePaodekuaiResult:
+            producer:
+              configuration:
+                request:
+                  timeout:
+                    ms: 30000
+                linger:
+                  ms: 5
+                batch:
+                  size: 16384
                   
       bindings:
         notice:
@@ -243,6 +263,11 @@ spring:
             partitionCount: 1
         doudizhuGameRoom:
           destination: doudizhuGameRoom
+          contentType: application/json
+          producer:
+            partitionCount: 1
+        paodekuaiGameRoom:
+          destination: paodekuaiGameRoom
           contentType: application/json
           producer:
             partitionCount: 1
@@ -359,6 +384,20 @@ spring:
             concurrency: 1
             partitioned: false
           contentType: application/json
+        paodekuaiGame:
+          destination: paodekuaiGame
+          group: qipai-game
+          consumer:
+            concurrency: 1
+            partitioned: false
+          contentType: application/json
+        paodekuaiResult:
+          destination: paodekuaiResult
+          group: qipai-game
+          consumer:
+            concurrency: 1
+            partitioned: false
+          contentType: application/json
         gameServerManager:
           destination: gameServer
           consumer:
@@ -415,6 +454,11 @@ spring:
             partitionCount: 1
         gameDoudizhuResult:
           destination: gameDoudizhuResult
+          contentType: application/json
+          producer:
+            partitionCount: 1
+        gamePaodekuaiResult:
+          destination: gamePaodekuaiResult
           contentType: application/json
           producer:
             partitionCount: 1

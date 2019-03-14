@@ -17,5 +17,7 @@ public enum Game {
 
 	wenzhouShuangkou,
 
-	doudizhu
+	doudizhu,
+
+    paodekuai
 }
