@@ -5,9 +5,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import com.anbang.qipai.game.msg.service.*;
-import com.anbang.qipai.game.util.CommonVoUtil;
-import com.anbang.qipai.game.web.fb.*;
 import org.eclipse.jetty.client.HttpClient;
 import org.eclipse.jetty.client.api.ContentResponse;
 import org.eclipse.jetty.client.api.Request;
@@ -19,6 +16,15 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.anbang.qipai.game.cqrs.c.service.GameRoomCmdService;
+import com.anbang.qipai.game.msg.service.DianpaoGameRoomMsgService;
+import com.anbang.qipai.game.msg.service.DoudizhuGameRoomMsgService;
+import com.anbang.qipai.game.msg.service.FangpaoGameRoomMsgService;
+import com.anbang.qipai.game.msg.service.GameServerMsgService;
+import com.anbang.qipai.game.msg.service.PaodekuaiGameRoomMsgService;
+import com.anbang.qipai.game.msg.service.RoomManageMsgService;
+import com.anbang.qipai.game.msg.service.RuianGameRoomMsgService;
+import com.anbang.qipai.game.msg.service.WenzhouGameRoomMsgService;
+import com.anbang.qipai.game.msg.service.WenzhouShuangkouGameRoomMsgService;
 import com.anbang.qipai.game.plan.bean.games.CanNotJoinMoreRoomsException;
 import com.anbang.qipai.game.plan.bean.games.Game;
 import com.anbang.qipai.game.plan.bean.games.GameLaw;
@@ -41,7 +47,15 @@ import com.anbang.qipai.game.plan.service.MemberLoginLimitRecordService;
 import com.anbang.qipai.game.plan.service.MemberService;
 import com.anbang.qipai.game.remote.service.QipaiMembersRemoteService;
 import com.anbang.qipai.game.remote.vo.CommonRemoteVO;
+import com.anbang.qipai.game.util.CommonVoUtil;
 import com.anbang.qipai.game.util.NumConvertChineseUtil;
+import com.anbang.qipai.game.web.fb.DdzLawsFB;
+import com.anbang.qipai.game.web.fb.DpmjLawsFB;
+import com.anbang.qipai.game.web.fb.FpmjLawsFB;
+import com.anbang.qipai.game.web.fb.PdkLawsFB;
+import com.anbang.qipai.game.web.fb.RamjLawsFB;
+import com.anbang.qipai.game.web.fb.WzmjLawsFB;
+import com.anbang.qipai.game.web.fb.WzskLawsFB;
 import com.anbang.qipai.game.web.vo.CommonVO;
 import com.anbang.qipai.game.web.vo.MemberGameRoomVO;
 import com.anbang.qipai.game.web.vo.MemberPlayingRoomVO;
@@ -657,7 +671,9 @@ public class GamePlayController {
 		req.param("fapai", fb.getFapai());
 		req.param("chaodi", fb.getChaodi());
 		req.param("shuangming", fb.getShuangming());
-		req.param("fengding", fb.getFengding());
+		req.param("bxfd", fb.getBxfd());
+		req.param("jxfd", fb.getJxfd());
+		req.param("sxfd", fb.getSxfd());
 		Map resData;
 		try {
 			ContentResponse res = req.send();
@@ -835,7 +851,6 @@ public class GamePlayController {
 			return CommonVoUtil.error("login limited");
 		}
 
-
 		// 根据memberId查询到member
 		Member member = memberService.findMember(memberId);
 		// 得到member中的会员权益
@@ -848,8 +863,8 @@ public class GamePlayController {
 			return CommonVoUtil.error(e.getClass().getName());
 		} catch (NotVIPMemberException e) {
 			int todayCreateVipRoomsCount = gameService.countTodayCreateVipRoomsCount(memberId);
-			return CommonVoUtil.error(e.getClass().getName() + "-todayCreateVipRoomsCount:" +
-					NumConvertChineseUtil.toChinese(String.valueOf(todayCreateVipRoomsCount)));
+			return CommonVoUtil.error(e.getClass().getName() + "-todayCreateVipRoomsCount:"
+					+ NumConvertChineseUtil.toChinese(String.valueOf(todayCreateVipRoomsCount)));
 		} catch (CanNotJoinMoreRoomsException e) {
 			return CommonVoUtil.error(e.getClass().getName());
 		} catch (NoServerAvailableForGameException e) {

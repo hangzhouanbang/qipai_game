@@ -16,7 +16,9 @@ public class WzskLawsFB {
 	private String fapai;
 	private String chaodi = "false";
 	private String shuangming = "false";
-	private String fengding = "false";
+	private String bxfd = "false";
+	private String jxfd = "false";
+	private String sxfd = "false";
 
 	public WzskLawsFB() {
 		panshu = " ";
@@ -66,8 +68,12 @@ public class WzskLawsFB {
 				chaodi = "true";
 			} else if (lawName.equals("shuangming")) {// 双明
 				shuangming = "true";
-			} else if (lawName.equals("fengding")) {// 封顶
-				fengding = "true";
+			} else if (lawName.equals("bxfd")) {// 八线封顶
+				bxfd = "true";
+			} else if (lawName.equals("jxfd")) {// 九线封顶
+				jxfd = "true";
+			} else if (lawName.equals("sxfd")) {// 十线封顶
+				sxfd = "true";
 			} else {
 
 			}
@@ -146,12 +152,28 @@ public class WzskLawsFB {
 		this.shuangming = shuangming;
 	}
 
-	public String getFengding() {
-		return fengding;
+	public String getBxfd() {
+		return bxfd;
 	}
 
-	public void setFengding(String fengding) {
-		this.fengding = fengding;
+	public void setBxfd(String bxfd) {
+		this.bxfd = bxfd;
+	}
+
+	public String getJxfd() {
+		return jxfd;
+	}
+
+	public void setJxfd(String jxfd) {
+		this.jxfd = jxfd;
+	}
+
+	public String getSxfd() {
+		return sxfd;
+	}
+
+	public void setSxfd(String sxfd) {
+		this.sxfd = sxfd;
 	}
 
 	public String getChapai() {
