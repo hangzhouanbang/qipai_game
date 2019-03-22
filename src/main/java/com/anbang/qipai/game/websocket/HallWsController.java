@@ -7,6 +7,7 @@ import java.util.Map;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
+import com.anbang.qipai.game.util.IPAddressUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.web.socket.CloseStatus;
@@ -133,6 +134,8 @@ public class HallWsController extends TextWebSocketHandler {
 			newRecord.setLoginTime(currentTime);
 			newRecord.setOnlineTime(0);
 			newRecord.setLoginIp(session.getRemoteAddress().getHostString());
+			String ipAddress = IPAddressUtil.getIPAddress2(session.getRemoteAddress().getHostString());
+			newRecord.setIpAddress(ipAddress);
 			MemberLoginRecord lastRecord = memberLoginRecordService.findRecentRecordByMemberId(memberId);
 			if (lastRecord != null) {
 				newRecord.setLastLoginTime(lastRecord.getLoginTime());
