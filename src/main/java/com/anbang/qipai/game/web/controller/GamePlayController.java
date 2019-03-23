@@ -174,8 +174,9 @@ public class GamePlayController {
 			vo.setMsg("NoServerAvailableForGameException");
 			return vo;
 		}
-
-		int gold = rights.getPlanMemberCreateRoomDailyGoldPrice();
+		RamjLawsFB fb = new RamjLawsFB(lawNames);
+		// 普通会员每日开房（vip房）金币价格
+		int gold = fb.payForCreateRoom();
 		// 房主玩家记录
 		List<PlayersRecord> playersRecord = new ArrayList<>();
 		gameRoom.setPlayersRecord(playersRecord);
@@ -189,7 +190,6 @@ public class GamePlayController {
 
 		GameServer gameServer = gameRoom.getServerGame().getServer();
 		// 游戏服务器rpc，需要手动httpclientrpc
-		RamjLawsFB fb = new RamjLawsFB(lawNames);
 		Request req = httpClient.newRequest(gameServer.getHttpUrl() + "/game/newgame");
 		req.param("playerId", memberId);
 		req.param("difen", fb.getDifen());
@@ -1021,16 +1021,18 @@ public class GamePlayController {
 			vo.setMsg("InsufficientBalanceException");
 			return vo;
 		}
-		WzskLawsFB fb = new WzskLawsFB();
+		int gold = 100;
+		List<String> lawNames = new ArrayList<>();
+		List<GameLaw> laws = gameRoom.getLaws();
+		// 构建list laws
+		laws.forEach((law) -> lawNames.add(law.getName()));
 		if (gameRoom.getGame().equals(Game.wenzhouShuangkou)) {
-			List<String> lawNames = new ArrayList<>();
-			List<GameLaw> laws = gameRoom.getLaws();
-			// 构建list laws
-			laws.forEach((law) -> lawNames.add(law.getName()));
-			fb = new WzskLawsFB(lawNames);
+			gold = new WzskLawsFB(lawNames).payForJoinRoom();
+		} else if (gameRoom.getGame().equals(Game.ruianMajiang)) {
+			gold = new RamjLawsFB(lawNames).payForJoinRoom();
 		}
 		int balance = memberGoldBalance.getBalanceAfter();
-		if (gameRoom.isVip() && !member.isVip() && balance < fb.payForJoinRoom()) {
+		if (gameRoom.isVip() && !member.isVip() && balance < gold) {
 			vo.setSuccess(false);
 			vo.setMsg("InsufficientBalanceException");
 			return vo;
@@ -1059,7 +1061,6 @@ public class GamePlayController {
 			return vo;
 		}
 
-		int gold = fb.payForJoinRoom();
 		// 加入房间玩家记录,列表从第一开始，第0个是房主
 		List<PlayersRecord> playersRecord = gameRoom.getPlayersRecord();
 		PlayersRecord record = new PlayersRecord();
