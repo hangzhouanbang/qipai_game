@@ -55,7 +55,7 @@ public class HallWsNotifier {
 	 * @return
 	 */
 	public boolean isRawSession(String id) {
-		return sessionIdMemberIdMap.containsKey(id);
+		return !sessionIdMemberIdMap.containsKey(id);
 	}
 
 	public void addSession(WebSocketSession session) {
