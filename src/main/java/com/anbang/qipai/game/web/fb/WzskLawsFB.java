@@ -19,6 +19,7 @@ public class WzskLawsFB {
 	private String bxfd = "false";
 	private String jxfd = "false";
 	private String sxfd = "false";
+	private String gxjb = "false";
 
 	public WzskLawsFB() {
 		panshu = " ";
@@ -74,6 +75,8 @@ public class WzskLawsFB {
 				jxfd = "true";
 			} else if (lawName.equals("sxfd")) {// 十线封顶
 				sxfd = "true";
+			} else if (lawName.equals("gxjb")) {// 贡献减半
+				gxjb = "true";
 			} else {
 
 			}
@@ -190,6 +193,14 @@ public class WzskLawsFB {
 
 	public void setFapai(String fapai) {
 		this.fapai = fapai;
+	}
+
+	public String getGxjb() {
+		return gxjb;
+	}
+
+	public void setGxjb(String gxjb) {
+		this.gxjb = gxjb;
 	}
 
 }

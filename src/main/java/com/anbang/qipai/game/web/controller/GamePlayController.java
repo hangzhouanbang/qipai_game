@@ -674,6 +674,7 @@ public class GamePlayController {
 		req.param("bxfd", fb.getBxfd());
 		req.param("jxfd", fb.getJxfd());
 		req.param("sxfd", fb.getSxfd());
+		req.param("gxjb", fb.getGxjb());
 		Map resData;
 		try {
 			ContentResponse res = req.send();
