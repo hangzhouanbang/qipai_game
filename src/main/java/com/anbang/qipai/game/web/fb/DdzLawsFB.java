@@ -7,6 +7,7 @@ public class DdzLawsFB {
 	private String renshu;
 	private String difen;
 	private String qxp = "false";
+	private String szfbxp = "false";
 
 	public DdzLawsFB(List<String> lawNames) {
 		lawNames.forEach((lawName) -> {
@@ -20,11 +21,11 @@ public class DdzLawsFB {
 				renshu = "2";
 			} else if (lawName.equals("sanr")) {// 三人
 				renshu = "3";
-			}
-			if (lawName.equals("qxp")) {// 去小牌
+			} else if (lawName.equals("qxp")) {// 去小牌
 				qxp = "true";
-			}
-			if (lawName.equals("yf")) {// 一分
+			} else if (lawName.equals("szfbxp")) {// 三张分不洗牌
+				szfbxp = "true";
+			} else if (lawName.equals("yf")) {// 一分
 				difen = "1";
 			} else if (lawName.equals("ef")) {// 二分
 				difen = "2";
@@ -66,6 +67,14 @@ public class DdzLawsFB {
 
 	public void setQxp(String qxp) {
 		this.qxp = qxp;
+	}
+
+	public String getSzfbxp() {
+		return szfbxp;
+	}
+
+	public void setSzfbxp(String szfbxp) {
+		this.szfbxp = szfbxp;
 	}
 
 }

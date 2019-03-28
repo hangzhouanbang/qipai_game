@@ -792,6 +792,7 @@ public class GamePlayController {
 		req.param("renshu", fb.getRenshu());
 		req.param("difen", fb.getDifen());
 		req.param("qxp", fb.getQxp());
+		req.param("szfbxp", fb.getSzfbxp());
 		Map resData;
 		try {
 			ContentResponse res = req.send();
