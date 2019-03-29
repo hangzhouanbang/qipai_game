@@ -19,5 +19,7 @@ public enum Game {
 
 	doudizhu,
 
-    paodekuai
+	paodekuai,
+
+	daboluo
 }
