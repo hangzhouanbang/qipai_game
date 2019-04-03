@@ -30,19 +30,19 @@ public class PdkLawsFB {
             } else if (lawName.equals("sr")) {// 三人
                 renshu = "3";
             } else if (lawName.equals("bichu")) {
-                panshu = "true";
+                bichu = "true";
             } else if (lawName.equals("biya")) {
-                renshu = "true";
+                biya = "true";
             } else if (lawName.equals("aBoom")) {
-                renshu = "true";
+                aBoom = "true";
             } else if (lawName.equals("sandaique")) {
-                panshu = "true";
+                sandaique = "true";
             } else if (lawName.equals("feijique")) {
-                renshu = "true";
+                feijique = "true";
             } else if (lawName.equals("showShoupaiNum")) {
-                renshu = "true";
+                showShoupaiNum = "true";
             } else if (lawName.equals("zhuaniao")) {
-                panshu = "true";
+                zhuaniao = "true";
             } else {
 
             }
