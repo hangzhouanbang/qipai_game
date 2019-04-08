@@ -868,7 +868,7 @@ public class GamePlayController {
 			return CommonVoUtil.error(e.getClass().getName() + "-todayCreateVipRoomsCount:"
 					+ NumConvertChineseUtil.toChinese(String.valueOf(todayCreateVipRoomsCount)));
 		} catch (CanNotJoinMoreRoomsException e) {
-			return CommonVoUtil.error(e.getClass().getName());
+			return CommonVoUtil.error("CanNotJoinMoreRoomsException");
 		} catch (NoServerAvailableForGameException e) {
 			return CommonVoUtil.error(e.getClass().getName());
 		}
