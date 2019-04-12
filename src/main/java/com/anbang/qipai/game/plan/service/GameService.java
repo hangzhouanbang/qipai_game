@@ -150,7 +150,6 @@ public class GameService {
 		gameRoom.setCreateTime(System.currentTimeMillis());
 		gameRoom.setCreateMemberId(memberId);
 		return gameRoom;
-
 	}
 
 	/**
@@ -520,6 +519,83 @@ public class GameService {
 		return gameRoom;
 	}
 
+	public GameRoom buildDblGameRoom(String memberId, List<String> lawNames) throws IllegalGameLawsException,
+			NotVIPMemberException, NoServerAvailableForGameException, CanNotJoinMoreRoomsException {
+		Member member = memberDao.findById(memberId);
+		MemberRights rights = member.getRights();
+		// memberId->该用户已开房间数量
+		int memberRoomsCount = memberGameRoomDao.count(memberId);
+		// 校验能否继续开房
+		if (rights.getRoomsCount() <= memberRoomsCount) {
+			throw new CanNotJoinMoreRoomsException();
+		}
+		// 校验是否有当前游戏服务器
+		List<GameServer> allServers = gameServerDao.findServersByState(Game.daboluo,
+				GameService.GAME_SERVER_STATE_RUNNINT);
+		if (allServers == null || allServers.isEmpty()) {
+			throw new NoServerAvailableForGameException();
+		}
+		Random r = new Random();
+		// 随机选一个服务器
+		GameServer gameServer = allServers.get(r.nextInt(allServers.size()));
+		ServerGame serverGame = new ServerGame();
+		serverGame.setServer(gameServer);
+		GameRoom gameRoom = new GameRoom();
+		// 将serverGame放入gameRoom
+		gameRoom.setServerGame(serverGame);
+
+		List<GameLaw> laws = new ArrayList<>();
+		// 构建list laws
+		lawNames.forEach((name) -> laws.add(gameLawDao.findByGameAndName(Game.daboluo, name)));
+		gameRoom.setLaws(laws);
+		// 校验规则是否重复
+		if (!gameRoom.validateLaws()) {
+			throw new IllegalGameLawsException();
+		}
+		// 查询是否包含vip规则->gameRoom的vip字段
+		gameRoom.calculateVip();
+		if (gameRoom.isVip() && !member.isVip()) {
+			// 得到一天的开始时间和结束时间
+			Date d = new Date();
+			long startTime = TimeUtil.getDayStartTime(d);
+			long endTime = TimeUtil.getDayEndTime(d);
+			// 得到今天创建房间的数量
+			int todayCreateVipRoomsCount = gameRoomDao.count(startTime, endTime, memberId, true);
+			// 校验今天创建的房间是否超过规定值
+			if (rights.getPlanMemberMaxCreateRoomDaily() <= todayCreateVipRoomsCount) {
+				throw new NotVIPMemberException();
+			}
+		}
+		gameRoom.setCurrentPanNum(0);
+		// 设置房间销毁时间
+		gameRoom.setDeadlineTime(System.currentTimeMillis() + (rights.getRoomsAliveHours() * 60 * 60 * 1000));
+		gameRoom.setGame(Game.daboluo);
+		if (lawNames.contains("shj")) {
+			gameRoom.setPanCountPerJu(10);
+		} else if (lawNames.contains("esj")) {
+			gameRoom.setPanCountPerJu(20);
+		} else if (lawNames.contains("sansj")) {
+			gameRoom.setPanCountPerJu(30);
+		} else if (lawNames.contains("sisj")) {
+			gameRoom.setPanCountPerJu(40);
+		} else {
+			gameRoom.setPanCountPerJu(10);
+		}
+
+		if (lawNames.contains("er")) {
+			gameRoom.setPlayersCount(2);
+		} else if (lawNames.contains("sanr")) {
+			gameRoom.setPlayersCount(3);
+		} else if (lawNames.contains("sir")) {
+			gameRoom.setPlayersCount(4);
+		} else {
+			gameRoom.setPlayersCount(4);
+		}
+		gameRoom.setCreateTime(System.currentTimeMillis());
+		gameRoom.setCreateMemberId(memberId);
+		return gameRoom;
+	}
+
 	public GameRoom buildPdkGameRoom(String memberId, List<String> lawNames) throws IllegalGameLawsException,
 			NotVIPMemberException, NoServerAvailableForGameException, CanNotJoinMoreRoomsException {
 		Member member = memberDao.findById(memberId);
@@ -591,6 +667,75 @@ public class GameService {
 		gameRoom.setCreateTime(System.currentTimeMillis());
 		gameRoom.setCreateMemberId(memberId);
 		return gameRoom;
+	}
+
+	/**
+	 * 创建茶苑双扣房间
+	 */
+	public GameRoom buildCyskGameRoom(String memberId, List<String> lawNames) throws IllegalGameLawsException,
+			NotVIPMemberException, NoServerAvailableForGameException, CanNotJoinMoreRoomsException {
+		Member member = memberDao.findById(memberId);
+		MemberRights rights = member.getRights();
+
+		int memberRoomsCount = memberGameRoomDao.count(memberId);
+		if (rights.getRoomsCount() <= memberRoomsCount) {
+			throw new CanNotJoinMoreRoomsException();
+		}
+
+		List<GameServer> allServers = gameServerDao.findServersByState(Game.chayuanShuangkou,
+				GameService.GAME_SERVER_STATE_RUNNINT);
+		if (allServers == null || allServers.isEmpty()) {
+			throw new NoServerAvailableForGameException();
+		}
+		Random r = new Random();
+		GameServer gameServer = allServers.get(r.nextInt(allServers.size()));
+		ServerGame serverGame = new ServerGame();
+		serverGame.setServer(gameServer);
+		GameRoom gameRoom = new GameRoom();
+		gameRoom.setServerGame(serverGame);
+
+		List<GameLaw> laws = new ArrayList<>();
+		lawNames.forEach((name) -> laws.add(gameLawDao.findByGameAndName(Game.chayuanShuangkou, name)));
+		gameRoom.setLaws(laws);
+		if (!gameRoom.validateLaws()) {
+			throw new IllegalGameLawsException();
+		}
+		gameRoom.calculateVip();
+		if (gameRoom.isVip() && !member.isVip()) {
+			Date d = new Date();
+			long startTime = TimeUtil.getDayStartTime(d);
+			long endTime = TimeUtil.getDayEndTime(d);
+			int todayCreateVipRoomsCount = gameRoomDao.count(startTime, endTime, memberId, true);
+			if (rights.getPlanMemberMaxCreateRoomDaily() <= todayCreateVipRoomsCount) {
+				throw new NotVIPMemberException();
+			}
+		}
+		gameRoom.setCurrentPanNum(0);
+		gameRoom.setDeadlineTime(System.currentTimeMillis() + (rights.getRoomsAliveHours() * 60 * 60 * 1000));
+		gameRoom.setGame(Game.chayuanShuangkou);
+		if (lawNames.contains("sj")) {
+			gameRoom.setPanCountPerJu(4);
+		} else if (lawNames.contains("bj")) {
+			gameRoom.setPanCountPerJu(8);
+		} else if (lawNames.contains("slj")) {
+			gameRoom.setPanCountPerJu(16);
+		} else if (lawNames.contains("ssj")) {
+			gameRoom.setPanCountPerJu(30);
+		} else {
+			gameRoom.setPanCountPerJu(4);
+		}
+
+		if (lawNames.contains("er")) {
+			gameRoom.setPlayersCount(2);
+		} else if (lawNames.contains("sir")) {
+			gameRoom.setPlayersCount(4);
+		} else {
+			gameRoom.setPlayersCount(4);
+		}
+		gameRoom.setCreateTime(System.currentTimeMillis());
+		gameRoom.setCreateMemberId(memberId);
+		return gameRoom;
+
 	}
 
 	public int countTodayCreateVipRoomsCount(String createMemberId) {
@@ -674,6 +819,10 @@ public class GameService {
 		memberGameRoomDao.remove(Game.doudizhu, serverGameId, playerId);
 	}
 
+	public void daboluoPlayerQuitQame(String serverGameId, String playerId) {
+		memberGameRoomDao.remove(Game.daboluo, serverGameId, playerId);
+	}
+
 	public void paodekuaiPlayerQuitQame(String serverGameId, String playerId) {
 		memberGameRoomDao.remove(Game.paodekuai, serverGameId, playerId);
 	}
@@ -684,6 +833,10 @@ public class GameService {
 
 	public void wenzhouShuangkouPlayerQuitQame(String serverGameId, String playerId) {
 		memberGameRoomDao.remove(Game.wenzhouShuangkou, serverGameId, playerId);
+	}
+
+	public void chayuanShuangkouPlayerQuitQame(String serverGameId, String playerId) {
+		memberGameRoomDao.remove(Game.chayuanShuangkou, serverGameId, playerId);
 	}
 
 	public void expireMemberGameRoom(Game game, String serverGameId) {

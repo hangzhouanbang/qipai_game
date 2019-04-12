@@ -114,7 +114,27 @@ spring:
                   ms: 5
                 batch:
                   size: 16384
+          chayuanShuangkouGameRoom:
+            producer:
+              configuration:
+                request:
+                  timeout:
+                    ms: 30000
+                linger:
+                  ms: 5
+                batch:
+                  size: 16384
           doudizhuGameRoom:
+            producer:
+              configuration:
+                request:
+                  timeout:
+                    ms: 30000
+                linger:
+                  ms: 5
+                batch:
+                  size: 16384
+          daboluoGameRoom:
             producer:
               configuration:
                 request:
@@ -204,7 +224,27 @@ spring:
                   ms: 5
                 batch:
                   size: 16384
+          gameChayuanskResult:
+            producer:
+              configuration:
+                request:
+                  timeout:
+                    ms: 30000
+                linger:
+                  ms: 5
+                batch:
+                  size: 16384
           gameDoudizhuResult:
+            producer:
+              configuration:
+                request:
+                  timeout:
+                    ms: 30000
+                linger:
+                  ms: 5
+                batch:
+                  size: 16384
+          gameDaboluoResult:
             producer:
               configuration:
                 request:
@@ -261,8 +301,18 @@ spring:
           contentType: application/json
           producer:
             partitionCount: 1
+        chayuanShuangkouGameRoom:
+          destination: chayuanShuangkouGameRoom
+          contentType: application/json
+          producer:
+            partitionCount: 1
         doudizhuGameRoom:
           destination: doudizhuGameRoom
+          contentType: application/json
+          producer:
+            partitionCount: 1
+        daboluoGameRoom:
+          destination: daboluoGameRoom
           contentType: application/json
           producer:
             partitionCount: 1
@@ -370,6 +420,20 @@ spring:
             concurrency: 1
             partitioned: false
           contentType: application/json
+        chayaunShuangkouGame:
+          destination: chayuanShuangkouGame
+          group: qipai-game
+          consumer:
+            concurrency: 1
+            partitioned: false
+          contentType: application/json
+        chayuanShuangkouResult:
+          destination: chayuanShuangkouResult
+          group: qipai-game
+          consumer:
+            concurrency: 1
+            partitioned: false
+          contentType: application/json
         doudizhuGame:
           destination: doudizhuGame
           group: qipai-game
@@ -379,6 +443,20 @@ spring:
           contentType: application/json
         doudizhuResult:
           destination: doudizhuResult
+          group: qipai-game
+          consumer:
+            concurrency: 1
+            partitioned: false
+          contentType: application/json
+        daboluoGame:
+          destination: daboluoGame
+          group: qipai-game
+          consumer:
+            concurrency: 1
+            partitioned: false
+          contentType: application/json
+        daboluoResult:
+          destination: daboluoResult
           group: qipai-game
           consumer:
             concurrency: 1
@@ -452,8 +530,18 @@ spring:
           contentType: application/json
           producer:
             partitionCount: 1
+        gameChayuanskResult:
+          destination: gameChayuanskResult
+          contentType: application/json
+          producer:
+            partitionCount: 1
         gameDoudizhuResult:
           destination: gameDoudizhuResult
+          contentType: application/json
+          producer:
+            partitionCount: 1
+        gameDaboluoResult:
+          destination: gameDaboluoResult
           contentType: application/json
           producer:
             partitionCount: 1
@@ -475,8 +563,8 @@ eureka:
     #prefer-ip-address: true
     #instance-id: http://172.16.21.51:83
 websocket:
-  url: ws://47.96.20.47:83/hall
-  #url: ws://192.168.0.156:83/hall
+  #url: ws://47.96.20.47:83/hall
+  url: ws://192.168.0.156:83/hall
 filepath:
   snapshotFileBasePath: /data/app/qipai_game/snapshot
   jFileBasePath: /data/app/qipai_game/journal

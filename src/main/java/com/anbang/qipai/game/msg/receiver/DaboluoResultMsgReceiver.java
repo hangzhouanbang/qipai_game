@@ -8,9 +8,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cloud.stream.annotation.EnableBinding;
 import org.springframework.cloud.stream.annotation.StreamListener;
 
-import com.anbang.qipai.game.msg.channel.sink.DianpaoMajiangResultSink;
+import com.anbang.qipai.game.msg.channel.sink.DaboluoResultSink;
 import com.anbang.qipai.game.msg.msjobj.CommonMO;
-import com.anbang.qipai.game.msg.service.DianpaomjResultMsgService;
+import com.anbang.qipai.game.msg.service.DaboluoResultMsgService;
 import com.anbang.qipai.game.plan.bean.games.Game;
 import com.anbang.qipai.game.plan.bean.games.GameRoom;
 import com.anbang.qipai.game.plan.bean.historicalresult.GameHistoricalJuResult;
@@ -24,9 +24,8 @@ import com.anbang.qipai.game.plan.service.GameHistoricalPanResultService;
 import com.anbang.qipai.game.plan.service.GameService;
 import com.google.gson.Gson;
 
-@EnableBinding(DianpaoMajiangResultSink.class)
-public class DianpaoMajiangResultMsgReceiver {
-
+@EnableBinding(DaboluoResultSink.class)
+public class DaboluoResultMsgReceiver {
 	@Autowired
 	private GameHistoricalJuResultService majiangHistoricalResultService;
 
@@ -34,30 +33,30 @@ public class DianpaoMajiangResultMsgReceiver {
 	private GameHistoricalPanResultService majiangHistoricalPanResultService;
 
 	@Autowired
-	private DianpaomjResultMsgService dianpaomjResultMsgService;
+	private DaboluoResultMsgService daboluoResultMsgService;
 
 	@Autowired
 	private GameService gameService;
 
 	private Gson gson = new Gson();
 
-	@StreamListener(DianpaoMajiangResultSink.DIANPAOMAJIANGRESULT)
+	@StreamListener(DaboluoResultSink.DABOLUORESULT)
 	public void recordMajiangHistoricalResult(CommonMO mo) {
 		String msg = mo.getMsg();
 		String json = gson.toJson(mo.getData());
 		Map map = gson.fromJson(json, Map.class);
-		if ("dianpaomajiang ju result".equals(msg)) {
+		if ("daboluo ju result".equals(msg)) {
 			Object gid = map.get("gameId");
 			Object dyjId = map.get("dayingjiaId");
 			Object dthId = map.get("datuhaoId");
 			if (gid != null && dyjId != null && dthId != null) {
 				String gameId = (String) gid;
-				GameRoom room = gameService.findRoomByGameAndServerGameGameId(Game.dianpaoMajiang, gameId);
+				GameRoom room = gameService.findRoomByGameAndServerGameGameId(Game.daboluo, gameId);
 				if (room != null) {
 					GameHistoricalJuResult majiangHistoricalResult = new GameHistoricalJuResult();
 					majiangHistoricalResult.setGameId(gameId);
 					majiangHistoricalResult.setRoomNo(room.getNo());
-					majiangHistoricalResult.setGame(Game.dianpaoMajiang);
+					majiangHistoricalResult.setGame(Game.daboluo);
 					majiangHistoricalResult.setDayingjiaId((String) dyjId);
 					majiangHistoricalResult.setDatuhaoId((String) dthId);
 
@@ -73,20 +72,20 @@ public class DianpaoMajiangResultMsgReceiver {
 						majiangHistoricalResult.setFinishTime(((Double) map.get("finishTime")).longValue());
 
 						majiangHistoricalResultService.addGameHistoricalResult(majiangHistoricalResult);
-						dianpaomjResultMsgService.newJuResult(majiangHistoricalResult);
+						daboluoResultMsgService.newJuResult(majiangHistoricalResult);
 					}
 				}
 			}
 		}
-		if ("dianpaomajiang pan result".equals(msg)) {
+		if ("daboluo pan result".equals(msg)) {
 			Object gid = map.get("gameId");
 			if (gid != null) {
 				String gameId = (String) gid;
-				GameRoom room = gameService.findRoomByGameAndServerGameGameId(Game.dianpaoMajiang, gameId);
+				GameRoom room = gameService.findRoomByGameAndServerGameGameId(Game.daboluo, gameId);
 				if (room != null) {
 					GameHistoricalPanResult majiangHistoricalResult = new GameHistoricalPanResult();
 					majiangHistoricalResult.setGameId(gameId);
-					majiangHistoricalResult.setGame(Game.dianpaoMajiang);
+					majiangHistoricalResult.setGame(Game.daboluo);
 
 					Object playerList = map.get("playerResultList");
 					if (playerList != null) {
@@ -99,7 +98,7 @@ public class DianpaoMajiangResultMsgReceiver {
 						majiangHistoricalResult.setFinishTime(((Double) map.get("finishTime")).longValue());
 
 						majiangHistoricalPanResultService.addGameHistoricalResult(majiangHistoricalResult);
-						dianpaomjResultMsgService.newPanResult(majiangHistoricalResult);
+						daboluoResultMsgService.newPanResult(majiangHistoricalResult);
 					}
 				}
 			}
