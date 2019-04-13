@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.anbang.qipai.game.cqrs.c.service.GameRoomCmdService;
+import com.anbang.qipai.game.msg.service.ChayuanShuangkouGameRoomMsgService;
 import com.anbang.qipai.game.msg.service.DaboluoGameRoomMsgService;
 import com.anbang.qipai.game.msg.service.DianpaoGameRoomMsgService;
 import com.anbang.qipai.game.msg.service.DoudizhuGameRoomMsgService;
@@ -109,6 +110,9 @@ public class GamePlayController {
 
 	@Autowired
 	private WenzhouShuangkouGameRoomMsgService wenzhouShuangkouGameRoomMsgService;
+
+	@Autowired
+	private ChayuanShuangkouGameRoomMsgService chayuanShuangkouGameRoomMsgService;
 
 	@Autowired
 	private DoudizhuGameRoomMsgService doudizhuGameRoomMsgService;
@@ -1522,6 +1526,7 @@ public class GamePlayController {
 		doudizhuGameRoomMsgService.removeGameRoom(gameIdMap.get(Game.doudizhu));
 		paodekuaiGameRoomMsgService.removeGameRoom(gameIdMap.get(Game.paodekuai));
 		daboluoGameRoomMsgService.removeGameRoom(gameIdMap.get(Game.daboluo));
+		chayuanShuangkouGameRoomMsgService.removeGameRoom(gameIdMap.get(Game.chayuanShuangkou));
 	}
 
 	/**
