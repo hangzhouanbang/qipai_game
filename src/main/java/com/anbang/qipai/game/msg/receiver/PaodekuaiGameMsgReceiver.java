@@ -3,12 +3,12 @@ package com.anbang.qipai.game.msg.receiver;
 import java.util.List;
 import java.util.Map;
 
-import com.anbang.qipai.game.msg.channel.sink.PaodekuaiGameSink;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cloud.stream.annotation.EnableBinding;
 import org.springframework.cloud.stream.annotation.StreamListener;
 
 import com.anbang.qipai.game.cqrs.c.service.GameRoomCmdService;
+import com.anbang.qipai.game.msg.channel.sink.PaodekuaiGameSink;
 import com.anbang.qipai.game.msg.msjobj.CommonMO;
 import com.anbang.qipai.game.plan.bean.games.Game;
 import com.anbang.qipai.game.plan.bean.games.GameRoom;
@@ -106,6 +106,13 @@ public class PaodekuaiGameMsgReceiver {
 			int no = (int) data.get("no");
 			List playerIds = (List) data.get("playerIds");
 			gameService.panFinished(Game.paodekuai, gameId, no, playerIds);
+		}
+		if ("game delay".equals(msg)) {// 游戏延时
+			Map data = (Map) mo.getData();
+			String gameId = (String) data.get("gameId");
+			GameRoom gameRoom = gameService.findRoomByGameAndServerGameGameId(Game.paodekuai, gameId);
+			// 延时11小时
+			gameService.delayGameRoom(Game.paodekuai, gameId, gameRoom.getDeadlineTime() + 11 * 60 * 60 * 1000);
 		}
 	}
 }

@@ -1502,22 +1502,15 @@ public class GamePlayController {
 	public void removeGameRoom() {
 		long deadlineTime = System.currentTimeMillis();
 		List<GameRoom> roomList = gameService.findExpireGameRoom(deadlineTime);
-		List<String> roomIds = new ArrayList<>();
 		Map<Game, List<String>> gameIdMap = new HashMap<>();
 		for (Game game : Game.values()) {
 			gameIdMap.put(game, new ArrayList<>());
 		}
 		for (GameRoom room : roomList) {
-			String id = room.getId();
-			roomIds.add(id);
-			String no = room.getNo();
-			gameRoomCmdService.removeRoom(no);
 			Game game = room.getGame();
 			String serverGameId = room.getServerGame().getGameId();
 			gameIdMap.get(game).add(serverGameId);
-			gameService.expireMemberGameRoom(game, serverGameId);
 		}
-		gameService.expireGameRoom(roomIds);
 		ruianGameRoomMsgService.removeGameRoom(gameIdMap.get(Game.ruianMajiang));
 		fangpaoGameRoomMsgService.removeGameRoom(gameIdMap.get(Game.fangpaoMajiang));
 		wenzhouGameRoomMsgService.removeGameRoom(gameIdMap.get(Game.wenzhouMajiang));

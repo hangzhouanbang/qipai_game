@@ -107,5 +107,12 @@ public class FangpaoMajiangGameMsgReceiver {
 			List playerIds = (List) data.get("playerIds");
 			gameService.panFinished(Game.fangpaoMajiang, gameId, no, playerIds);
 		}
+		if ("game delay".equals(msg)) {// 游戏延时
+			Map data = (Map) mo.getData();
+			String gameId = (String) data.get("gameId");
+			GameRoom gameRoom = gameService.findRoomByGameAndServerGameGameId(Game.fangpaoMajiang, gameId);
+			// 延时11小时
+			gameService.delayGameRoom(Game.fangpaoMajiang, gameId, gameRoom.getDeadlineTime() + 11 * 60 * 60 * 1000);
+		}
 	}
 }

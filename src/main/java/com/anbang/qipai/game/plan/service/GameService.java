@@ -735,7 +735,6 @@ public class GameService {
 		gameRoom.setCreateTime(System.currentTimeMillis());
 		gameRoom.setCreateMemberId(memberId);
 		return gameRoom;
-
 	}
 
 	public int countTodayCreateVipRoomsCount(String createMemberId) {
@@ -849,6 +848,13 @@ public class GameService {
 
 	public List<GameRoom> findExpireGameRoom(long deadlineTime) {
 		return gameRoomDao.findExpireGameRoom(deadlineTime, false);
+	}
+
+	/**
+	 * 延长游戏房间
+	 */
+	public void delayGameRoom(Game game, String serverGameId, long deadlineTime) {
+		gameRoomDao.updateGameRoomDeadlineTime(game, serverGameId, deadlineTime);
 	}
 
 	public void expireGameRoom(List<String> ids) {

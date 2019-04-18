@@ -2,7 +2,6 @@ package com.anbang.qipai.game.plan.dao.mongodb;
 
 import java.util.List;
 
-import com.anbang.qipai.game.plan.bean.games.MemberGameRoom;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
@@ -33,7 +32,7 @@ public class MongodbGameRoomDao implements GameRoomDao {
 	public int count(long startTimeForCreate, long endTimeForCreate, String createMemberId, boolean vip) {
 		Query query = new Query();
 		Criteria criteria = new Criteria();
-		//gt:大于 lt:小于
+		// gt:大于 lt:小于
 		criteria.andOperator(Criteria.where("createTime").gt(startTimeForCreate),
 				Criteria.where("createTime").lt(endTimeForCreate), Criteria.where("createMemberId").is(createMemberId),
 				Criteria.where("vip").is(vip));
@@ -93,6 +92,16 @@ public class MongodbGameRoomDao implements GameRoomDao {
 	@Override
 	public List<GameRoom> robotTest() {
 		Query query = new Query(Criteria.where("finished").is(false));
-		return mongoTemplate.find(query,GameRoom.class);
+		return mongoTemplate.find(query, GameRoom.class);
+	}
+
+	@Override
+	public void updateGameRoomDeadlineTime(Game game, String serverGameId, long deadlineTime) {
+		Query query = new Query();
+		query.addCriteria(
+				Criteria.where("game").is(game).andOperator(Criteria.where("serverGame.gameId").is(serverGameId)));
+		Update update = new Update();
+		update.set("deadlineTime", deadlineTime);
+		mongoTemplate.updateFirst(query, update, GameRoom.class);
 	}
 }
