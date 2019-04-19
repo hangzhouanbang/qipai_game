@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.commons.lang.StringUtils;
 import org.eclipse.jetty.client.HttpClient;
 import org.eclipse.jetty.client.api.ContentResponse;
 import org.eclipse.jetty.client.api.Request;
@@ -1509,7 +1510,9 @@ public class GamePlayController {
 		for (GameRoom room : roomList) {
 			Game game = room.getGame();
 			String serverGameId = room.getServerGame().getGameId();
-			gameIdMap.get(game).add(serverGameId);
+			if (!StringUtils.isBlank(serverGameId)) {
+				gameIdMap.get(game).add(serverGameId);
+			}
 		}
 		ruianGameRoomMsgService.removeGameRoom(gameIdMap.get(Game.ruianMajiang));
 		fangpaoGameRoomMsgService.removeGameRoom(gameIdMap.get(Game.fangpaoMajiang));
