@@ -18,6 +18,7 @@ public class WzmjLawsFB {
 	private String teshushuangfan = "false";
 	private String caishenqian = "false";
 	private String shaozhongfa = "false";
+	private String queyise = "false";
 	private String lazila = "false";
 
 	public WzmjLawsFB(List<String> lawNames) {
@@ -46,6 +47,8 @@ public class WzmjLawsFB {
 				caishenqian = "true";
 			} else if (lawName.equals("szf")) {// 少中发
 				shaozhongfa = "true";
+			} else if (lawName.equals("qys")) {// 缺一色
+				queyise = "true";
 			} else if (lawName.equals("lzl")) {// 辣子辣
 				lazila = "true";
 			} else if (lawName.equals("gsf")) {// 杠算分
@@ -54,6 +57,14 @@ public class WzmjLawsFB {
 
 			}
 		});
+	}
+
+	public String getQueyise() {
+		return queyise;
+	}
+
+	public void setQueyise(String queyise) {
+		this.queyise = queyise;
 	}
 
 	public String getPanshu() {
