@@ -648,13 +648,11 @@ public class GameService {
 		gameRoom.setDeadlineTime(System.currentTimeMillis() + (rights.getRoomsAliveHours() * 60 * 60 * 1000));
 		gameRoom.setGame(Game.paodekuai);
 		if (lawNames.contains("sj")) {
-			gameRoom.setPanCountPerJu(4);
-		} else if (lawNames.contains("bj")) {
-			gameRoom.setPanCountPerJu(8);
-		} else if (lawNames.contains("slj")) {
-			gameRoom.setPanCountPerJu(16);
+			gameRoom.setPanCountPerJu(10);
+		} else if (lawNames.contains("esj")) {
+			gameRoom.setPanCountPerJu(20);
 		} else {
-			gameRoom.setPanCountPerJu(4);
+			gameRoom.setPanCountPerJu(10);
 		}
 
 		if (lawNames.contains("er")) {
