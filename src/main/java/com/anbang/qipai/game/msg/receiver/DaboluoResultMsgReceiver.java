@@ -17,8 +17,8 @@ import com.anbang.qipai.game.plan.bean.historicalresult.GameHistoricalJuResult;
 import com.anbang.qipai.game.plan.bean.historicalresult.GameHistoricalPanResult;
 import com.anbang.qipai.game.plan.bean.historicalresult.GameJuPlayerResult;
 import com.anbang.qipai.game.plan.bean.historicalresult.GamePanPlayerResult;
-import com.anbang.qipai.game.plan.bean.historicalresult.majiang.DianpaoMajiangJuPlayerResult;
-import com.anbang.qipai.game.plan.bean.historicalresult.majiang.DianpaoMajiangPanPlayerResult;
+import com.anbang.qipai.game.plan.bean.historicalresult.puke.DaboluoJuPlayerResult;
+import com.anbang.qipai.game.plan.bean.historicalresult.puke.DaboluoPanPlayerResult;
 import com.anbang.qipai.game.plan.service.GameHistoricalJuResultService;
 import com.anbang.qipai.game.plan.service.GameHistoricalPanResultService;
 import com.anbang.qipai.game.plan.service.GameService;
@@ -64,7 +64,7 @@ public class DaboluoResultMsgReceiver {
 					if (playerList != null) {
 						List<GameJuPlayerResult> juPlayerResultList = new ArrayList<>();
 						((List) playerList).forEach((juPlayerResult) -> juPlayerResultList
-								.add(new DianpaoMajiangJuPlayerResult((Map) juPlayerResult)));
+								.add(new DaboluoJuPlayerResult((Map) juPlayerResult)));
 						majiangHistoricalResult.setPlayerResultList(juPlayerResultList);
 
 						majiangHistoricalResult.setPanshu(((Double) map.get("panshu")).intValue());
@@ -91,7 +91,7 @@ public class DaboluoResultMsgReceiver {
 					if (playerList != null) {
 						List<GamePanPlayerResult> panPlayerResultList = new ArrayList<>();
 						((List) map.get("playerResultList")).forEach((panPlayerResult) -> panPlayerResultList
-								.add(new DianpaoMajiangPanPlayerResult((Map) panPlayerResult)));
+								.add(new DaboluoPanPlayerResult((Map) panPlayerResult)));
 						majiangHistoricalResult.setPlayerResultList(panPlayerResultList);
 
 						majiangHistoricalResult.setNo(((Double) map.get("no")).intValue());

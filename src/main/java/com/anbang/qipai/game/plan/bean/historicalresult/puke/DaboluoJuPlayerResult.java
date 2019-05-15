@@ -8,14 +8,16 @@ public class DaboluoJuPlayerResult implements GameJuPlayerResult {
 	private String playerId;
 	private String nickname;
 	private String headimgurl;
-	private int yingCount;
+	private int tspx;// 特殊牌型
+	private int qld;// 全垒打
 	private int totalScore;
 
 	public DaboluoJuPlayerResult(Map juPlayerResult) {
 		this.playerId = (String) juPlayerResult.get("playerId");
 		this.nickname = (String) juPlayerResult.get("nickname");
 		this.headimgurl = (String) juPlayerResult.get("headimgurl");
-		this.yingCount = ((Double) juPlayerResult.get("yingCount")).intValue();
+		this.tspx = ((Double) juPlayerResult.get("tspx")).intValue();
+		this.qld = ((Double) juPlayerResult.get("qld")).intValue();
 		this.totalScore = ((Double) juPlayerResult.get("totalScore")).intValue();
 	}
 
@@ -47,12 +49,20 @@ public class DaboluoJuPlayerResult implements GameJuPlayerResult {
 		this.headimgurl = headimgurl;
 	}
 
-	public int getYingCount() {
-		return yingCount;
+	public int getTspx() {
+		return tspx;
 	}
 
-	public void setYingCount(int yingCount) {
-		this.yingCount = yingCount;
+	public void setTspx(int tspx) {
+		this.tspx = tspx;
+	}
+
+	public int getQld() {
+		return qld;
+	}
+
+	public void setQld(int qld) {
+		this.qld = qld;
 	}
 
 	public int getTotalScore() {
